@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors')
 require('dotenv').config()
 const bodyParser = require('body-parser');
-//const database = require("./database/database")();
+const database = require("./database")();
 
 const app = express();
 app.use(cors())
@@ -13,10 +13,9 @@ app.use(express.static(__dirname + "/client/build"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
+const userRouter = require("./routes/user")
+app.use("/user", userRouter)
 
-app.use((req, res, next) => {
-    res.send('Welcome to Express');
-});
 
 app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "/client/build/index.html"));

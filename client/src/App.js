@@ -1,6 +1,12 @@
+import './App.css';
+import UserCreate from './components/UserCreate';
+
+
 const App = () => {
   return (
-    <div className="" >initial</div>
+    <div className="App">
+      <UserCreate></UserCreate>  
+    </div>
   );
 }
 

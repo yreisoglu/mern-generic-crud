@@ -35,7 +35,6 @@ router.get("/get-user-by-id", (req, res) => {
 router.post("/", (req, res) => {
     const usersSecretKey = req.headers.userssecretkey;
     const user = new UserModel(encryptBody(req.body, usersSecretKey))
-    console.log('Save :', req.body);
     user.save()
         .then((response) => {
             res.json(response);
@@ -73,7 +72,7 @@ const decryptResponse = (response, usersSecretKey) => {
         name: cryptr.decrypt(response.name),
         surname: cryptr.decrypt(response.surname),
         email: cryptr.decrypt(response.email),
-        image: cryptr.decrypt(response.file),
+        image: cryptr.decrypt(response.image),
         totalWorkTime: cryptr.decrypt(response.totalWorkTime),
         university: cryptr.decrypt(response.university),
         previousJob: cryptr.decrypt(response.previousJob),

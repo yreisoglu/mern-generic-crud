@@ -9,7 +9,7 @@ router.get("/", (req, res) => {
     UserModel.find().sort({ $natural: -1 }).limit(10)
         .then(response => {
             response.forEach((item) => {
-                decryptedResponse.push(decryptResponse(item,req.headers.userssecretkey))
+                decryptedResponse.push(decryptResponse(item, req.headers.userssecretkey))
             })
             res.json(decryptedResponse)
         })
@@ -42,6 +42,27 @@ router.post("/", (req, res) => {
             res.statusCode = "404"
         })
 })
+
+
+router.put("/", async (req, res) => {
+
+    let newObject = encryptBody(req.body, req.headers.userssecretkey);
+    UserModel.findByIdAndUpdate(req.body._id, newObject)
+        .then(response => res.json(decryptResponse(response, req.headers.userssecretkey)))
+        .catch(error => console.log(error))
+
+});
+
+router.delete("/", (req, res) => {
+    UserModel.findByIdAndDelete(req.body._id).then(response => res.json(response)).catch(error => console.log(error))
+})
+
+router.delete("/delete-multiple", (req, res) => {
+    const ids = req.body["ids"];
+    UserModel.deleteMany({ _id: { $in: ids } }).then(response => res.json(response)).catch(error => console.log(error))
+})
+
+
 
 const decryptResponse = (response, usersSecretKey) => {
     const cryptr = new Cryptr(usersSecretKey);

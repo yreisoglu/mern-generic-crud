@@ -1,10 +1,9 @@
 import axios from 'axios';
 
 const HTTP = axios.create({
-    baseURL: "http://localhost:5000",
+    baseURL: "http://127.0.0.1:5000",
 });
 
 export const UserSave = async (body) => {
-    await HTTP.post('/user/', body)
+    await HTTP.post('/user', body , {headers: { 'usersSecretKey': "asd" }}).then(response => console.log(response))
 };
-

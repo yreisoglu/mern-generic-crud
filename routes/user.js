@@ -6,7 +6,7 @@ const Cryptr = require('cryptr');
 
 router.get("/", (req, res) => {
     const decryptedResponse = []
-    UserModel.find().sort({ $natural: -1 }).limit(10)
+    UserModel.find().sort({ $natural: -1 })
         .then(response => {
             response.forEach((item) => {
                 decryptedResponse.push(decryptResponse(item, req.headers.userssecretkey))
@@ -68,36 +68,13 @@ router.delete("/delete-multiple", (req, res) => {
 
 const decryptResponse = (response, usersSecretKey) => {
     const cryptr = new Cryptr(usersSecretKey);
-    const decryptedResponse = {
-        name: cryptr.decrypt(response.name),
-        surname: cryptr.decrypt(response.surname),
-        email: cryptr.decrypt(response.email),
-        image: cryptr.decrypt(response.image),
-        totalWorkTime: cryptr.decrypt(response.totalWorkTime),
-        university: cryptr.decrypt(response.university),
-        previousJob: cryptr.decrypt(response.previousJob),
-        skills: cryptr.decrypt(response.skills),
-        description: cryptr.decrypt(response.description),
-    }
-    return decryptedResponse
+    response.description = cryptr.decrypt(response.description);
+    return response
 }
 const encryptBody = (body, usersSecretKey) => {
     const cryptr = new Cryptr(usersSecretKey);
-    const encryptedBody = {
-        name: cryptr.encrypt(body.name),
-        surname: cryptr.encrypt(body.surname),
-        email: cryptr.encrypt(body.email),
-        image: cryptr.encrypt(body.image),
-        firstJobDay: body.firstJobDay,
-        totalWorkTime: cryptr.encrypt(body.totalWorkTime),
-        university: cryptr.encrypt(body.university),
-        graduationTime: body.graduationTime,
-        previousJob: cryptr.encrypt(body.previousJob),
-        skills: cryptr.encrypt(body.skills),
-        description: cryptr.encrypt(body.description),
-        createdAt: body.createdAt
-    }
-    return encryptedBody
+    body.description = cryptr.encrypt(body.description);
+    return body
 }
 
 module.exports = router

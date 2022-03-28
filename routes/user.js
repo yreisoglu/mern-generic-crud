@@ -2,6 +2,19 @@ const express = require("express");
 const UserModel = require("../models/UserModel");
 const router = express.Router();
 const Cryptr = require('cryptr');
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+    destination: function (req, file, callback) {
+        callback(null, './images');
+    },
+    filename: function (req, file, callback) {
+        callback(null, Date.now() + '.jpg');
+    }
+});
+
+const upload = multer({ storage: storage });
+
 
 
 router.get("/", (req, res) => {
@@ -32,17 +45,27 @@ router.get("/get-user-by-id", (req, res) => {
         .catch(error => console.log(error))
 })
 
-router.post("/", (req, res) => {
+router.post("/", upload.single('file'), (req, res) => {
     const usersSecretKey = req.headers.userssecretkey;
-    const user = new UserModel(encryptBody(req.body, usersSecretKey))
-    user.save()
-        .then((response) => {
-            res.json(response);
-        })
-        .catch((error) => {
-            console.log(error);
-            res.statusCode = "404"
-        })
+    if (!req.file) {
+        console.log("No file received");
+        return res.send({
+            success: false
+        });
+
+    } else {
+        const user = new UserModel(encryptBody(req.body, usersSecretKey))
+        user.image = `/img/${req.file.filename}`
+
+        user.save()
+            .then((response) => {
+                res.json(response);
+            })
+            .catch((error) => {
+                console.log(error);
+                res.statusCode = "404"
+            })
+    }
 })
 
 

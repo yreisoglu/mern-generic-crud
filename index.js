@@ -18,9 +18,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 const userRouter = require("./routes/user")
 app.use("/user", userRouter)
-const imageRouter = require("./routes/image")
-app.use("/image", imageRouter)
-
 
 app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "/client/build/index.html"));

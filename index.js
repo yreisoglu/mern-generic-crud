@@ -10,11 +10,16 @@ const port = process.env.PORT || 5000;
 
 
 app.use(express.static(__dirname + "/client/build"));
+app.use('/img', express.static(__dirname + '/images'));
+
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 const userRouter = require("./routes/user")
 app.use("/user", userRouter)
+const imageRouter = require("./routes/image")
+app.use("/image", imageRouter)
 
 
 app.get("*", (req, res) => {

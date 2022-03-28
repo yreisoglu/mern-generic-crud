@@ -110,25 +110,25 @@ const UserCreate = () => {
                                         </div>
                                     </div>
                                     <div className="row">
-                                        <div className="form-group mt-2 col-md-4">
+                                        <div className="form-group mt-2 col-md-6">
                                             <div className="form-group">
                                                 <label className="mb-3" for="file">Photo</label>
-                                                <input type="file" className="form-control-file" id="file" onChange={(e) => setData({ ...data, image: e.target.value })} />
+                                                <input type="file" className="form-control" id="file" onChange={(e) => setData({ ...data, image: e.target.value })} />
                                                 <p style={{ color: "red" }} className="mt-2">
                                                     {DataErrors.image}
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className="form-group mt-2 col-md-4">
+                                        <div className="form-group mt-2 col-md-3">
                                             <label className="mb-3" for="FirstJobDay">First Job Day</label>
                                             <div className="form-group">
-                                                <input type="date" className="form-control-file" id="FirstJobDay" onChange={(e) => setData({ ...data, firstJobDay: e.target.value })} />
+                                                <input type="date" className="form-control" id="FirstJobDay" onChange={(e) => setData({ ...data, firstJobDay: e.target.value })} />
                                                 <p style={{ color: "red" }} className="mt-2">
                                                     {DataErrors.firstJobDay}
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className="form-group mt-1 col-md-4">
+                                        <div className="form-group mt-1 col-md-3">
                                             <div className="form-group">
                                                 <label for="TotalWorkTime">Total Work Time</label>
                                                 <input type="text" className="form-control" id="TotalWorkTime" placeholder="1 month 2 year" onChange={(e) => setData({ ...data, totalWorkTime: e.target.value })} />
@@ -151,7 +151,7 @@ const UserCreate = () => {
                                         <div className="form-group mt-2 col-md-3">
                                             <label className="mb-3" for="GraduationTime">Graduation Time</label>
                                             <div className="form-group">
-                                                <input type="date" className="form-control-file" id="GraduationTime" onChange={(e) => setData({ ...data, graduationTime: e.target.value })} />
+                                                <input type="date" className="form-control" id="GraduationTime" onChange={(e) => setData({ ...data, graduationTime: e.target.value })} />
                                                 <p style={{ color: "red" }} className="mt-2">
                                                     {DataErrors.graduationTime}
                                                 </p>

@@ -25,3 +25,14 @@ export const GetUserById = async (id) => {
             })
     })
 }
+
+export const DeleteUserById = async (id) => {
+    return new Promise((resolve, reject) => {
+        HTTP.delete('/user', { headers: { 'usersSecretKey': "asd" } }, { "_id": id })
+            .then(response => {
+                resolve(response.data)
+            }).catch(error => {
+                reject(error)
+            })
+    })
+}

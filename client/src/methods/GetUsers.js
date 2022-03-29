@@ -25,3 +25,16 @@ export const GetUserById = async (id) => {
             })
     })
 }
+
+export const DeleteUsersByIds = async (ids) => {
+    let payload = {
+        ids: ids
+    }
+    return new Promise((resolve, reject) => {
+        HTTP.delete("/user/delete-multiple", { data: payload }).then(response => {
+            resolve(response.data)
+        }).catch(error => {
+            reject(error)
+        })
+    })
+}

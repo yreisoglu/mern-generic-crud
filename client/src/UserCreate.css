@@ -10,7 +10,7 @@
 
 html, body {
     height: 100%;
-    background-color: #152733;
+    background-color: #F7F7F7;
     overflow: auto;
 }
 
@@ -40,21 +40,22 @@ html, body {
 }
 
 .form-content .form-items {
-    border: 3px solid #fff;
+    border: 2px solid #4d4c4c;
     padding: 40px;
     display: inline-block;
     width: 100%;
     min-width: 540px;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
     text-align: left;
     -webkit-transition: all 0.4s ease;
     transition: all 0.4s ease;
+    background-color: white;
 }
 
 .form-content h3 {
-    color: #fff;
+    color: #4d4c4c;
     text-align: left;
     font-size: 28px;
     font-weight: 600;
@@ -66,7 +67,7 @@ html, body {
 }
 
 .form-content p {
-    color: #fff;
+    color: #4d4c4c;
     text-align: left;
     font-size: 17px;
     font-weight: 300;
@@ -76,7 +77,9 @@ html, body {
 
 
 .form-content label, .was-validated .form-check-input:invalid~.form-check-label, .was-validated .form-check-input:valid~.form-check-label{
-    color: #fff;
+    color: #4d4c4c;
+    font-weight: 900;
+
 }
 
 .form-content input[type=text], .form-content input[type=password], .form-content input[type=email], .form-content select {
@@ -86,10 +89,10 @@ html, body {
     border: 0;
     outline: 0;
     border-radius: 6px;
-    background-color: #fff;
+    background-color: #F7F7F7;
     font-size: 15px;
     font-weight: 300;
-    color: #8D8D8D;
+    color: #4d4c4c;
     -webkit-transition: all 0.3s ease;
     transition: all 0.3s ease;
     margin-top: 16px;
@@ -97,7 +100,7 @@ html, body {
 
 
 .btn-primary{
-    background-color: #6C757D;
+    background-color: #4d4c4c;
     outline: none;
     border: 0px;
      box-shadow: none;
@@ -110,17 +113,37 @@ html, body {
      box-shadow: none;
 }
 
+.form-control[type=file]:not(:disabled):not([readonly]) {
+    cursor: pointer;
+    background-color: #F7F7F7;
+    color: #4d4c4c;
+}
+
+input#FirstJobDay {
+    background-color: #F7F7F7;
+    color: #4d4c4c;
+}
+button#submit {
+    color: #4d4c4c;
+    background-color: #F7F7F7;
+    font-weight: 900;
+}
+input#GraduationTime {
+    background-color: #F7F7F7;
+    color: #4d4c4c;
+}
+
 .form-content textarea {
     position: static !important;
     width: 100%;
     padding: 8px 20px;
     border-radius: 6px;
     text-align: left;
-    background-color: #fff;
+    background-color: #F7F7F7;
     border: 0;
     font-size: 15px;
     font-weight: 300;
-    color: #8D8D8D;
+    color: #fff;
     outline: none;
     resize: none;
     height: 120px;
@@ -131,8 +154,8 @@ html, body {
 
 .form-content textarea:hover, .form-content textarea:focus {
     border: 0;
-    background-color: #ebeff8;
-    color: #8D8D8D;
+    background-color: #F7F7F7;
+    color: #4d4c4c;
 }
 
 .mv-up{

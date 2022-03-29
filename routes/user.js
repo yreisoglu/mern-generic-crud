@@ -2,11 +2,24 @@ const express = require("express");
 const UserModel = require("../models/UserModel");
 const router = express.Router();
 const Cryptr = require('cryptr');
+const multer = require("multer");
+
+const storage = multer.diskStorage({
+    destination: function (req, file, callback) {
+        callback(null, './images');
+    },
+    filename: function (req, file, callback) {
+        callback(null, Date.now() + '.jpg');
+    }
+});
+
+const upload = multer({ storage: storage });
+
 
 
 router.get("/", (req, res) => {
     const decryptedResponse = []
-    UserModel.find().sort({ $natural: -1 }).limit(10)
+    UserModel.find().sort({ $natural: -1 })
         .then(response => {
             response.forEach((item) => {
                 decryptedResponse.push(decryptResponse(item, req.headers.userssecretkey))
@@ -32,17 +45,27 @@ router.get("/get-user-by-id", (req, res) => {
         .catch(error => console.log(error))
 })
 
-router.post("/", (req, res) => {
+router.post("/", upload.single('file'), (req, res) => {
     const usersSecretKey = req.headers.userssecretkey;
-    const user = new UserModel(encryptBody(req.body, usersSecretKey))
-    user.save()
-        .then((response) => {
-            res.json(response);
-        })
-        .catch((error) => {
-            console.log(error);
-            res.statusCode = "404"
-        })
+    if (!req.file) {
+        console.log("No file received");
+        return res.send({
+            success: false
+        });
+
+    } else {
+        const user = new UserModel(encryptBody(req.body, usersSecretKey))
+        user.image = `/img/${req.file.filename}`
+
+        user.save()
+            .then((response) => {
+                res.json(response);
+            })
+            .catch((error) => {
+                console.log(error);
+                res.statusCode = "404"
+            })
+    }
 })
 
 
@@ -68,36 +91,13 @@ router.delete("/delete-multiple", (req, res) => {
 
 const decryptResponse = (response, usersSecretKey) => {
     const cryptr = new Cryptr(usersSecretKey);
-    const decryptedResponse = {
-        name: cryptr.decrypt(response.name),
-        surname: cryptr.decrypt(response.surname),
-        email: cryptr.decrypt(response.email),
-        image: cryptr.decrypt(response.image),
-        totalWorkTime: cryptr.decrypt(response.totalWorkTime),
-        university: cryptr.decrypt(response.university),
-        previousJob: cryptr.decrypt(response.previousJob),
-        skills: cryptr.decrypt(response.skills),
-        description: cryptr.decrypt(response.description),
-    }
-    return decryptedResponse
+    response.description = cryptr.decrypt(response.description);
+    return response
 }
 const encryptBody = (body, usersSecretKey) => {
     const cryptr = new Cryptr(usersSecretKey);
-    const encryptedBody = {
-        name: cryptr.encrypt(body.name),
-        surname: cryptr.encrypt(body.surname),
-        email: cryptr.encrypt(body.email),
-        image: cryptr.encrypt(body.image),
-        firstJobDay: body.firstJobDay,
-        totalWorkTime: cryptr.encrypt(body.totalWorkTime),
-        university: cryptr.encrypt(body.university),
-        graduationTime: body.graduationTime,
-        previousJob: cryptr.encrypt(body.previousJob),
-        skills: cryptr.encrypt(body.skills),
-        description: cryptr.encrypt(body.description),
-        createdAt: body.createdAt
-    }
-    return encryptedBody
+    body.description = cryptr.encrypt(body.description);
+    return body
 }
 
 module.exports = router

@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import DataTable from 'react-data-table-component';
 import styled from "styled-components";
 import "bootstrap/dist/css/bootstrap.min.css";
+import { useNavigate } from "react-router-dom";
 
 import { GetUserById, GetUsers } from "../methods/GetUsers";
+import { isExpired } from "../methods/Login";
 //import ReactDeleteRow from 'react-delete-row';
 
 
@@ -12,9 +14,13 @@ const UserList = () => {
     const [data, setData] = useState([]);
     const [selectedData, setSelectedData] = useState();
     const [quary, setQuary] = useState("");
-
+    const navigate = useNavigate();
     useEffect(() => {
-
+        isExpired().then(response => {
+            if (response) {
+                navigate("/login")
+            }
+        })
         GetUsers().then(response => {
 
             setData(response);
@@ -25,7 +31,7 @@ const UserList = () => {
     console.log(data);
 
 
-   
+
 
     const columnas = [
 
@@ -70,19 +76,19 @@ const UserList = () => {
 
         },
 
-     /*   {
+        /*   {
+   
+               name: "Actions",
+               cell: () => <button onClick={handleChange}>Delete</button>,
+               ignoreRowClick: true,
+               allowOverflow: true,
+               button:true
+   
+           },*/
 
-            name: "Actions",
-            cell: () => <button onClick={handleChange}>Delete</button>,
-            ignoreRowClick: true,
-            allowOverflow: true,
-            button:true
-
-        },*/
-       
     ];
 
-  
+
 
     const ExpandedComponent = ({ data }) => <pre>{JSON.stringify(data, null, 2)}</pre>;
 
@@ -103,20 +109,20 @@ const UserList = () => {
         );
     }
 
-   /* const handleChange = (state) => {
-        setSelectedData(state.setData);
-        console.log(data);
-      }; */
-      
-    
+    /* const handleChange = (state) => {
+         setSelectedData(state.setData);
+         console.log(data);
+       }; */
 
-  
+
+
+
     return (
 
         <div >
             <input className="search" type="text" placeholder="search..." value={quary} onChange={(e) => setQuary(e.target.value)} />
-           
-          
+
+
 
             <DataTable
 
@@ -128,11 +134,11 @@ const UserList = () => {
                 fixedHeader
                 fixedHeaderScrollHeight="600px"
                 selectableRows
-               // onSelectedRowsChange={handleChange}
+                // onSelectedRowsChange={handleChange}
                 expandableRows
                 expandableRowsComponent={ExpandedComponent}
-              
-              
+
+
             />
 
 

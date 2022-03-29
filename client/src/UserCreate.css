@@ -40,14 +40,14 @@ html, body {
 }
 
 .form-content .form-items {
-    border: 3px solid #4d4c4c;
+    border: 2px solid #4d4c4c;
     padding: 40px;
     display: inline-block;
     width: 100%;
     min-width: 540px;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    border-radius: 10px;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    border-radius: 6px;
     text-align: left;
     -webkit-transition: all 0.4s ease;
     transition: all 0.4s ease;

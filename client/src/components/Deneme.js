@@ -1,6 +1,6 @@
 import React, { useEffect, useState, forwardRef  } from "react";
 import MaterialTable from "material-table";
-import { DeleteUserById, GetUserById, GetUsers } from "../methods/GetUsers";
+//import { DeleteUserById, GetUserById, GetUsers } from "../methods/GetUsers";
 import { CsvBuilder } from 'filefy'; 
 import axios from 'axios';
 
@@ -120,7 +120,7 @@ const Deneme=()=>{
     ]
  
     const handleRowDelete = () => {
-      DeleteUserById(selectedRows.id).then(response => console.log(response));
+     // DeleteUserById(selectedRows.id).then(response => console.log(response));
      
     }
 

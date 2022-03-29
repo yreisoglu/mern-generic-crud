@@ -7,6 +7,7 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import UserList from './components/UserList';
 
 const App = () => {
   return (
@@ -15,7 +16,7 @@ const App = () => {
         <Route path="/" >
           <Route index element={<UserCreate />} />
           <Route path="login" element={<LoginPage />} />
-          <Route path='users' />
+          <Route path='users' element={<UserList />} />
         </Route>
       </Routes>
     </BrowserRouter>

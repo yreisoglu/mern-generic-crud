@@ -1,6 +1,6 @@
 import React, { useEffect, useState, forwardRef } from "react";
 import MaterialTable from "material-table";
-import { GetUserById, GetUsers } from "../methods/GetUsers";
+import { DeleteUsersByIds, GetUserById, GetUsers } from "../methods/GetUsers";
 //import { CsvBuilder } from 'filefy'; 
 import axios from 'axios';
 import AddBox from '@material-ui/icons/AddBox';

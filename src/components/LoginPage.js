@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { isExpired, Login } from "../methods/Login";
+import { isExpired, Login } from "../methods/Account";
 import { useNavigate } from "react-router-dom";
 import React from 'react';
 

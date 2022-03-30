@@ -213,7 +213,7 @@ const UserCreate = () => {
                                             </p>
                                         </div>
                                         <div className="form-group mt-1 col-md-6">
-                                            <label for="Description">About us</label>
+                                            <label for="Description">About</label>
                                             <textarea className="form-control" id="description" rows="1" onChange={(e) => setDescription(e.target.value)}></textarea>
                                             <p style={{ color: "red" }} className="mt-2">
                                                 {/* {DataErrors.description} */}

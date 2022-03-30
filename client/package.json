@@ -11,6 +11,8 @@
     "axios": "^0.26.1",
     "bootstrap": "^5.1.3",
     "crypto": "^1.0.1",
+    "docx": "^7.3.0",
+    "file-saver": "^2.0.5",
     "filefy": "^0.1.11",
     "formik": "^2.2.9",
     "jsonwebtoken": "^8.5.1",

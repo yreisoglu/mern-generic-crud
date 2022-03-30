@@ -134,10 +134,7 @@ const UserList = () => {
   /*  const exportAllSelectedRows=()=>{
   
 
-        new CsvBuilder("tableData.csv")
-         .setColumns(columnas.map(col=>col.title))
-         .addRows(selectedRows.map(rowData=>columnas.map(col=>rowData[col.field])))
-         .exportFile();
+        generate();
        
        } */
   return (

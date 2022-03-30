@@ -1,8 +1,7 @@
 import React, { useEffect, useState, forwardRef } from "react";
 import MaterialTable from "material-table";
-import { DeleteUsersByIds, GetUserById, GetUsers } from "../methods/GetUsers";
-import { CsvBuilder } from 'filefy';
-import axios from 'axios';
+import { DeleteUsersByIds, GetUsers } from "../methods/GetUsers";
+
 
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
@@ -36,7 +35,7 @@ import { Button } from "bootstrap";
 
 
 
-const Deneme = () => {
+const UserTable = () => {
 
 
 
@@ -319,4 +318,4 @@ const Deneme = () => {
   )
 }
 
-export default Deneme;
+export default UserTable;

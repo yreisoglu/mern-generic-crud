@@ -7,8 +7,8 @@ import {
   Route,
   Link
 } from "react-router-dom";
-import Deneme from './components/Deneme';
 import React from 'react';
+import UserTable from './components/UserTable';
 
 const App = () => {
   return (
@@ -17,7 +17,7 @@ const App = () => {
         <Route path="/" >
           <Route index element={<UserCreate />} />
           <Route path="login" element={<LoginPage />} />
-          <Route path='users' element={<Deneme />} />
+          <Route path='users' element={<UserTable />} />
         </Route>
       </Routes>
     </BrowserRouter>

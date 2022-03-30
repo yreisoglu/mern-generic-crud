@@ -7,7 +7,7 @@ import {
   Route,
   Link
 } from "react-router-dom";
-import UserList from './components/UserList';
+import Deneme from './components/Deneme';
 import React from 'react';
 
 const App = () => {
@@ -17,10 +17,12 @@ const App = () => {
         <Route path="/" >
           <Route index element={<UserCreate />} />
           <Route path="login" element={<LoginPage />} />
-          <Route path='users' element={<UserList />} />
+          <Route path='users' element={<Deneme />} />
         </Route>
       </Routes>
     </BrowserRouter>
+    
+   
   );
 }
 

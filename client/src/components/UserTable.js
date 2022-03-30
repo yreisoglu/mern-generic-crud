@@ -30,15 +30,7 @@ import { Button } from "bootstrap";
 
 //import { render } from "express/lib/response";
 
-
-
-
-
-
 const UserTable = () => {
-
-
-
   const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
     Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -75,67 +67,44 @@ const UserTable = () => {
   }, []);
 
   console.log(data);
-
-
-
-  const columnas = [
-
-    /*  {
-        title: '_id',
-        field: '_id',
-      },
-  */
+  const columns = [
     {
 
       title: 'image',
       field: 'image',
       /* render: data => <img src={data.image} style={{width: 50, borderRadius: '50%'}}/>, */
       render: rowData => (
-        <img
-          style={{ height: 36, borderRadius: '50%' }}
-          src={rowData.avatar}
-        />
+        <img style={{ height: 36, borderRadius: '50%' }} src={"https://mern-generic-crud.herokuapp.com" + rowData.image}/>
       ),
 
 
     },
     {
-
       title: 'name',
       field: 'name',
       searchable: true,
-
-
     },
 
     {
-
       title: 'surname',
       field: 'surname',
       searchable: true,
     },
     {
-
       title: 'firstJobDay',
       field: 'firstJobDay',
       searchable: true,
-
     },
     {
-
       title: 'university',
       field: 'university',
       searchable: true,
-
     },
     {
-
       title: 'description',
       field: 'description',
       searchable: true,
-
     },
-
     /* {
     
                 name: "Actions",
@@ -155,7 +124,7 @@ const UserTable = () => {
      }, */
   ]
 
-  const [tableData, setTableData] = useState(columnas);
+  const [tableData, setTableData] = useState(columns);
 
   const generate = (rowData) => {
     let objArr = [];
@@ -172,12 +141,12 @@ const UserTable = () => {
           level: 0 //How deep you want the bullet to be
         }
       });
-     let s = new Paragraph({
+      let s = new Paragraph({
         text: obj['university'] + " " + obj['description'],
         bullet: {
           level: 0 //How deep you want the bullet to be
         }
-      }); 
+      });
 
       objArr.push(p);
       objArr.push(s);
@@ -199,10 +168,6 @@ const UserTable = () => {
 
   };
 
-
-
-
-
   const exportAllSelectedRows = (rowData) => {
 
     let names = [];
@@ -211,9 +176,6 @@ const UserTable = () => {
       // name haricinde de ihtiyaç olan diğer tüm prop.ları bu şekilde alırsın
       names.push(name);
     }
-
-
-
   }
 
   return (
@@ -222,7 +184,7 @@ const UserTable = () => {
         icons={tableIcons}
         title="User List"
         data={data}
-        columns={columnas}
+        columns={columns}
 
         editable={{
           /*  onRowDelete: selectedRow => new Promise((resolve, reject) => {
@@ -239,7 +201,6 @@ const UserTable = () => {
 
         onSelectionChange={
           (rows) => setSelectedRows(rows)
-
         }
 
         actions={[
@@ -249,7 +210,6 @@ const UserTable = () => {
             onClick: () => DeleteUsersByIds(selectedRows)
           },
           {
-
             icon: () => <GetAppIcon />,
             /* render:rowData=>{
                return(
@@ -263,7 +223,6 @@ const UserTable = () => {
 
             onClick: (event, rowData) => generate(rowData),
           },
-
         ]}
 
         detailPanel={[
@@ -300,11 +259,7 @@ const UserTable = () => {
 
             },
           },
-
         ]}
-
-
-
 
         options={{
           sorting: true, search: true, searchFieldAlignment: "right", filtering: false, searchFieldVariant: "standard",

@@ -7,7 +7,7 @@ const HTTP = axios.create({
 
 export const GetUsers = async () => {
     return new Promise((resolve, reject) => {
-        HTTP.get('/user', { headers: { 'x-access-token': localStorage.getItem("jwt") } })
+        HTTP.get('/api/user', { headers: { 'x-access-token': localStorage.getItem("jwt") } })
             .then(response => {
                 resolve(response.data);
             }).catch(error => reject(error))
@@ -17,7 +17,7 @@ export const GetUsers = async () => {
 
 export const GetUserById = async (id) => {
     return new Promise((resolve, reject) => {
-        HTTP.get('/user/get-user-by-id', { params: { "id": id }, headers: { 'x-access-token': localStorage.getItem("jwt") } })
+        HTTP.get('/api/user/get-user-by-id', { params: { "id": id }, headers: { 'x-access-token': localStorage.getItem("jwt") } })
             .then(response => {
                 resolve(response.data)
             }).catch(error => {
@@ -32,7 +32,7 @@ export const DeleteUsersByIds = async (ids) => {
         token: localStorage.getItem("jwt")
     }
     return new Promise((resolve, reject) => {
-        HTTP.delete("/user/delete-multiple", { data: payload }).then(response => {
+        HTTP.delete("/api/user/delete-multiple", { data: payload }).then(response => {
             resolve(response.data)
         }).catch(error => {
             reject(error)

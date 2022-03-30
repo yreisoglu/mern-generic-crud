@@ -17,10 +17,10 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 const userRouter = require("./routes/user")
-app.use("/user", userRouter)
+app.use("/api/user", userRouter)
 
 const accountRouter = require("./routes/login");
-app.use("/account", accountRouter)
+app.use("/api/account", accountRouter)
 app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "/client/build/index.html"));
 });

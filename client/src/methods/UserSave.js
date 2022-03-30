@@ -5,7 +5,7 @@ const HTTP = axios.create({
 });
 
 export const UserSave = async (body) => {
-    await HTTP.post('/user', body)
+    await HTTP.post('/api/user', body)
         .then(response => console.log(response))
         .catch(error => console.log(error));
 };

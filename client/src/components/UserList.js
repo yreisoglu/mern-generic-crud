@@ -1,9 +1,8 @@
-import React, { useEffect, useState, forwardRef  } from "react";
+import React, { useEffect, useState, forwardRef } from "react";
 import MaterialTable from "material-table";
-import {  GetUserById, GetUsers } from "../methods/GetUsers";
+import { DeleteUsersByIds, GetUserById, GetUsers } from "../methods/GetUsers";
 //import { CsvBuilder } from 'filefy'; 
 import axios from 'axios';
-
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
 import Check from '@material-ui/icons/Check';
@@ -24,229 +23,203 @@ import GetAppIcon from '@material-ui/icons/GetApp';
 import DeleteIcon from '@material-ui/icons/Delete';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
+import { isExpired, Logout } from "../methods/Account";
+import { useNavigate } from "react-router-dom";
 
-import { Paragraph, Document, Packer } from "docx";
-import { saveAs } from "file-saver";
+const UserList = () => {
+  const navigate = useNavigate();
 
-const UserList=()=>{
-
-
-    const generate = () => {
-        const doc = new Document({
-          sections: [
-            {
-              children: [
-                new Paragraph({
-                  text: "Bullet points",
-                  bullet: {
-                    level: 0 //How deep you want the bullet to be
-                  }
-                }),
-                new Paragraph({
-                  text: "Are awesome",
-                  bullet: {
-                    level: 0
-                  }
-                })
-              ]
-            }
-          ]
-        });
-    
-        Packer.toBlob(doc).then((blob) => {
-          console.log(blob);
-          saveAs(blob, "example.docx");
-          console.log("Document created successfully");
-        });
-      };
-     
-
-    const tableIcons = {
-        Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
-        Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
-        Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-        Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
-        DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-        Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
-        Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
-        Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
-        FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
-        LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
-        NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-        PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
-        ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-        Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-        SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
-        ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
-        ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
-      };
+  const tableIcons = {
+    Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
+    Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
+    Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+    Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
+    DetailPanel: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+    Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
+    Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
+    Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
+    FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
+    LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
+    NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
+    PreviousPage: forwardRef((props, ref) => <ChevronLeft {...props} ref={ref} />),
+    ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
+    Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
+    SortArrow: forwardRef((props, ref) => <ArrowDownward {...props} ref={ref} />),
+    ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
+    ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
+  };
 
 
-    const [selectedRows,setSelectedRows]=useState([]);
-    const [data, setData] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [data, setData] = useState([]);
 
-    const [iserror, setIserror] = useState(false)
-    const [errorMessages, setErrorMessages] = useState([])
+  const [iserror, setIserror] = useState(false)
+  const [errorMessages, setErrorMessages] = useState([])
 
-    useEffect(() => {
+  useEffect(() => {
+    isExpired().then(res => {
+      console.log(res)
+      if (res || !localStorage.getItem("jwt")) {
+        navigate("/login")
+      }
+    })
+    GetUsers().then(response => {
 
-        GetUsers().then(response => {
+      setData(response);
+    });
+  }, []);
 
-            setData(response);
-        });
-    }, []);
-
-    console.log(data);
+  console.log(data);
 
 
-  
-    const columnas = [
 
-        {
+  const columnas = [
 
-            title: 'image',
-            field:'image',
-           /* render: data => <img src={data.image} style={{width: 50, borderRadius: '50%'}}/>, */
-           render: rowData => (
-            <img
-              style={{ height: 36, borderRadius: '50%' }}
-              src={rowData.avatar}
-            />
-          ),
-           
-           
-        },
-        {
+    {
 
-            title: 'name',
-            field:'name',
-            searchable:true,
-           
-        },
+      title: 'image',
+      field: 'image',
+      /* render: data => <img src={data.image} style={{width: 50, borderRadius: '50%'}}/>, */
+      render: rowData => (
+        <img
+          style={{ height: 36, borderRadius: '50%' }}
+          src={rowData.avatar}
+        />
+      ),
 
-        {
 
-            title: 'surname',
-            field:'surname',
-            searchable:true,
-        },
-        {
+    },
+    {
 
-            title: 'firstJobDay',
-            field:'firstJobDay',
-            searchable:true,
+      title: 'name',
+      field: 'name',
+      searchable: true,
 
-        },
-        {
+    },
 
-            title: 'university',
-            field:'university',
-            searchable:true,
+    {
 
-        },
-        {
+      title: 'surname',
+      field: 'surname',
+      searchable: true,
+    },
+    {
 
-            title: 'description',
-            field:'description',
-            searchable:true,
+      title: 'firstJobDay',
+      field: 'firstJobDay',
+      searchable: true,
 
-        },
-    ]
- 
-    const handleRowDelete = () => {
-     // DeleteUserById(selectedRows.id).then(response => console.log(response));
-     
-    }
+    },
+    {
+
+      title: 'university',
+      field: 'university',
+      searchable: true,
+
+    },
+    {
+
+      title: 'description',
+      field: 'description',
+      searchable: true,
+
+    },
+  ]
+
+  const handleRowDelete = () => {
+    // DeleteUserById(selectedRows.id).then(response => console.log(response));
+
+  }
 
   /*  const exportAllSelectedRows=()=>{
   
 
         generate();
        
-       } 
-       */
-    return(
-        <div>
-            <MaterialTable
-            icons={tableIcons}
-             title="User List"
-             data={data}
-             columns={columnas}
+       } */
+  return (
+    <div>
+      <MaterialTable
+        icons={tableIcons}
+        title="User List"
+        data={data}
+        columns={columnas}
 
-              editable={{
-              /*  onRowDelete: selectedRow => new Promise((resolve, reject) => {
-                    const index = selectedRow.tableData.id;
-                    const updatedRows = [...data]
-                    updatedRows.splice(index, 1)
-                    setTimeout(() => {
-                      setData(updatedRows)
-                      resolve()
-                    }, 2000)
-                  }), */
+        editable={{
+          /*  onRowDelete: selectedRow => new Promise((resolve, reject) => {
+                const index = selectedRow.tableData.id;
+                const updatedRows = [...data]
+                updatedRows.splice(index, 1)
+                setTimeout(() => {
+                  setData(updatedRows)
+                  resolve()
+                }, 2000)
+              }), */
 
-              }}
-
-              actions={[
-
-
-
-                  { icon:()=><GetAppIcon/>,
-                  onClick: () => generate()
-                
-                },
-                {
-                    icon: ()=><DeleteIcon/>,
-                    tooltip: "Delete all selected rows",
-                    onClick: () => handleRowDelete()
-                  }
-
-                
-              ]}
-
-            detailPanel={[
-                {
-                    icon:()=><KeyboardArrowRightIcon/>,
-                    openIcon:()=><KeyboardArrowDownIcon/>,
-                    tooltip: 'Show Both',
-                    render: rowData => {
-                      return (
-                        <div
-                          style={{
-                            fontSize: 16,
-                            textAlign: 'start',
-                            color: 'black',
-                           
-                           
-                          }}
-                        >
-                            <p >Name: {rowData.name}</p>
-                           <br/> 
-                           <p >Sur Name: {rowData.surname}</p>
-                           <br/>
-                           <p >First JobDay: {rowData.firstJobDay}</p>  
-                          <br/> 
-                          <p >University: {rowData.university}</p> 
-                           <br/>
-                           <p >Description: {rowData.description}</p>  
-                           <br/>
-                        </div>
-                      )
-                    },
-                  },
-              
-            ]}
-              
-
-              onSelectionChange={(rows)=>setSelectedRows(rows)}
-               
-                options={{sorting:true, search:true, searchFieldAlignment:"right", filtering:false, searchFieldVariant:"standard",
-            paging:false, exportButton:true, actionsColumnIndex:-1,exportAllData:true,showTextRowsSelected:false, 
-            showSelectAllCheckbox:false ,selection:true, addRowPosition: "first"
-        
         }}
-            />
-        </div>
-    )
+
+        actions={[
+
+
+
+          { //icon:()=><GetAppIcon/>,
+            //onClick: () => exportAllSelectedRows()
+
+          },
+          {
+            icon: () => <DeleteIcon />,
+            tooltip: "Delete all selected rows",
+            onClick: () => handleRowDelete()
+          }
+
+
+        ]}
+
+        detailPanel={[
+          {
+            icon: () => <KeyboardArrowRightIcon />,
+            openIcon: () => <KeyboardArrowDownIcon />,
+            tooltip: 'Show Both',
+            render: rowData => {
+              return (
+                <div
+                  style={{
+                    fontSize: 16,
+                    textAlign: 'start',
+                    color: 'black',
+
+
+                  }}
+                >
+                  <p >Name: {rowData.name}</p>
+                  <br />
+                  <p >Sur Name: {rowData.surname}</p>
+                  <br />
+                  <p >First JobDay: {rowData.firstJobDay}</p>
+                  <br />
+                  <p >University: {rowData.university}</p>
+                  <br />
+                  <p >Description: {rowData.description}</p>
+                  <br />
+                </div>
+              )
+            },
+          },
+
+        ]}
+
+
+        onSelectionChange={(rows) => setSelectedRows(rows)}
+
+        options={{
+          sorting: true, search: true, searchFieldAlignment: "right", filtering: false, searchFieldVariant: "standard",
+          paging: false, exportButton: true, actionsColumnIndex: -1, exportAllData: true, showTextRowsSelected: false,
+          showSelectAllCheckbox: false, selection: true, addRowPosition: "first"
+
+        }}
+      />
+    </div>
+  )
 }
 
 export default UserList;

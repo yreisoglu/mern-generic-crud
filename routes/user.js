@@ -3,38 +3,45 @@ const UserModel = require("../models/UserModel");
 const router = express.Router();
 const Cryptr = require('cryptr');
 const multer = require("multer");
+const auth = require("../middleware/auth")
+
+const usersSecretKey = process.env.USERS_SECRET_KEY
 
 const storage = multer.diskStorage({
     destination: function (req, file, callback) {
         callback(null, './images');
     },
     filename: function (req, file, callback) {
-        callback(null, Date.now() + '.jpg');
+        let fileType;
+        if (file.mimetype === 'image/png') {
+            fileType = '.png'
+        } else if (file.mimetype === 'image/jpeg') {
+            fileType = '.jpg'
+        }
+        callback(null, Date.now() + fileType);
     }
 });
 
 const upload = multer({ storage: storage });
 
 
-
-router.get("/", (req, res) => {
+router.get("/", auth, (req, res) => {
     const decryptedResponse = []
     UserModel.find().sort({ $natural: -1 })
         .then(response => {
             response.forEach((item) => {
-                decryptedResponse.push(decryptResponse(item, req.headers.userssecretkey))
+                decryptedResponse.push(decryptResponse(item))
             })
             res.json(decryptedResponse)
         })
         .catch(error => console.log(error));
 })
 
-router.get("/get-user-by-id", (req, res) => {
-    const usersSecretKey = req.headers.userssecretkey;
+router.get("/get-user-by-id", auth, (req, res) => {
     UserModel.findById(req.query.id)
         .then(response => {
             try {
-                res.json(decryptResponse(response, usersSecretKey))
+                res.json(decryptResponse(response))
             }
             catch {
                 res.json({ "error": "Bad Authenticate data" })
@@ -46,7 +53,6 @@ router.get("/get-user-by-id", (req, res) => {
 })
 
 router.post("/", upload.single('file'), (req, res) => {
-    const usersSecretKey = req.headers.userssecretkey;
     if (!req.file) {
         console.log("No file received");
         return res.send({
@@ -54,7 +60,7 @@ router.post("/", upload.single('file'), (req, res) => {
         });
 
     } else {
-        const user = new UserModel(encryptBody(req.body, usersSecretKey))
+        const user = new UserModel(encryptBody(req.body))
         user.image = `/img/${req.file.filename}`
 
         user.save()
@@ -69,32 +75,32 @@ router.post("/", upload.single('file'), (req, res) => {
 })
 
 
-router.put("/", async (req, res) => {
+router.put("/", auth, async (req, res) => {
 
-    let newObject = encryptBody(req.body, req.headers.userssecretkey);
+    let newObject = encryptBody(req.body);
     UserModel.findByIdAndUpdate(req.body._id, newObject)
-        .then(response => res.json(decryptResponse(response, req.headers.userssecretkey)))
+        .then(response => res.json(decryptResponse(response)))
         .catch(error => console.log(error))
 
 });
 
-router.delete("/", (req, res) => {
+router.delete("/", auth, (req, res) => {
     UserModel.findByIdAndDelete(req.body._id).then(response => res.json(response)).catch(error => console.log(error))
 })
 
-router.delete("/delete-multiple", (req, res) => {
+router.delete("/delete-multiple", auth, (req, res) => {
     const ids = req.body["ids"];
     UserModel.deleteMany({ _id: { $in: ids } }).then(response => res.json(response)).catch(error => console.log(error))
 })
 
 
 
-const decryptResponse = (response, usersSecretKey) => {
+const decryptResponse = (response) => {
     const cryptr = new Cryptr(usersSecretKey);
     response.description = cryptr.decrypt(response.description);
     return response
 }
-const encryptBody = (body, usersSecretKey) => {
+const encryptBody = (body) => {
     const cryptr = new Cryptr(usersSecretKey);
     body.description = cryptr.encrypt(body.description);
     return body

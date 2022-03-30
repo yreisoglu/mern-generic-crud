@@ -25,7 +25,41 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 
+import { Paragraph, Document, Packer } from "docx";
+import { saveAs } from "file-saver";
+
 const UserList=()=>{
+
+
+    const generate = () => {
+        const doc = new Document({
+          sections: [
+            {
+              children: [
+                new Paragraph({
+                  text: "Bullet points",
+                  bullet: {
+                    level: 0 //How deep you want the bullet to be
+                  }
+                }),
+                new Paragraph({
+                  text: "Are awesome",
+                  bullet: {
+                    level: 0
+                  }
+                })
+              ]
+            }
+          ]
+        });
+    
+        Packer.toBlob(doc).then((blob) => {
+          console.log(blob);
+          saveAs(blob, "example.docx");
+          console.log("Document created successfully");
+        });
+      };
+     
 
     const tableIcons = {
         Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -127,12 +161,10 @@ const UserList=()=>{
   /*  const exportAllSelectedRows=()=>{
   
 
-        new CsvBuilder("tableData.csv")
-         .setColumns(columnas.map(col=>col.title))
-         .addRows(selectedRows.map(rowData=>columnas.map(col=>rowData[col.field])))
-         .exportFile();
+        generate();
        
-       } */
+       } 
+       */
     return(
         <div>
             <MaterialTable
@@ -158,8 +190,8 @@ const UserList=()=>{
 
 
 
-                  { //icon:()=><GetAppIcon/>,
-                  //onClick: () => exportAllSelectedRows()
+                  { icon:()=><GetAppIcon/>,
+                  onClick: () => generate()
                 
                 },
                 {

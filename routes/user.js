@@ -9,7 +9,14 @@ const storage = multer.diskStorage({
         callback(null, './images');
     },
     filename: function (req, file, callback) {
-        callback(null, Date.now() + '.jpg');
+        let fileType;
+        if(file.mimetype === 'image/png'){
+            fileType = '.png'
+        }else if(file.mimetype === 'image/jpeg'){
+            fileType = '.jpg'
+        }
+        console.log(file);
+        callback(null, Date.now() + fileType);
     }
 });
 
@@ -55,7 +62,7 @@ router.post("/", upload.single('file'), (req, res) => {
 
     } else {
         const user = new UserModel(encryptBody(req.body, usersSecretKey))
-        user.image = `/img/${req.file.filename}`
+        user.image = `/images/${req.file.filename}`
 
         user.save()
             .then((response) => {

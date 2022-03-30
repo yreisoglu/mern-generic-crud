@@ -50,6 +50,7 @@ router.post("/login", async (req, res) => {
 
         if (!(username, password)) {
             res.status(400).send("All input is required")
+            return
         }
         const account = await Account.findOne({ username });
 
@@ -58,14 +59,16 @@ router.post("/login", async (req, res) => {
                 { account_id: account._id, username },
                 process.env.TOKEN_KEY,
                 {
-                    expiresIn: "9h"
+                    expiresIn: "24h"
                 }
             );
             account.token = token;
 
             res.status(200).json(account)
+            return
         }
         res.status(400).send("Invalid Credentials");
+        return
     } catch (error) {
         console.log(error)
     }
@@ -77,7 +80,9 @@ router.post("/is-expired", (req, res) => {
     const decodedToken = jwt.decode(req.body.token, { complete: true });
     if (decodedToken.payload.exp < Date.now() / 1000) {
         res.send(true)
+        return
     }
     res.send(false)
+    return
 })
 module.exports = router

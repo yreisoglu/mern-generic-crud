@@ -9,12 +9,17 @@ const storage = multer.diskStorage({
         callback(null, './images');
     },
     filename: function (req, file, callback) {
-        callback(null, Date.now() + '.jpg');
+        let fileType;
+        if(file.mimetype === 'image/png'){
+            fileType = '.png'
+        }else if(file.mimetype === 'image/jpeg'){
+            fileType = '.jpg'
+        }
+        callback(null, Date.now() + fileType);
     }
 });
 
 const upload = multer({ storage: storage });
-
 
 
 router.get("/", (req, res) => {

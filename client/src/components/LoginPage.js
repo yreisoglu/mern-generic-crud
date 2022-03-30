@@ -10,11 +10,11 @@ const LoginPage = () => {
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
     useEffect(() => {
-        // isExpired().then(res => {
-        //     if (!res) {
-        //         navigate("/users")
-        //     }
-        // })
+        isExpired().then(res => {
+            if (!res) {
+                navigate("/users")
+            }
+        })
     }, [])
     const handleLogin = () => {
         Login(username, password)
@@ -50,11 +50,11 @@ const LoginPage = () => {
                                 <div className="row">
                                     <div className="form-group col-md-12">
                                         <label for="name">Username</label>
-                                        <input type="text" className="form-control" id="name" placeholder="Username" onChange={(e) => { setUsername(e.target.value) }}/>
+                                        <input type="text" className="form-control" id="name" placeholder="Username" onChange={(e) => { setUsername(e.target.value) }} />
                                     </div>
                                     <div className="form-group col-md-12">
                                         <label for="Surname">Password</label>
-                                        <input type="password" className="form-control" id="surname" placeholder="Password" onChange={(e) => { setPassword(e.target.value) }}/>
+                                        <input type="password" className="form-control" id="surname" placeholder="Password" onChange={(e) => { setPassword(e.target.value) }} />
                                     </div>
                                 </div>
                                 <div style={{ textAlign: 'center' }} class="form-button mt-3">

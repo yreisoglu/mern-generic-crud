@@ -136,7 +136,7 @@ const UserCreate = () => {
                                             {formik.touched.skills && formik.errors.skills ? <p className="formikValidate">{formik.errors.skills}</p> : null}
                                         </div>
                                         <div className="form-group mt-1 col-md-6">
-                                            <label for="Description">About us</label>
+                                            <label for="Description">About</label>
                                             <textarea className="form-control" name="description" onBlur={formik.handleBlur} id="description" rows="1" onChange={formik.handleChange} value={formik.values.description}></textarea>
                                             {formik.touched.description && formik.errors.description ? <p className="formikValidate">{formik.errors.description}</p> : null}
                                         </div>

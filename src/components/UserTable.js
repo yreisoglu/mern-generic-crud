@@ -133,6 +133,9 @@ const UserTable = () => {
   const [tableData, setTableData] = useState(columns);
 
   const generate = async (rowData) => {
+
+
+
     let objArr = [];
     let obj = {};
     console.log(rowData)
@@ -142,146 +145,116 @@ const UserTable = () => {
       obj['university'] = rowData[i].university;
       obj['description'] = rowData[i].description;
       obj['image'] = "https://mern-generic-crud.herokuapp.com" + rowData[i].image
-      let p = new Paragraph({
-        text: obj['name'] + " " + obj['surname'],
-        bullet: {
-          level: 0 //How deep you want the bullet to be
-        }
-      });
+
+      const awaitBanner = await fetch(banner);
+      console.log(obj['image']);
+      const image = await fetch(obj['image']);
+
+      const borders = {
+        top: {
+          style: BorderStyle.NONE,
+          size: 1,
+
+        },
+        bottom: {
+          style: BorderStyle.NONE,
+          size: 1,
+
+        },
+        left: {
+          style: BorderStyle.NONE,
+          size: 1,
+        },
+        right: {
+          style: BorderStyle.NONE,
+          size: 1,
+        },
+      };
+
       let s = new Paragraph({
-        text: obj['university'] + " " + obj['description'],
-        bullet: {
-          level: 0 //How deep you want the bullet to be
-        }
+        children: [
+          new ImageRun({
+            data: await awaitBanner.blob(),
+            transformation: {
+              width: 795,
+              height: 200
+
+            },
+
+            floating: {
+              horizontalPosition: {
+                offset: 1000, // relative: HorizontalPositionRelativeFrom.PAGE by default
+              },
+              verticalPosition: {
+                offset: 1000, // relative: VerticalPositionRelativeFrom.PAGE by default
+              },
+            }
+          })
+        ]
       });
 
-      objArr.push(p);
-      objArr.push(s);
-    }
+      let s1 = new Paragraph({
+        children: [],  // Just newline without text
+      });
 
-    /* const doc = new Document({
-      sections: [
-        {
-          children: objArr
-        }
-      ]
-    }); */
-    const awaitBanner = await fetch(banner);
-    console.log(obj['image'])
-    const image = await fetch(obj['image'])
 
-    const borders = {
-      top: {
-        style: BorderStyle.NONE,
-        size: 1,
+      let t = new Table({
+        borders: borders,
+        rows: [
+          new TableRow({
 
-      },
-      bottom: {
-        style: BorderStyle.NONE,
-        size: 1,
-
-      },
-      left: {
-        style: BorderStyle.NONE,
-        size: 1,
-      },
-      right: {
-        style: BorderStyle.NONE,
-        size: 1,
-      },
-    };
-
-    const doc = new Document({
-      sections: [{
-        children: [
-          new Paragraph({
             children: [
-              new ImageRun({
-                data: await awaitBanner.blob(),
-                transformation: {
-                  width: 795,
-                  height: 200
+              new TableCell({
+                borders: borders,
 
+                width: {
+                  size: 50,
+                  type: WidthType.PERCENTAGE
                 },
-
-                floating: {
-                  horizontalPosition: {
-                    offset: 1000, // relative: HorizontalPositionRelativeFrom.PAGE by default
-                  },
-                  verticalPosition: {
-                    offset: 1000, // relative: VerticalPositionRelativeFrom.PAGE by default
-                  },
-                }
-              })
-            ]
-          }),
-
-          new Paragraph({
-            children: [],  // Just newline without text
-          }), new Paragraph({
-            children: [],  // Just newline without text
-          }), new Paragraph({
-            children: [],  // Just newline without text
-          }), new Paragraph({
-            children: [],  // Just newline without text
-          }), new Paragraph({
-            children: [],  // Just newline without text
-          }), new Paragraph({
-            children: [],  // Just newline without text
-          }), new Paragraph({
-            children: [],  // Just newline without text
-          }), new Paragraph({
-            children: [],  // Just newline without text
-          }), new Paragraph({
-            children: [],  // Just newline without text
-          }),
-
-          new Table({
-            borders: borders,
-            rows: [
-              new TableRow({
-
                 children: [
-                  new TableCell({
-                    borders: borders,
-
-                    width: {
-                      size: 50,
-                      type: WidthType.PERCENTAGE
-                    },
+                  new Paragraph({
                     children: [
-                      new Paragraph({
-                        children: [
-                          new ImageRun({
-                            data: await image.blob(),
-                            transformation: {
-                              width: 165,
-                              height: 165
-                            },
-                          }),
-                        ]
-                      })
+                      new ImageRun({
+                        data: await image.blob(),
+                        transformation: {
+                          width: 165,
+                          height: 165
+                        },
+                      }),
                     ]
-                  }),
-                  new TableCell({
-                    borders: borders,
-                    verticalAlign: VerticalAlign.CENTER,
+                  })
+                ]
+              }),
+              new TableCell({
+                borders: borders,
+                verticalAlign: VerticalAlign.CENTER,
+                children: [
+                  new Paragraph({
                     children: [
-                      new Paragraph({
-                        children: [
-                          new TextRun({
-                            text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum delectus, iure rem alias officia quaerat mollitia quibusdam excepturi! Sed, culpa. Accusantium ducimus commodi nisi quod nam aut excepturi ipsam culpa!"
-                          })
-                        ]
+                      new TextRun({
+                        text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum delectus, iure rem alias officia quaerat mollitia quibusdam excepturi! Sed, culpa. Accusantium ducimus commodi nisi quod nam aut excepturi ipsam culpa!"
                       })
                     ]
                   })
                 ]
               })
             ]
-          }),
-
+          })
         ]
+      });
+      objArr.push(s);
+      for (let j = 0; j < 9; j++) {
+        objArr.push(s1);
+      }
+
+      objArr.push(t);
+
+    }
+
+
+    const doc = new Document({
+      sections: [{
+        children: objArr
       }]
     })
 
@@ -293,16 +266,6 @@ const UserTable = () => {
 
   };
 
-  const exportAllSelectedRows = (rowData) => {
-
-    let names = [];
-    for (let i = 0; i < rowData.length; i++) {
-      let name = rowData[i].name;
-      // name haricinde de ihtiyaç olan diğer tüm prop.ları bu şekilde alırsın
-      names.push(name);
-    }
-  }
-
   return (
     <div>
       <MaterialTable
@@ -312,15 +275,6 @@ const UserTable = () => {
         columns={columns}
 
         editable={{
-          /*  onRowDelete: selectedRow => new Promise((resolve, reject) => {
-                const index = selectedRow.tableData.id;
-                const updatedRows = [...data]
-                updatedRows.splice(index, 1)
-                setTimeout(() => {
-                  setData(updatedRows)
-                  resolve()
-                }, 2000)
-              }), */
 
         }}
 
@@ -336,15 +290,7 @@ const UserTable = () => {
           },
           {
             icon: () => <GetAppIcon />,
-            /* render:rowData=>{
-               return(
-                 <div>
-                    <button onClick= {generate(rowData.name)}></button>
-                 </div>
-               )
-             },
-             */
-            //onClick:()=>exportAllSelectedRows()
+        
 
             onClick: (event, rowData) => generate(rowData),
           },
@@ -389,7 +335,7 @@ const UserTable = () => {
         options={{
           sorting: true, search: true, searchFieldAlignment: "right", filtering: false, searchFieldVariant: "standard",
           paging: false, exportButton: true, actionsColumnIndex: -1, exportAllData: true, showTextRowsSelected: false,
-          showSelectAllCheckbox: false, selection: true, addRowPosition: "first", filtering: true
+          showSelectAllCheckbox: true, selection: true, addRowPosition: "first", filtering: true
 
         }}
 

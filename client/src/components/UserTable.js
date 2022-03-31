@@ -1,7 +1,8 @@
 import React, { useEffect, useState, forwardRef } from "react";
 import MaterialTable from "material-table";
 import { DeleteUsersByIds, GetUsers } from "../methods/GetUsers";
-import { isExpired } from '../methods/Account'
+import { isExpired } from '../methods/Account';
+import '../UserCreate.css';
 
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
@@ -30,6 +31,7 @@ import { useNavigate } from "react-router-dom";
 
 
 import banner from '../Assets/banner.jpg'
+import UserEdit from "./UserEdit";
 
 //import { render } from "express/lib/response";
 
@@ -144,7 +146,7 @@ const UserTable = () => {
       obj['surname'] = rowData[i].surname;
       obj['university'] = rowData[i].university;
       obj['description'] = rowData[i].description;
-      obj['image'] = "https://mern-generic-crud.herokuapp.com" + rowData[i].image
+      obj['image'] =  rowData[i].image;
 
       const awaitBanner = await fetch(banner);
       console.log(obj['image']);
@@ -267,7 +269,8 @@ const UserTable = () => {
   };
 
   return (
-    <div>
+    <div className="container">
+      <div className="row mt-4">
       <MaterialTable
         icons={tableIcons}
         title="User List"
@@ -303,29 +306,7 @@ const UserTable = () => {
             tooltip: 'Show Both',
             render: rowData => {
               return (
-                <div
-                  style={{
-                    fontSize: 16,
-                    textAlign: 'start',
-                    color: 'black',
-
-
-                  }}
-                >
-                  <p >Name: {rowData.name}</p>
-                  <br />
-                  <p >Sur Name: {rowData.surname}</p>
-                  <br />
-                  <p >First JobDay: {rowData.firstJobDay}</p>
-                  <br />
-                  <p >University: {rowData.university}</p>
-                  <br />
-                  <p >Description: {rowData.description}</p>
-                  <br />
-
-
-                </div>
-
+                <UserEdit data={rowData}></UserEdit>
               )
 
             },
@@ -338,8 +319,8 @@ const UserTable = () => {
           showSelectAllCheckbox: true, selection: true, addRowPosition: "first", filtering: true
 
         }}
-
       />
+      </div>
     </div>
   )
 }

@@ -22,6 +22,7 @@ const serviceAccount = {
     "client_x509_cert_url": process.env.client_x509_cert_url
 };
 
+
 const admin = firebaseAdmin.initializeApp({
     credential: firebaseAdmin.credential.cert(serviceAccount)
 })

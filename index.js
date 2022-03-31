@@ -23,10 +23,10 @@ app.use("/api/user", userRouter)
 const accountRouter = require("./routes/login");
 app.use("/api/account", accountRouter)
 app.get("*", (req, res) => {
-    res.sendFile(path.join(__dirname, "/client/build/index.html"));
+  res.sendFile(path.join(__dirname, "/client/build/index.html"));
 });
 
 
 app.listen(port, () => {
-    console.log(`Server running on port ${port}`);
+  console.log(`Server running on port ${port}`);
 });

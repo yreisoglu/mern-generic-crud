@@ -81,7 +81,7 @@ const UserTable = () => {
       field: 'image',
       /* render: data => <img src={data.image} style={{width: 50, borderRadius: '50%'}}/>, */
       render: rowData => (
-        <img style={{ height: 36, borderRadius: '50%' }} src={"https://mern-generic-crud.herokuapp.com" + rowData.image} />
+        <img style={{ height: 36, borderRadius: '50%' }} src={rowData.image} />
       ),
 
     },

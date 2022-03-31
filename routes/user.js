@@ -101,9 +101,12 @@ router.post("/", upload.single('file'), async (req, res) => {
 })
 
 
-router.put("/", auth, async (req, res) => {
-
+router.put("/", auth, upload.single("file"), async (req, res) => {
     let newObject = encryptBody(req.body);
+    await storageRef.upload(req.file.path, { public: true }).then(snapshot => {
+        console.log(snapshot[0].metadata.mediaLink);
+        newObject.image = snapshot[0].metadata.mediaLink
+    })
     UserModel.findByIdAndUpdate(req.body._id, newObject)
         .then(response => res.json(decryptResponse(response)))
         .catch(error => console.log(error))
@@ -123,12 +126,14 @@ router.delete("/delete-multiple", auth, (req, res) => {
 
 const decryptResponse = (response) => {
     const cryptr = new Cryptr(usersSecretKey);
-    response.description = cryptr.decrypt(response.description);
+    const decrpytedData = cryptr.decrypt(response.description);
+    response.description = decrpytedData;
     return response
 }
 const encryptBody = (body) => {
     const cryptr = new Cryptr(usersSecretKey);
-    body.description = cryptr.encrypt(body.description);
+    const encryptedData = cryptr.encrypt(body.description)
+    body.description = encryptedData;
     return body
 }
 

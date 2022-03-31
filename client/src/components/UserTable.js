@@ -81,7 +81,7 @@ const UserTable = () => {
 
       title: 'image',
       field: 'image',
-      filtering:false,
+      filtering: false,
       /* render: data => <img src={data.image} style={{width: 50, borderRadius: '50%'}}/>, */
       render: rowData => (
         <img style={{ height: 36, borderRadius: '50%' }} src={rowData.image} />
@@ -117,6 +117,31 @@ const UserTable = () => {
 
     let objArr = [];
     let obj = {};
+
+    const awaitBanner = await fetch(banner);
+
+    let s = new Paragraph({
+      children: [
+        new ImageRun({
+          data: await awaitBanner.blob(),
+          transformation: {
+            width: 795,
+            height: 200
+
+          },
+
+          floating: {
+            horizontalPosition: {
+              offset: 1000,
+            },
+            verticalPosition: {
+              offset: 1000,
+            },
+          }
+        })
+      ]
+    });
+    objArr.push(s)
     console.log(rowData)
     for (let i = 0; i < rowData.length; i++) {
       obj['name'] = rowData[i].name;
@@ -126,8 +151,6 @@ const UserTable = () => {
       obj['description'] = rowData[i].description;
       obj['image'] = rowData[i].image
 
-      const awaitBanner = await fetch(banner);
-      console.log(obj['image']);
       const image = await fetch(obj['image']);
 
       const borders = {
@@ -151,30 +174,10 @@ const UserTable = () => {
         },
       };
 
-      let s = new Paragraph({
-        children: [
-          new ImageRun({
-            data: await awaitBanner.blob(),
-            transformation: {
-              width: 795,
-              height: 200
 
-            },
-
-            floating: {
-              horizontalPosition: {
-                offset: 1000, 
-              },
-              verticalPosition: {
-                offset: 1000, 
-              },
-            }
-          })
-        ]
-      });
 
       let s1 = new Paragraph({
-        children: [],  
+        children: [],
       });
 
 
@@ -208,21 +211,22 @@ const UserTable = () => {
               new TableCell({
                 borders: borders,
                 verticalAlign: VerticalAlign.CENTER,
-              
+
                 children: [
                   new Paragraph({
                     children: [
                       new TextRun({
-                        text: obj['name'] + " " + obj['surname']+", "+obj['firstJobDay'], bold:true}),
-                      new TextRun({text: " tarihi itibariyle"}),
-                      new TextRun({text: "Orion Innovation Türkiye ",bold:true}),
-                      new TextRun({text: "ailesine "}),
-                      new TextRun({text: "Teknoloji Grubu Mühendisi ",bold:true}),
-                      new TextRun({text: "olarak katılmıştır."}),
+                        text: obj['name'] + " " + obj['surname'] + ", " + obj['firstJobDay'], bold: true
+                      }),
+                      new TextRun({ text: " tarihi itibariyle" }),
+                      new TextRun({ text: "Orion Innovation Türkiye ", bold: true }),
+                      new TextRun({ text: "ailesine " }),
+                      new TextRun({ text: "Teknoloji Grubu Mühendisi ", bold: true }),
+                      new TextRun({ text: "olarak katılmıştır." }),
                     ]
                   }),
                   new Paragraph({
-                    children: [],  
+                    children: [],
                   }),
 
                   new Paragraph({
@@ -234,25 +238,25 @@ const UserTable = () => {
                   }),
 
                   new Paragraph({
-                    children: [],  
+                    children: [],
                   }),
 
                   new Paragraph({
                     children: [
-                      new TextRun({text: "NRD2208 - *CIM TASARIM* ",bold:true}),
+                      new TextRun({ text: "NRD2208 - *CIM TASARIM* ", bold: true }),
                       new TextRun({
-                        text:  "ekibimizde işe başlayan "+obj['name']+" "+obj['surname']+"'a 'Orion Innovation Türkiye’ye hoş geldin' der, yeni görevinde başarılar dileriz."
+                        text: "ekibimizde işe başlayan " + obj['name'] + " " + obj['surname'] + "'a 'Orion Innovation Türkiye’ye hoş geldin' der, yeni görevinde başarılar dileriz."
                       }),
                     ]
                   }),
                   new Paragraph({
-                    children: [],  
+                    children: [],
                   }),
 
                   new Paragraph({
                     children: [
-                      new TextRun({text: "İnsan Kaynakları Departmanı"}),
-                    ],  
+                      new TextRun({ text: "İnsan Kaynakları Departmanı" }),
+                    ],
                   }),
 
                 ]
@@ -288,55 +292,55 @@ const UserTable = () => {
   return (
     <div className="container">
       <div className="row mt-4">
-      <MaterialTable
-        icons={tableIcons}
-        title="User List"
-        data={data}
-        columns={columns}
+        <MaterialTable
+          icons={tableIcons}
+          title="User List"
+          data={data}
+          columns={columns}
 
-        editable={{
+          editable={{
 
-        }}
+          }}
 
-        onSelectionChange={
-          (rows) => setSelectedRows(rows)
-        }
+          onSelectionChange={
+            (rows) => setSelectedRows(rows)
+          }
 
-        actions={[
-          {
-            icon: () => <DeleteIcon />,
-            tooltip: "Delete all selected rows And REFRESH THE PAGE!",
-            onClick: () => DeleteUsersByIds(selectedRows)
-          },
-          {
-            icon: () => <GetAppIcon />,
-        
-
-            onClick: (event, rowData) => generate(rowData),
-          },
-        ]}
-
-        detailPanel={[
-          {
-            icon: () => <KeyboardArrowRightIcon />,
-            openIcon: () => <KeyboardArrowDownIcon />,
-            tooltip: 'Show Both',
-            render: rowData => {
-              return (
-                <UserEdit data={rowData}></UserEdit>
-              )
-
+          actions={[
+            {
+              icon: () => <DeleteIcon />,
+              tooltip: "Delete all selected rows And REFRESH THE PAGE!",
+              onClick: () => DeleteUsersByIds(selectedRows)
             },
-          },
-        ]}
+            {
+              icon: () => <GetAppIcon />,
 
-        options={{
-          sorting: true, search: true, searchFieldAlignment: "right", filtering: false, searchFieldVariant: "standard",
-          paging: false, exportButton: false, actionsColumnIndex: -1, exportAllData: true, showTextRowsSelected: false,
-          showSelectAllCheckbox: true, selection: true, addRowPosition: "first", filtering: true
 
-        }}
-      />
+              onClick: (event, rowData) => generate(rowData),
+            },
+          ]}
+
+          detailPanel={[
+            {
+              icon: () => <KeyboardArrowRightIcon />,
+              openIcon: () => <KeyboardArrowDownIcon />,
+              tooltip: 'Show Both',
+              render: rowData => {
+                return (
+                  <UserEdit data={rowData}></UserEdit>
+                )
+
+              },
+            },
+          ]}
+
+          options={{
+            sorting: true, search: true, searchFieldAlignment: "right", filtering: false, searchFieldVariant: "standard",
+            paging: false, exportButton: false, actionsColumnIndex: -1, exportAllData: true, showTextRowsSelected: false,
+            showSelectAllCheckbox: true, selection: true, addRowPosition: "first", filtering: true
+
+          }}
+        />
       </div>
     </div>
   )

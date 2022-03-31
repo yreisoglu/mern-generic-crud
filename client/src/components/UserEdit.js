@@ -15,10 +15,10 @@ const UserEdit = (props) => {
             surname: props.data.surname,
             email: props.data.email,
             // fileName: "",
-            firstJobDay: props.data.firstJobDay.substring(0,10),
+            firstJobDay: props.data.firstJobDay ? props.data.firstJobDay.substring(0,10) : null,
             totalWorkTime: props.data.totalWorkTime,
             university: props.data.university,
-            graduationTime: props.data.graduationTime.substring(0,10),
+            graduationTime: props.data.graduationTime ? props.data.graduationTime.substring(0,10) : null,
             previousJob: props.data.previousJob,
             skills: props.data.skills,
             description: props.data.description,
@@ -78,7 +78,9 @@ const UserEdit = (props) => {
                 <div className="form-group mt-2 col-md-6">
                   <div className="form-group">
                     <label className="mb-3" for="file">Current Photo</label>
-                    <img style={{ height: 100, borderRadius: '50%' }} src={"https://mern-generic-crud.herokuapp.com" + formik.values.image} />
+                    <div className="currentPhoto">
+                        <img className="currentPhotoImg" src={props.data.image} />
+                    </div>
                   </div>
                 </div>
                 <div className="form-group mt-2 col-md-6">

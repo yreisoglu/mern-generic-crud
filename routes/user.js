@@ -29,7 +29,6 @@ const admin = firebaseAdmin.initializeApp({
 })
 const storageRef = admin.storage().bucket(`gs://mern-generic-crud.appspot.com`);
 
-=======
 
 
 const storage = multer.diskStorage({
@@ -86,8 +85,10 @@ router.post("/", upload.single('file'), async (req, res) => {
 
     } else {
         const user = new UserModel(encryptBody(req.body))
-        user.image = `/img/${req.file.filename}`
-
+        await storageRef.upload(req.file.path, { public: true }).then(snapshot => {
+            console.log(snapshot[0].metadata.mediaLink);
+            user.image = snapshot[0].metadata.mediaLink
+        })
         user.save()
             .then((response) => {
                 res.json(response);

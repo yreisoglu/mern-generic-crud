@@ -7,6 +7,7 @@ const auth = require("../middleware/auth")
 
 const usersSecretKey = process.env.USERS_SECRET_KEY
 
+
 const firebaseAdmin = require('firebase-admin');
 
 const serviceAccount = {
@@ -27,6 +28,8 @@ const admin = firebaseAdmin.initializeApp({
     credential: firebaseAdmin.credential.cert(serviceAccount)
 })
 const storageRef = admin.storage().bucket(`gs://mern-generic-crud.appspot.com`);
+
+=======
 
 
 const storage = multer.diskStorage({
@@ -74,7 +77,6 @@ router.get("/get-user-by-id", auth, (req, res) => {
         .catch(error => console.log(error))
 })
 
-
 router.post("/", upload.single('file'), async (req, res) => {
     if (!req.file) {
         console.log("No file received");
@@ -84,10 +86,8 @@ router.post("/", upload.single('file'), async (req, res) => {
 
     } else {
         const user = new UserModel(encryptBody(req.body))
-        await storageRef.upload(req.file.path, { public: true }).then(snapshot => {
-            console.log(snapshot[0].metadata.mediaLink);
-            user.image = snapshot[0].metadata.mediaLink
-        })
+        user.image = `/img/${req.file.filename}`
+
         user.save()
             .then((response) => {
                 res.json(response);

@@ -8,7 +8,6 @@ const auth = require("../middleware/auth")
 const usersSecretKey = process.env.USERS_SECRET_KEY
 
 const firebaseAdmin = require('firebase-admin');
-const { v4: uuidv4 } = require('uuid');
 
 const serviceAccount = {
     "type": process.env.type,
@@ -74,15 +73,6 @@ router.get("/get-user-by-id", auth, (req, res) => {
         .catch(error => console.log(error))
 })
 
-const uploadToFirebase = async (path, filename) => {
-    // Upload the File
-    const storage = await storageRef.upload(path, {
-        public: true,
-    });
-
-
-    return storage[0].metadata.mediaLink;
-}
 
 router.post("/", upload.single('file'), async (req, res) => {
     if (!req.file) {

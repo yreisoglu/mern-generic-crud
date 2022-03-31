@@ -7,6 +7,7 @@ const auth = require("../middleware/auth")
 
 const usersSecretKey = process.env.USERS_SECRET_KEY
 
+
 const storage = multer.diskStorage({
     destination: function (req, file, callback) {
         callback(null, './images');
@@ -52,7 +53,7 @@ router.get("/get-user-by-id", auth, (req, res) => {
         .catch(error => console.log(error))
 })
 
-router.post("/", upload.single('file'), (req, res) => {
+router.post("/", upload.single('file'), async (req, res) => {
     if (!req.file) {
         console.log("No file received");
         return res.send({

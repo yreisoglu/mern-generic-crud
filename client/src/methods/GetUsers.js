@@ -26,6 +26,12 @@ export const GetUserById = async (id) => {
     })
 }
 
+export const UpdateUser = async (body) => {
+    await HTTP.put('/api/user', body)
+    .then(response => console.log(response))
+    .catch(error => console.log(error));
+};
+
 export const DeleteUsersByIds = async (ids) => {
     let payload = {
         ids: ids,

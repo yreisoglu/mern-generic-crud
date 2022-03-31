@@ -81,6 +81,7 @@ const UserTable = () => {
 
       title: 'image',
       field: 'image',
+      filtering:false,
       /* render: data => <img src={data.image} style={{width: 50, borderRadius: '50%'}}/>, */
       render: rowData => (
         <img style={{ height: 36, borderRadius: '50%' }} src={rowData.image} />
@@ -108,35 +109,11 @@ const UserTable = () => {
       field: 'university',
       searchable: true,
     },
-    {
-      title: 'description',
-      field: 'description',
-      searchable: true,
-    },
-    /* {
-    
-                name: "Actions",
-                render: rowData=>{
-                  return(
-                    <div>
-                       <button onClick={generate(rowData.name)}>Download</button>
-                    </div>
-                  
-                  )
-                },
-               
-                ignoreRowClick: true,
-                allowOverflow: true,
-                button:true
-    
-     }, */
   ]
 
   const [tableData, setTableData] = useState(columns);
 
   const generate = async (rowData) => {
-
-
 
     let objArr = [];
     let obj = {};
@@ -144,9 +121,10 @@ const UserTable = () => {
     for (let i = 0; i < rowData.length; i++) {
       obj['name'] = rowData[i].name;
       obj['surname'] = rowData[i].surname;
+      obj['firstJobDay'] = rowData[i].firstJobDay;
       obj['university'] = rowData[i].university;
       obj['description'] = rowData[i].description;
-      obj['image'] =  rowData[i].image;
+      obj['image'] = rowData[i].image
 
       const awaitBanner = await fetch(banner);
       console.log(obj['image']);
@@ -185,10 +163,10 @@ const UserTable = () => {
 
             floating: {
               horizontalPosition: {
-                offset: 1000, // relative: HorizontalPositionRelativeFrom.PAGE by default
+                offset: 1000, 
               },
               verticalPosition: {
-                offset: 1000, // relative: VerticalPositionRelativeFrom.PAGE by default
+                offset: 1000, 
               },
             }
           })
@@ -196,7 +174,7 @@ const UserTable = () => {
       });
 
       let s1 = new Paragraph({
-        children: [],  // Just newline without text
+        children: [],  
       });
 
 
@@ -210,7 +188,7 @@ const UserTable = () => {
                 borders: borders,
 
                 width: {
-                  size: 50,
+                  size: 30,
                   type: WidthType.PERCENTAGE
                 },
                 children: [
@@ -230,14 +208,53 @@ const UserTable = () => {
               new TableCell({
                 borders: borders,
                 verticalAlign: VerticalAlign.CENTER,
+              
                 children: [
                   new Paragraph({
                     children: [
                       new TextRun({
-                        text: "Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ipsum delectus, iure rem alias officia quaerat mollitia quibusdam excepturi! Sed, culpa. Accusantium ducimus commodi nisi quod nam aut excepturi ipsam culpa!"
+                        text: obj['name'] + " " + obj['surname']+", "+obj['firstJobDay'], bold:true}),
+                      new TextRun({text: " tarihi itibariyle"}),
+                      new TextRun({text: "Orion Innovation Türkiye ",bold:true}),
+                      new TextRun({text: "ailesine "}),
+                      new TextRun({text: "Teknoloji Grubu Mühendisi ",bold:true}),
+                      new TextRun({text: "olarak katılmıştır."}),
+                    ]
+                  }),
+                  new Paragraph({
+                    children: [],  
+                  }),
+
+                  new Paragraph({
+                    children: [
+                      new TextRun({
+                        text: obj['description']
                       })
                     ]
-                  })
+                  }),
+
+                  new Paragraph({
+                    children: [],  
+                  }),
+
+                  new Paragraph({
+                    children: [
+                      new TextRun({text: "NRD2208 - *CIM TASARIM* ",bold:true}),
+                      new TextRun({
+                        text:  "ekibimizde işe başlayan "+obj['name']+" "+obj['surname']+"'a 'Orion Innovation Türkiye’ye hoş geldin' der, yeni görevinde başarılar dileriz."
+                      }),
+                    ]
+                  }),
+                  new Paragraph({
+                    children: [],  
+                  }),
+
+                  new Paragraph({
+                    children: [
+                      new TextRun({text: "İnsan Kaynakları Departmanı"}),
+                    ],  
+                  }),
+
                 ]
               })
             ]
@@ -315,7 +332,7 @@ const UserTable = () => {
 
         options={{
           sorting: true, search: true, searchFieldAlignment: "right", filtering: false, searchFieldVariant: "standard",
-          paging: false, exportButton: true, actionsColumnIndex: -1, exportAllData: true, showTextRowsSelected: false,
+          paging: false, exportButton: false, actionsColumnIndex: -1, exportAllData: true, showTextRowsSelected: false,
           showSelectAllCheckbox: true, selection: true, addRowPosition: "first", filtering: true
 
         }}

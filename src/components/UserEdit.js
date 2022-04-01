@@ -6,7 +6,7 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 const UserEdit = (props) => {
-    
+
     const [fileName, setFileName] = useState("");
     
     const formik = useFormik({
@@ -44,6 +44,7 @@ const UserEdit = (props) => {
             }
             
             form_data.append("file",fileName);
+            form_data.append("_id",props.data._id);
             UpdateUser(form_data);
         }
     });

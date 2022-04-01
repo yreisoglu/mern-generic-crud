@@ -29,11 +29,8 @@ import { Paragraph, Document, Packer, ImageRun, Table, TableRow, TableCell, Rela
 import { saveAs } from "file-saver";
 import { useNavigate } from "react-router-dom";
 
-
 import banner from '../Assets/banner.jpg'
 import UserEdit from "./UserEdit";
-
-//import { render } from "express/lib/response";
 
 const UserTable = () => {
   const tableIcons = {
@@ -56,7 +53,6 @@ const UserTable = () => {
     ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
   };
 
-
   const [selectedRows, setSelectedRows] = useState([]);
   const [data, setData] = useState([]);
 
@@ -72,42 +68,51 @@ const UserTable = () => {
     })
     GetUsers().then(response => {
       setData(response);
+      
     });
   }, []);
 
-  console.log(data);
   const columns = [
     {
 
-      title: 'image',
+      title: 'Image',
       field: 'image',
       filtering: false,
+      searchable: false,
       /* render: data => <img src={data.image} style={{width: 50, borderRadius: '50%'}}/>, */
       render: rowData => (
         <img style={{ height: 36, borderRadius: '50%' }} src={rowData.image} />
       ),
 
+      sorting: false
     },
     {
-      title: 'name',
+      title: 'Name',
       field: 'name',
       searchable: true,
+      sorting: false
     },
 
     {
-      title: 'surname',
+      title: 'Surname',
       field: 'surname',
       searchable: true,
+      sorting: false
     },
     {
-      title: 'firstJobDay',
+
+
+      title: 'first Job Day',
       field: 'firstJobDay',
+      type: 'date',
       searchable: true,
+      sorting: true
     },
     {
-      title: 'university',
+      title: 'University',
       field: 'university',
       searchable: true,
+      sorting: false
     },
   ]
 
@@ -175,11 +180,9 @@ const UserTable = () => {
       };
 
 
-
       let s1 = new Paragraph({
         children: [],
       });
-
 
       let t = new Table({
         borders: borders,
@@ -211,20 +214,24 @@ const UserTable = () => {
               new TableCell({
                 borders: borders,
                 verticalAlign: VerticalAlign.CENTER,
-
+                
                 children: [
+                  
                   new Paragraph({
                     children: [
                       new TextRun({
-                        text: obj['name'] + " " + obj['surname'] + ", " + obj['firstJobDay'], bold: true
+                        text: obj['name'] + " " + obj['surname'] + ", " + obj['firstJobDay'].substring(0, 10), bold: true,
+                       size:24, font:"Calibri"
+                      
                       }),
-                      new TextRun({ text: " tarihi itibariyle" }),
-                      new TextRun({ text: "Orion Innovation Türkiye ", bold: true }),
-                      new TextRun({ text: "ailesine " }),
-                      new TextRun({ text: "Teknoloji Grubu Mühendisi ", bold: true }),
-                      new TextRun({ text: "olarak katılmıştır." }),
+                      new TextRun({ text: " tarihi itibariyle ", size:24, font:"Calibri" }),
+                      new TextRun({ text: "Orion Innovation Türkiye ", bold: true, size:24, font:"Calibri" }),
+                      new TextRun({ text: "ailesine ", size:24, font:"Calibri"}),
+                      new TextRun({ text: "Teknoloji Grubu Mühendisi ", bold: true, size:24, font:"Calibri"}),
+                      new TextRun({ text: "olarak katılmıştır.", size:24, font:"Calibri" }),
                     ]
                   }),
+
                   new Paragraph({
                     children: [],
                   }),
@@ -232,7 +239,7 @@ const UserTable = () => {
                   new Paragraph({
                     children: [
                       new TextRun({
-                        text: obj['description']
+                        text: obj['description'], size:22, font:"Calibri"
                       })
                     ]
                   }),
@@ -243,9 +250,10 @@ const UserTable = () => {
 
                   new Paragraph({
                     children: [
-                      new TextRun({ text: "NRD2208 - *CIM TASARIM* ", bold: true }),
+                      new TextRun({ text: "NRD2208 - *CIM TASARIM* ", bold: true, size:24, font:"Calibri" }),
                       new TextRun({
-                        text: "ekibimizde işe başlayan " + obj['name'] + " " + obj['surname'] + "'a 'Orion Innovation Türkiye’ye hoş geldin' der, yeni görevinde başarılar dileriz."
+                        text: "ekibimizde işe başlayan " + obj['name'] + " " + obj['surname'] + "'a 'Orion Innovation Türkiye’ye hoş geldin' der, yeni görevinde başarılar dileriz.",
+                        size:24, font:"Calibri"
                       }),
                     ]
                   }),
@@ -255,7 +263,7 @@ const UserTable = () => {
 
                   new Paragraph({
                     children: [
-                      new TextRun({ text: "İnsan Kaynakları Departmanı" }),
+                      new TextRun({ text: "İnsan Kaynakları Departmanı", size:24, font:"Calibri" }),
                     ],
                   }),
 
@@ -268,11 +276,8 @@ const UserTable = () => {
       for (let j = 0; j < 9; j++) {
         objArr.push(s1);
       }
-
       objArr.push(t);
-
     }
-
 
     const doc = new Document({
       sections: [{
@@ -309,7 +314,9 @@ const UserTable = () => {
             {
               icon: () => <DeleteIcon />,
               tooltip: "Delete all selected rows And REFRESH THE PAGE!",
-              onClick: () => DeleteUsersByIds(selectedRows)
+              onClick: () => DeleteUsersByIds(selectedRows).then(
+                window.location.reload(true)
+              )
             },
             {
               icon: () => <GetAppIcon />,

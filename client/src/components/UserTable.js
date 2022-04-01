@@ -265,7 +265,6 @@ const UserTable = () => {
           })
         ]
       });
-      objArr.push(s);
       for (let j = 0; j < 9; j++) {
         objArr.push(s1);
       }

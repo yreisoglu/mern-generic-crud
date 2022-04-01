@@ -14,7 +14,7 @@ const serviceAccount = {
     "type": process.env.type,
     "project_id": process.env.project_id,
     "private_key_id": process.env.private_key_id,
-    "private_key": process.env.private_key,
+    "private_key": process.env.private_key.replace(/\\n/g, '\n'),
     "client_email": process.env.client_email,
     "client_id": process.env.client_id,
     "auth_uri": process.env.auth_uri,
@@ -50,86 +50,130 @@ const upload = multer({ storage: storage });
 
 
 router.get("/", auth, (req, res) => {
-    const decryptedResponse = []
-    UserModel.find().sort({ $natural: -1 })
-        .then(response => {
-            response.forEach((item) => {
-                decryptedResponse.push(decryptResponse(item))
+    try {
+        const decryptedResponse = []
+        UserModel.find().sort({ $natural: -1 })
+            .then(response => {
+                response.forEach((item) => {
+                    decryptedResponse.push(decryptResponse(item))
+                })
+                res.json(decryptedResponse)
             })
-            res.json(decryptedResponse)
-        })
-        .catch(error => console.log(error));
+            .catch(error => console.log(error));
+    } catch (error) {
+        console.log(error)
+    }
+
 })
 
 router.get("/get-user-by-id", auth, (req, res) => {
-    UserModel.findById(req.query.id)
-        .then(response => {
-            try {
-                res.json(decryptResponse(response))
-            }
-            catch {
-                res.json({ "error": "Bad Authenticate data" })
-                res.statusCode = "401"
-            }
+    try {
+        UserModel.findById(req.query.id)
+            .then(response => {
+                try {
+                    res.json(decryptResponse(response))
+                }
+                catch {
+                    res.json({ "error": "Bad Authenticate data" })
+                    res.statusCode = "401"
+                }
 
-        })
-        .catch(error => console.log(error))
-})
-
-router.post("/", upload.single('file'), async (req, res) => {
-    if (!req.file) {
-        console.log("No file received");
-        return res.send({
-            success: false
-        });
-
-    } else {
-        const user = new UserModel(encryptBody(req.body))
-        await storageRef.upload(req.file.path, { public: true }).then(snapshot => {
-            console.log(snapshot[0].metadata.mediaLink);
-            user.image = snapshot[0].metadata.mediaLink
-        })
-        user.save()
-            .then((response) => {
-                res.json(response);
             })
-            .catch((error) => {
-                console.log(error);
-                res.statusCode = "404"
-            })
+            .catch(error => console.log(error))
+    } catch (error) {
+        console.log(error)
     }
 })
 
+router.post("/", upload.single('file'), async (req, res) => {
+    try {
+        if (!req.file) {
+            console.log("No file received");
+            return res.send({
+                success: false
+            });
 
-router.put("/", auth, async (req, res) => {
+        } else {
+            const user = new UserModel(encryptBody(req.body))
+            await storageRef.upload(req.file.path, { public: true }).then(snapshot => {
+                console.log(snapshot[0].metadata.mediaLink);
+                user.image = snapshot[0].metadata.mediaLink
+            })
+            user.save()
+                .then((response) => {
+                    res.json(response);
+                })
+                .catch((error) => {
+                    console.log(error);
+                    res.statusCode = "404"
+                })
+        }
+    } catch (error) {
+        console.log(error)
+    }
 
-    let newObject = encryptBody(req.body);
-    UserModel.findByIdAndUpdate(req.body._id, newObject)
-        .then(response => res.json(decryptResponse(response)))
-        .catch(error => console.log(error))
+})
 
+
+router.put("/", auth, upload.single("file"), async (req, res) => {
+    try {
+        let newObject = encryptBody(req.body);
+        await storageRef.upload(req.file.path, { public: true }).then(snapshot => {
+            console.log(snapshot[0].metadata.mediaLink);
+            newObject.image = snapshot[0].metadata.mediaLink
+        })
+        UserModel.findByIdAndUpdate(req.body._id, newObject)
+            .then(response => res.json(decryptResponse(response)))
+            .catch(error => console.log(error))
+    } catch (error) {
+        console.log(error)
+    }
 });
 
 router.delete("/", auth, (req, res) => {
-    UserModel.findByIdAndDelete(req.body._id).then(response => res.json(response)).catch(error => console.log(error))
+    try {
+        UserModel.findByIdAndDelete(req.body._id).then(response => res.json(response)).catch(error => console.log(error))
+
+    } catch (error) {
+        console.log(error)
+    }
 })
 
 router.delete("/delete-multiple", auth, (req, res) => {
-    const ids = req.body["ids"];
-    UserModel.deleteMany({ _id: { $in: ids } }).then(response => res.json(response)).catch(error => console.log(error))
+    try {
+        const ids = req.body["ids"];
+        UserModel.deleteMany({ _id: { $in: ids } }).then(response => res.json(response)).catch(error => console.log(error))
+    } catch (error) {
+        console.log(error)
+    }
+
 })
 
 
 
 const decryptResponse = (response) => {
-    const cryptr = new Cryptr(usersSecretKey);
-    response.description = cryptr.decrypt(response.description);
-    return response
+    try {
+        const cryptr = new Cryptr(usersSecretKey);
+        const decrpytedData = cryptr.decrypt(response.description);
+        response.description = decrpytedData;
+        return response
+    } catch (error) {
+        console.log(error)
+    }
+
+
 }
 const encryptBody = (body) => {
-    const cryptr = new Cryptr(usersSecretKey);
-    body.description = cryptr.encrypt(body.description);
-    return body
+    try {
+        const cryptr = new Cryptr(usersSecretKey);
+        const encryptedData = cryptr.encrypt(body.description)
+        body.description = encryptedData;
+        return body
+    } catch (error) {
+        console.log(error)
+    }
+
+
 }
 
 module.exports = router

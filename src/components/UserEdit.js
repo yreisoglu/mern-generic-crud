@@ -6,12 +6,14 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 const UserEdit = (props) => {
+
   const urlToObject = async (image) => {
     const response = await fetch(image);
     const blob = await response.blob();
     const file = new File([blob], 'image.jpg', { type: blob.type });
     return (file);
   }
+
 
   const [fileName, setFileName] = useState("");
 
@@ -21,6 +23,7 @@ const UserEdit = (props) => {
       surname: props.data.surname,
       email: props.data.email,
       // fileName: "",
+
       firstJobDay: props.data.firstJobDay ? props.data.firstJobDay.substring(0, 10) : null,
       totalWorkTime: props.data.totalWorkTime,
       university: props.data.university,
@@ -42,6 +45,7 @@ const UserEdit = (props) => {
       skills: Yup.string().min(50, "Skills must be at least 50 characters").required(),
       description: Yup.string().min(150, "Description must be at least 150 characters").required(),
     }),
+
     onSubmit: async (values) => {
       var form_data = new FormData();
 
@@ -60,6 +64,7 @@ const UserEdit = (props) => {
       }
 
       form_data.append("_id", props.data._id);
+
       UpdateUser(form_data);
     }
   });
@@ -94,9 +99,11 @@ const UserEdit = (props) => {
             <div className="form-group mt-2 col-md-6">
               <div className="form-group">
                 <label className="mb-3" for="file">Current Photo</label>
+
                 <div className="currentPhoto">
                   <img className="currentPhotoImg" src={props.data.image} />
                 </div>
+
               </div>
             </div>
             <div className="form-group mt-2 col-md-6">

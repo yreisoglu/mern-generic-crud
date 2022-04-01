@@ -55,8 +55,6 @@ const UserEdit = (props) => {
       }
 
 
-      form_data.append("file", fileName);
-
       if (fileName == "") {
         form_data.append("file", await urlToObject(props.data.image))
       } else {

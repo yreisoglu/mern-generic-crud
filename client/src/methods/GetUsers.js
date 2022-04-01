@@ -27,8 +27,9 @@ export const GetUserById = async (id) => {
 }
 
 export const UpdateUser = async (body) => {
-    console.log(body)
-    await HTTP.put('/api/user', body, { headers: { 'x-access-token': localStorage.getItem("jwt") } })
+
+    await HTTP.put('/api/user', body, { headers: { "x-access-token": localStorage.getItem("jwt") } })
+
         .then(response => console.log(response))
         .catch(error => console.log(error));
 };

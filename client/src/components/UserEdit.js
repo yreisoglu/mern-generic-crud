@@ -7,6 +7,14 @@ import * as Yup from "yup";
 
 const UserEdit = (props) => {
 
+  const urlToObject = async (image) => {
+    const response = await fetch(image);
+    const blob = await response.blob();
+    const file = new File([blob], 'image.jpg', { type: blob.type });
+    return (file);
+  }
+
+
   const [fileName, setFileName] = useState("");
 
   const formik = useFormik({
@@ -15,10 +23,11 @@ const UserEdit = (props) => {
       surname: props.data.surname,
       email: props.data.email,
       // fileName: "",
-      firstJobDay: props.data.firstJobDay.substring(0, 10),
+
+      firstJobDay: props.data.firstJobDay ? props.data.firstJobDay.substring(0, 10) : null,
       totalWorkTime: props.data.totalWorkTime,
       university: props.data.university,
-      graduationTime: props.data.graduationTime.substring(0, 10),
+      graduationTime: props.data.graduationTime ? props.data.graduationTime.substring(0, 10) : null,
       previousJob: props.data.previousJob,
       skills: props.data.skills,
       description: props.data.description,
@@ -36,19 +45,25 @@ const UserEdit = (props) => {
       skills: Yup.string().min(50, "Skills must be at least 50 characters").required(),
       description: Yup.string().min(150, "Description must be at least 150 characters").required(),
     }),
-    onSubmit: (values) => {
+
+    onSubmit: async (values) => {
       var form_data = new FormData();
+
 
       for (var key in values) {
         form_data.append(key, values[key]);
       }
-      console.log(formik.values.image)
+
+
+      form_data.append("file", fileName);
+
       if (fileName == "") {
-        form_data.append("file",formik.values.image)
+        form_data.append("file", await urlToObject(props.data.image))
       } else {
         form_data.append("file", fileName);
-
       }
+
+      form_data.append("_id", props.data._id);
 
       UpdateUser(form_data);
     }
@@ -84,7 +99,11 @@ const UserEdit = (props) => {
             <div className="form-group mt-2 col-md-6">
               <div className="form-group">
                 <label className="mb-3" for="file">Current Photo</label>
-                <img style={{ height: 100, borderRadius: '50%' }} src={"https://mern-generic-crud.herokuapp.com" + formik.values.image} />
+
+                <div className="currentPhoto">
+                  <img className="currentPhotoImg" src={props.data.image} />
+                </div>
+
               </div>
             </div>
             <div className="form-group mt-2 col-md-6">

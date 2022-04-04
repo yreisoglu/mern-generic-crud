@@ -35,7 +35,7 @@ const LoginPage = () => {
                 <div className="row">
                     <div className="form-holder">
                         <div className="form-content">
-                            <div className="form-items">
+                            <div className="form-items login">
                                 <div className="row">
                                     <div className="form-group col-md-9">
                                         <h3>LOG IN</h3>
@@ -47,14 +47,14 @@ const LoginPage = () => {
                                         </Link>
                                     </div>
                                 </div>
-                                <div className="row">
+                                <div className="row mt-4">
                                     <div className="form-group col-md-12">
                                         <label for="name">Username</label>
-                                        <input type="text" className="form-control" id="name" placeholder="Username" onChange={(e) => { setUsername(e.target.value) }} />
+                                        <input type="text" className="form-control" id="name" onChange={(e) => { setUsername(e.target.value) }} />
                                     </div>
-                                    <div className="form-group col-md-12">
+                                    <div className="form-group mt-4 col-md-12">
                                         <label for="Surname">Password</label>
-                                        <input type="password" className="form-control" id="surname" placeholder="Password" onChange={(e) => { setPassword(e.target.value) }} />
+                                        <input type="password" className="form-control" id="surname" onChange={(e) => { setPassword(e.target.value) }} />
                                     </div>
                                 </div>
                                 <div style={{ textAlign: 'center' }} class="form-button mt-3">

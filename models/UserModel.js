@@ -1,56 +1,56 @@
 const mongoose = require("mongoose");
-const Schema  = mongoose.Schema;
+const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
     fullname: {
         type: String,
-        required: true,
         default: ""
     },
     email: {
         type: String,
-        required: true,
         default: ""
     },
     image: {
         type: String,
-        required: true,
         default: ""
     },
     firstJobDay: Date,
     totalWorkTime: {
         type: String,
-        required: true,
-        default: ""
+        default: "",
+        maxlength: 64
     },
     university: {
         type: String,
-        required: true,
-        default: ""
+        default: "",
+        maxlength: 64
     },
     graduationTime: {
         type: String,
-        required: true,
         default: ""
     },
     previousJob: {
         type: String,
-        required: true,
-        default: ""
+        default: "",
+        maxlength: 64
     },
     skills: {
         type: String,
-        required: true,
-        default: ""
+        default: "",
+        maxlength: 1024
     },
     description: {
         type: String,
-        required: true,
-        default: ""
+        default: "",
+        maxlength: 1024
     },
     createdAt: {
         type: Date,
         default: new Date()
+    },
+    department: {
+        type: String,
+        default: ""
     }
 });
 

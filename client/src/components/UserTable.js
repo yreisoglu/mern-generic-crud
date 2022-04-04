@@ -145,16 +145,16 @@ const UserTable = () => {
 
   return (
 
-    <div className="container" background-color="#F7F7F7">
+    <div className="container">
 
-      <div className="row mt-4">
+      <div className="row">
 
         <MaterialTable
           icons={tableIcons}
           title="Employees List"
           data={data}
           columns={columns}
-
+        
 
           localization={{
             body: {
@@ -183,9 +183,13 @@ const UserTable = () => {
               icon: () => <DeleteIcon />,
 
               tooltip: "Delete all selected rows",
-              onClick: () => DeleteUsersByIds(selectedRows).then(
-                window.location.reload(true)
-              ) 
+              onClick: () => DeleteUsersByIds(selectedRows)
+                .then(response => {
+                  if (response.deletedCount > 0) {
+                    window.location.reload(true)
+                  }
+                }
+                )
 
             },
             {

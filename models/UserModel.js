@@ -42,7 +42,6 @@ const UserSchema = new Schema({
     description: {
         type: String,
         default: "",
-        maxlength: 1024
     },
     createdAt: {
         type: Date,

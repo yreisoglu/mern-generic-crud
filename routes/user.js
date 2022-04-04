@@ -27,6 +27,13 @@ const serviceAccount = {
 const admin = firebaseAdmin.initializeApp({
     credential: firebaseAdmin.credential.cert(serviceAccount)
 })
+
+const parseImageName = (url) => {
+    const endOfURL = url.split("/o/")
+    const parsedUrl = endOfURL[1].split("?generation")
+    return (parsedUrl[0])
+}
+
 const storageRef = admin.storage().bucket(`gs://mern-generic-crud.appspot.com`);
 
 
@@ -141,7 +148,21 @@ router.delete("/", auth, (req, res) => {
 router.delete("/delete-multiple", auth, (req, res) => {
     try {
         const ids = req.body["ids"];
-        UserModel.deleteMany({ _id: { $in: ids } }).then(response => res.json(response)).catch(error => console.log(error))
+        let images;
+        UserModel.find({ "_id": { $in: ids } }, { "image": 1 }).then(response => { images = response }).then(() => {
+            UserModel.deleteMany({ _id: { $in: ids } })
+                .then(response => {
+                    for (var index in images) {
+                        storageRef.file(parseImageName(images[index].image))
+                            .delete()
+                            .then(res => console.log(res[0].body))
+                            .catch(err => console.log(err))
+
+                    }
+                    res.json(response)
+                })
+                .catch(error => console.log(error))
+        })
     } catch (error) {
         console.log(error)
     }

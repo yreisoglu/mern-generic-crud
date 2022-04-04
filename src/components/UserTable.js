@@ -145,9 +145,9 @@ const UserTable = () => {
 
   return (
 
-    <div className="container" background-color="#F7F7F7">
+    <div className="container">
 
-      <div className="row mt-4">
+      <div className="row">
 
         <MaterialTable
           icons={tableIcons}

@@ -4,6 +4,8 @@ import { UserSave } from '../methods/UserSave';
 import { Link } from "react-router-dom";
 import { ErrorMessage, useFormik } from "formik";
 import * as Yup from "yup";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const UserCreate = () => {
 
@@ -59,18 +61,31 @@ const UserCreate = () => {
             for (var key in values) {
                 form_data.append(key, values[key]);
             }
-            UserSave(form_data).then(
+            UserSave(form_data).then(() => {
+                toast.success("Succesful !")
                 setTimeout(() => {
                     resetForm();
                 }, 2000)
-            ).catch(
-                error => console.log(error),
-            );
+            }).catch(() => {
+                toast.error("Error ! Please try again !")
+            });
         }
     });
 
     return (
         <div className="container">
+            <ToastContainer
+                position="top-right"
+                autoClose={1000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+                />
+            <ToastContainer />
             <div className="form-body">
                 <div className="row">
                     <div className="form-holder">
@@ -91,7 +106,7 @@ const UserCreate = () => {
                                     <div className="row mt-4">
                                         <div className="form-group col-md-6 col-sm-12">
                                             <label for="Surname">Full Name</label>
-                                            <input type="text" className="form-control" id="fullname" onBlur={formik.handleBlur} placeholder="name surname" name="fullname" onChange={formik.handleChange} value={formik.values.fullname}/>
+                                            <input type="text" className="form-control" id="fullname" onBlur={formik.handleBlur} placeholder="Name Surname" name="fullname" onChange={formik.handleChange} value={formik.values.fullname}/>
                                             {formik.touched.fullname && formik.errors.fullname ? <p className="formikValidate">{formik.errors.fullname}</p> : null}
                                         </div>
                                         <div className="form-group col-md-6 col-sm-12">

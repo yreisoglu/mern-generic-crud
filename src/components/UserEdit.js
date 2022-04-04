@@ -3,6 +3,8 @@ import '../UserCreate.css';
 import { UpdateUser } from '../methods/GetUsers';
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const UserEdit = (props) => {
 
@@ -55,9 +57,9 @@ const UserEdit = (props) => {
       graduationTime: Yup.date().required("Graduation is a required field"),
       previousJob: Yup.string().required("Previous job is a required field"),
       skills: Yup.string().min(20, "Skills must be at least 20 characters")
-              .required("Technical skills is a required field"),
+        .required("Technical skills is a required field"),
       description: Yup.string().min(150, "About must be at least 150 characters")
-              .required("About is a required field"),
+        .required("About is a required field"),
     }),
 
     onSubmit: async (values) => {
@@ -67,14 +69,30 @@ const UserEdit = (props) => {
       }
       if (formik.values.file == "") {
         form_data.append("file", await urlToObject(props.data.image))
-      } 
+      }
       form_data.append("_id", props.data._id);
-      UpdateUser(form_data);
+      UpdateUser(form_data).then(() => {
+        toast.success(" Update succesful !")
+      }).catch(() => {
+        toast.error("Error ! Please try again !")
+      });
     }
   });
 
   return (
     <div className="container p-5">
+      <ToastContainer
+        position="top-right"
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+      <ToastContainer />
       <div className="row">
         <div className="row">
           <div className="form-group col-md-9">
@@ -157,7 +175,7 @@ const UserEdit = (props) => {
               <label for="PreviousJob">Previous Job</label>
               <input type="text" className="form-control mt-2" id="PreviousJob" onBlur={formik.handleBlur} name="previousJob" placeholder="Corporate consulting" onChange={formik.handleChange} value={formik.values.previousJob} />
               {formik.touched.previousJob && formik.errors.previousJob ? <p className="formikValidate">{formik.errors.previousJob}</p> : null}
-            </div> 
+            </div>
           </div>
           <div className="row mt-4">
             <div className="form-group mt-1 col-md-12 col-sm-12">

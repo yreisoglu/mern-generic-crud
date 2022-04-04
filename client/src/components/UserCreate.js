@@ -21,6 +21,7 @@ const UserCreate = () => {
             file: "",
             firstJobDay: "",
             totalWorkTime: "",
+            department: "",
             university: "",
             graduationTime: "",
             previousJob: "",
@@ -45,6 +46,7 @@ const UserCreate = () => {
                     ),
             totalWorkTime: Yup.string().required("Total work day is a required field"),
             university: Yup.string().required("University is a required field"),
+            department: Yup.string().required("Orion department is a required field"),
             graduationTime: Yup.date().required("Graduation is a required field"),
             previousJob: Yup.string().required("Previous job is a required field"),
             skills: Yup.string().min(20, "Skills must be at least 20 characters")
@@ -134,6 +136,15 @@ const UserCreate = () => {
                                             <div className="form-group">
                                                 <input type="month" className="form-control" id="GraduationTime" onBlur={formik.handleBlur} name="graduationTime" onChange={formik.handleChange} value={formik.values.graduationTime} />
                                                 {formik.touched.graduationTime && formik.errors.graduationTime ? <p className="formikValidate">{formik.errors.graduationTime}</p> : null}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="row mt-4">
+                                        <div className="form-group mt-1 col-md-12 col-sm-12">
+                                            <div className="form-group">
+                                                <label for="university">Orion Department</label>
+                                                <input type="text" className="form-control" onBlur={formik.handleBlur} id="department" placeholder="ex: NRD 2208" name="department" onChange={formik.handleChange} value={formik.values.department} />
+                                                {formik.touched.department && formik.errors.department ? <p className="formikValidate">{formik.errors.department}</p> : null}
                                             </div>
                                         </div>
                                     </div>

@@ -27,6 +27,7 @@ const UserEdit = (props) => {
       firstJobDay: props.data.firstJobDay ? props.data.firstJobDay.substring(0, 10) : null,
       totalWorkTime: props.data.totalWorkTime,
       university: props.data.university,
+      department: props.data.department,
       graduationTime: props.data.graduationTime ? props.data.graduationTime.substring(0, 10) : null,
       previousJob: props.data.previousJob,
       skills: props.data.skills,
@@ -36,20 +37,21 @@ const UserEdit = (props) => {
       fullname: Yup.string().required("Name and surname is a required field"),
       email: Yup.string().email("Invalid email address").required("Email is a required field"),
       firstJobDay: Yup.date().required("Orion start day is a required field"),
-      file: Yup.mixed()
-              .required("Image is a required field")
-              .test(
-                  "fileSize",
-                  "Image too large. (max: 1024 x 1024)",
-                  value => value && value.size <= FILE_SIZE
-              )
-              .test(
-                  "fileFormat",
-                  "Unsupported Format. (sup: .jpg .png)",
-                  value => value && SUPPORTED_FORMATS.includes(value.type)
-              ),
+      // file: Yup.mixed()
+      //         .NoRequired("Image is a required field")
+      //         .test(
+      //             "fileSize",
+      //             "Image too large. (max: 1024 x 1024)",
+      //             value => value && value.size <= FILE_SIZE
+      //         )
+      //         .test(
+      //             "fileFormat",
+      //             "Unsupported Format. (sup: .jpg .png)",
+      //             value => value && SUPPORTED_FORMATS.includes(value.type)
+      //         ),
       totalWorkTime: Yup.string().required("Total work day is a required field"),
       university: Yup.string().required("University is a required field"),
+      department: Yup.string().required("Orion department is a required field"),
       graduationTime: Yup.date().required("Graduation is a required field"),
       previousJob: Yup.string().required("Previous job is a required field"),
       skills: Yup.string().min(20, "Skills must be at least 20 characters")
@@ -81,32 +83,32 @@ const UserEdit = (props) => {
         </div>
         <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
           <div className="row mt-4">
-              <div className="form-group col-md-6 col-sm-12">
-                  <label for="Surname">Full Name</label>
-                  <input type="text" className="form-control mt-2" id="fullname" onBlur={formik.handleBlur} placeholder="name surname" name="fullname" onChange={formik.handleChange} value={formik.values.fullname} />
-                  {formik.touched.fullname && formik.errors.fullname ? <p className="formikValidate">{formik.errors.fullname}</p> : null}
-              </div>
-              <div className="form-group col-md-6 col-sm-12">
-                  <label for="email">Email</label>
-                  <input type="email" className="form-control mt-2" id="email" onBlur={formik.handleBlur} name="email" placeholder="name@example.com" onChange={formik.handleChange} value={formik.values.email} />
-                  {formik.touched.email && formik.errors.email ? <p className="formikValidate">{formik.errors.email}</p> : null}
-              </div>
+            <div className="form-group col-md-6 col-sm-12">
+              <label for="Surname">Full Name</label>
+              <input type="text" className="form-control mt-2" id="fullname" onBlur={formik.handleBlur} placeholder="name surname" name="fullname" onChange={formik.handleChange} value={formik.values.fullname} />
+              {formik.touched.fullname && formik.errors.fullname ? <p className="formikValidate">{formik.errors.fullname}</p> : null}
+            </div>
+            <div className="form-group col-md-6 col-sm-12">
+              <label for="email">Email</label>
+              <input type="email" className="form-control mt-2" id="email" onBlur={formik.handleBlur} name="email" placeholder="name@example.com" onChange={formik.handleChange} value={formik.values.email} />
+              {formik.touched.email && formik.errors.email ? <p className="formikValidate">{formik.errors.email}</p> : null}
+            </div>
           </div>
           <div className="row mt-4">
-              <div className="form-group mt-1 col-md-6 col-sm-12">
-                  <label className="mb-2" for="FirstJobDay">Orion Start Day</label>
-                  <div className="form-group">
-                      <input type="date" className="form-control" id="FirstJobDay" onBlur={formik.handleBlur} name="firstJobDay" onChange={formik.handleChange} value={formik.values.firstJobDay} />
-                      {formik.touched.firstJobDay && formik.errors.firstJobDay ? <p className="formikValidate">{formik.errors.firstJobDay}</p> : null}
-                  </div>
+            <div className="form-group mt-1 col-md-6 col-sm-12">
+              <label className="mb-2" for="FirstJobDay">Orion Start Day</label>
+              <div className="form-group">
+                <input type="date" className="form-control" id="FirstJobDay" onBlur={formik.handleBlur} name="firstJobDay" onChange={formik.handleChange} value={formik.values.firstJobDay} />
+                {formik.touched.firstJobDay && formik.errors.firstJobDay ? <p className="formikValidate">{formik.errors.firstJobDay}</p> : null}
               </div>
-              <div className="form-group mt-2 col-md-6 col-sm-12">
-                  <div className="form-group">
-                      <label for="TotalWorkTime">Total Experience</label>
-                      <input type="text" className="form-control mt-1" id="TotalWorkTime" onBlur={formik.handleBlur} name="totalWorkTime" placeholder="ex: 2 years " onChange={formik.handleChange} value={formik.values.totalWorkTime} />
-                      {formik.touched.totalWorkTime && formik.errors.totalWorkTime ? <p className="formikValidate">{formik.errors.totalWorkTime}</p> : null}
-                  </div>
+            </div>
+            <div className="form-group mt-2 col-md-6 col-sm-12">
+              <div className="form-group">
+                <label for="TotalWorkTime">Total Experience</label>
+                <input type="text" className="form-control mt-1" id="TotalWorkTime" onBlur={formik.handleBlur} name="totalWorkTime" placeholder="ex: 2 years " onChange={formik.handleChange} value={formik.values.totalWorkTime} />
+                {formik.touched.totalWorkTime && formik.errors.totalWorkTime ? <p className="formikValidate">{formik.errors.totalWorkTime}</p> : null}
               </div>
+            </div>
           </div>
           <div className="row mt-4">
             <div className="form-group mt-2 col-md-2">
@@ -121,49 +123,58 @@ const UserEdit = (props) => {
               <div className="form-group">
                 <label className="mb-3" for="file">Click to update photo</label>
                 <input type="file" className="form-control" id="file" name="file" onChange={(e) => { formik.setFieldValue("file", (e.target.files[0])) }} />
-                {formik.errors.file ? <p className="formikValidate">{formik.errors.file}</p> : null}
+                {/* {formik.errors.file ? <p className="formikValidate">{formik.errors.file}</p> : null} */}
               </div>
             </div>
           </div>
           <div className="row mt-4">
-              <div className="form-group mt-1 col-md-9 col-sm-12">
-                  <div className="form-group">
-                      <label for="university">University</label>
-                      <input type="text" className="form-control mt-2" onBlur={formik.handleBlur} id="university" placeholder="Corban University" name="university" onChange={formik.handleChange} value={formik.values.university} />
-                      {formik.touched.university && formik.errors.university ? <p className="formikValidate">{formik.errors.university}</p> : null}
-                  </div>
+            <div className="form-group mt-1 col-md-9 col-sm-12">
+              <div className="form-group">
+                <label for="university">University</label>
+                <input type="text" className="form-control mt-2" onBlur={formik.handleBlur} id="university" placeholder="Corban University" name="university" onChange={formik.handleChange} value={formik.values.university} />
+                {formik.touched.university && formik.errors.university ? <p className="formikValidate">{formik.errors.university}</p> : null}
               </div>
-              <div className="form-group mt-1 col-md-3 col-sm-12">
-                  <label className="mb-2" for="GraduationTime">Graduation</label>
-                  <div className="form-group">
-                      <input type="month" className="form-control" id="GraduationTime" onBlur={formik.handleBlur} name="graduationTime" onChange={formik.handleChange} value={formik.values.graduationTime} />
-                      {formik.touched.graduationTime && formik.errors.graduationTime ? <p className="formikValidate">{formik.errors.graduationTime}</p> : null}
-                  </div>
+            </div>
+            <div className="form-group mt-1 col-md-3 col-sm-12">
+              <label className="mb-2" for="GraduationTime">Graduation</label>
+              <div className="form-group">
+                <input type="month" className="form-control" id="GraduationTime" onBlur={formik.handleBlur} name="graduationTime" onChange={formik.handleChange} value={formik.values.graduationTime} />
+                {formik.touched.graduationTime && formik.errors.graduationTime ? <p className="formikValidate">{formik.errors.graduationTime}</p> : null}
               </div>
+            </div>
           </div>
           <div className="row mt-4">
-              <div className="form-group mt-1 col-md-12 col-sm-12">
-                  <label for="PreviousJob">Previous Job</label>
-                  <input type="text" className="form-control mt-2" id="PreviousJob" onBlur={formik.handleBlur} name="previousJob" placeholder="Corporate consulting" onChange={formik.handleChange} value={formik.values.previousJob} />
-                  {formik.touched.previousJob && formik.errors.previousJob ? <p className="formikValidate">{formik.errors.previousJob}</p> : null}
-              </div> 
+            <div className="form-group mt-1 col-md-12 col-sm-12">
+              <div className="form-group">
+                <label for="university">Orion Department</label>
+                <input type="text" className="form-control" onBlur={formik.handleBlur} id="department" placeholder="ex: NRD 2208" name="department" onChange={formik.handleChange} value={formik.values.department} />
+                {formik.touched.department && formik.errors.department ? <p className="formikValidate">{formik.errors.department}</p> : null}
+              </div>
+            </div>
           </div>
           <div className="row mt-4">
-              <div className="form-group mt-1 col-md-12 col-sm-12">
-                  <label for="Skills">Technical Skills</label>
-                  <textarea className="form-control mt-2" id="Skills" name="skills" placeholder=" ex: PHP, Vue.js, AWS.." onBlur={formik.handleBlur} rows="3" onChange={formik.handleChange} value={formik.values.skills}></textarea>
-                  {formik.touched.skills && formik.errors.skills ? <p className="formikValidate">{formik.errors.skills}</p> : null}
-              </div>
+            <div className="form-group mt-1 col-md-12 col-sm-12">
+              <label for="PreviousJob">Previous Job</label>
+              <input type="text" className="form-control mt-2" id="PreviousJob" onBlur={formik.handleBlur} name="previousJob" placeholder="Corporate consulting" onChange={formik.handleChange} value={formik.values.previousJob} />
+              {formik.touched.previousJob && formik.errors.previousJob ? <p className="formikValidate">{formik.errors.previousJob}</p> : null}
+            </div> 
           </div>
           <div className="row mt-4">
-              <div className="form-group mt-1 col-md-12 col-sm-12">
-                  <label for="Description">About</label>
-                  <textarea className="form-control mt-2" name="description" onBlur={formik.handleBlur} id="description" rows="3" onChange={formik.handleChange} value={formik.values.description}></textarea>
-                  {formik.touched.description && formik.errors.description ? <p className="formikValidate">{formik.errors.description}</p> : null}
-              </div>
+            <div className="form-group mt-1 col-md-12 col-sm-12">
+              <label for="Skills">Technical Skills</label>
+              <textarea className="form-control mt-2" id="Skills" name="skills" placeholder=" ex: PHP, Vue.js, AWS.." onBlur={formik.handleBlur} rows="3" onChange={formik.handleChange} value={formik.values.skills}></textarea>
+              {formik.touched.skills && formik.errors.skills ? <p className="formikValidate">{formik.errors.skills}</p> : null}
+            </div>
+          </div>
+          <div className="row mt-4">
+            <div className="form-group mt-1 col-md-12 col-sm-12">
+              <label for="Description">About</label>
+              <textarea className="form-control mt-2" name="description" onBlur={formik.handleBlur} id="description" rows="3" onChange={formik.handleChange} value={formik.values.description}></textarea>
+              {formik.touched.description && formik.errors.description ? <p className="formikValidate">{formik.errors.description}</p> : null}
+            </div>
           </div>
           <div style={{ textAlign: 'center' }} class="form-button mt-4">
-              <button id="submit" type="submit" class="btn btn-primary">Update</button>
+            <button id="submit" type="submit" class="btn btn-primary">Update</button>
           </div>
         </form>
       </div>

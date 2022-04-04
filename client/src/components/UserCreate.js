@@ -69,7 +69,7 @@ const UserCreate = () => {
                 }, 2000)
             }
             ).catch((error) => {
-                toast.success("Submit Failed!")
+                toast.error("Submit Failed!")
                 console.log(error)
             });
         }

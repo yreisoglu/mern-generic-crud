@@ -295,7 +295,7 @@ const UserTable = () => {
 
   return (
     <div className="container">
-      <div className="row mt-4">
+      <div className="row">
         <MaterialTable
           icons={tableIcons}
           title="User List"

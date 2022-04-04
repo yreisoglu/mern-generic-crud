@@ -154,7 +154,7 @@ const UserTable = () => {
           title="Employees List"
           data={data}
           columns={columns}
-
+        
 
           localization={{
             body: {
@@ -183,9 +183,13 @@ const UserTable = () => {
               icon: () => <DeleteIcon />,
 
               tooltip: "Delete all selected rows",
-              onClick: () => DeleteUsersByIds(selectedRows).then(
-                window.location.reload(true)
-              ) 
+              onClick: () => DeleteUsersByIds(selectedRows)
+                .then(response => {
+                  if (response.deletedCount > 0) {
+                    window.location.reload(true)
+                  }
+                }
+                )
 
             },
             {

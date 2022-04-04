@@ -65,7 +65,7 @@ const UserCreate = () => {
                 toast.success("Succesful !")
                 setTimeout(() => {
                     resetForm();
-                }, 2000)
+                }, 500)
             }).catch(() => {
                 toast.error("Error ! Please try again !")
             });
@@ -74,18 +74,7 @@ const UserCreate = () => {
 
     return (
         <div className="container">
-            <ToastContainer
-                position="top-right"
-                autoClose={1000}
-                hideProgressBar={false}
-                newestOnTop={false}
-                closeOnClick
-                rtl={false}
-                pauseOnFocusLoss
-                draggable
-                pauseOnHover
-                />
-            <ToastContainer />
+           
             <div className="form-body">
                 <div className="row">
                     <div className="form-holder">

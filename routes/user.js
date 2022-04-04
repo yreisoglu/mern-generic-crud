@@ -96,7 +96,6 @@ router.post("/", upload.single('file'), async (req, res) => {
         } else {
             const user = new UserModel(encryptBody(req.body))
             await storageRef.upload(req.file.path, { public: true }).then(snapshot => {
-                console.log(snapshot[0].metadata.mediaLink);
                 user.image = snapshot[0].metadata.mediaLink
             })
             user.save()
@@ -105,7 +104,7 @@ router.post("/", upload.single('file'), async (req, res) => {
                 })
                 .catch((error) => {
                     console.log(error);
-                    res.statusCode = "404"
+                    res.status(400).send();
                 })
         }
     } catch (error) {

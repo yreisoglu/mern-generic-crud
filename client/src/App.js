@@ -9,10 +9,23 @@ import {
 } from "react-router-dom";
 import React from 'react';
 import UserTable from './components/UserTable';
+import { ToastContainer } from "react-toastify";
 
 const App = () => {
   return (
     <BrowserRouter>
+      <ToastContainer
+        position="top-right"
+        autoClose={500}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
+      <ToastContainer />
       <Routes>
         <Route path="/" >
           <Route index element={<UserCreate />} />
@@ -21,8 +34,8 @@ const App = () => {
         </Route>
       </Routes>
     </BrowserRouter>
-    
-   
+
+
   );
 }
 

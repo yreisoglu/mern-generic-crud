@@ -72,27 +72,16 @@ const UserEdit = (props) => {
       }
       form_data.append("_id", props.data._id);
       UpdateUser(form_data).then(() => {
-        toast.success(" Update succesful !")
+        toast.success("Update Succesful!")
+        window.location.reload();
       }).catch(() => {
-        toast.error("Error ! Please try again !")
+        toast.error("Error! Please try again!")
       });
     }
   });
 
   return (
-    <div className="container p-5">
-      <ToastContainer
-        position="top-right"
-        autoClose={1000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-      <ToastContainer />
+    <div className="container p-5" style={{backgroundColor:"#f2f8fc"}}>
       <div className="row">
         <div className="row">
           <div className="form-group col-md-9">

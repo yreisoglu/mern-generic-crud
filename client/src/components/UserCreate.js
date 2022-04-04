@@ -4,16 +4,15 @@ import { UserSave } from '../methods/UserSave';
 import { Link } from "react-router-dom";
 import { ErrorMessage, useFormik } from "formik";
 import * as Yup from "yup";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 const UserCreate = () => {
-
+    const [isLoading, setLoading] = useState(false)
     const FILE_SIZE = 1024 * 1024;
     const SUPPORTED_FORMATS = [
-      "image/jpg",
-      "image/jpeg",
-      "image/png"
+        "image/jpg",
+        "image/jpeg",
+        "image/png"
     ];
 
     const formik = useFormik({
@@ -35,46 +34,49 @@ const UserCreate = () => {
             email: Yup.string().email("Invalid email address").required("Email is a required field"),
             firstJobDay: Yup.date().required("Orion start day is a required field"),
             file: Yup.mixed()
-                    .required("Image is a required field")
-                    .test(
-                        "fileSize",
-                        "Image too large. (max: 1024 x 1024)",
-                        value => value && value.size <= FILE_SIZE
-                    )
-                    .test(
-                        "fileFormat",
-                        "Unsupported Format. (sup: .jpg .png)",
-                        value => value && SUPPORTED_FORMATS.includes(value.type)
-                    ),
+                .required("Image is a required field")
+                .test(
+                    "fileSize",
+                    "Image too large. (max: 1024 x 1024)",
+                    value => value && value.size <= FILE_SIZE
+                )
+                .test(
+                    "fileFormat",
+                    "Unsupported Format. (sup: .jpg .png)",
+                    value => value && SUPPORTED_FORMATS.includes(value.type)
+                ),
             totalWorkTime: Yup.string().required("Total work day is a required field"),
             university: Yup.string().required("University is a required field"),
             department: Yup.string().required("Orion department is a required field"),
             graduationTime: Yup.date().required("Graduation is a required field"),
             previousJob: Yup.string().required("Previous job is a required field"),
             skills: Yup.string().min(20, "Skills must be at least 20 characters")
-                    .required("Technical skills is a required field"),
+                .required("Technical skills is a required field"),
             description: Yup.string().min(150, "About must be at least 150 characters")
-                    .required("About is a required field"),
+                .required("About is a required field"),
         }),
         onSubmit: (values, { resetForm }) => {
+            setLoading(true)
             var form_data = new FormData();
             for (var key in values) {
                 form_data.append(key, values[key]);
             }
             UserSave(form_data).then(() => {
-                toast.success("Succesful !")
+                toast.success("User Submitted!")
+                setLoading(false);
                 setTimeout(() => {
                     resetForm();
-                }, 500)
-            }).catch(() => {
-                toast.error("Error ! Please try again !")
+                }, 2000)
+            }
+            ).catch((error) => {
+                toast.error("Submit Failed!")
+                console.log(error)
             });
         }
     });
 
     return (
         <div className="container">
-           
             <div className="form-body">
                 <div className="row">
                     <div className="form-holder">
@@ -95,7 +97,7 @@ const UserCreate = () => {
                                     <div className="row mt-4">
                                         <div className="form-group col-md-6 col-sm-12">
                                             <label for="Surname">Full Name</label>
-                                            <input type="text" className="form-control" id="fullname" onBlur={formik.handleBlur} placeholder="Name Surname" name="fullname" onChange={formik.handleChange} value={formik.values.fullname}/>
+                                            <input type="text" className="form-control" id="fullname" onBlur={formik.handleBlur} placeholder="name surname" name="fullname" onChange={formik.handleChange} value={formik.values.fullname} />
                                             {formik.touched.fullname && formik.errors.fullname ? <p className="formikValidate">{formik.errors.fullname}</p> : null}
                                         </div>
                                         <div className="form-group col-md-6 col-sm-12">
@@ -157,7 +159,7 @@ const UserCreate = () => {
                                             <label for="PreviousJob">Previous Job</label>
                                             <input type="text" className="form-control" id="PreviousJob" onBlur={formik.handleBlur} name="previousJob" placeholder="ex: Corporate consulting" onChange={formik.handleChange} value={formik.values.previousJob} />
                                             {formik.touched.previousJob && formik.errors.previousJob ? <p className="formikValidate">{formik.errors.previousJob}</p> : null}
-                                        </div> 
+                                        </div>
                                     </div>
                                     <div className="row mt-4">
                                         <div className="form-group mt-1 col-md-12 col-sm-12">
@@ -174,7 +176,13 @@ const UserCreate = () => {
                                         </div>
                                     </div>
                                     <div style={{ textAlign: 'center' }} class="form-button mt-4">
-                                        <button id="submit" type="submit" class="btn btn-primary">Submit</button>
+                                        {!isLoading ?
+                                            <button id="submit" type="submit" class="btn btn-primary">Submit</button>
+                                            :
+                                            <button id="submit" type="submit" class="btn btn-primary">
+                                                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            </button>
+                                        }
                                     </div>
                                 </form>
                             </div>

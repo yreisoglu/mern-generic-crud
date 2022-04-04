@@ -1,8 +1,10 @@
 import React, { useEffect, useState, forwardRef } from "react";
-import MaterialTable from "material-table";
+import MaterialTable, { MTableToolbar } from "material-table";
 import { DeleteUsersByIds, GetUsers } from "../methods/GetUsers";
 import { isExpired } from '../methods/Account';
 import '../UserCreate.css';
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
@@ -28,7 +30,12 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import { useNavigate } from "react-router-dom";
 
 import UserEdit from "./UserEdit";
+
+import { Link } from "react-router-dom";
+import { Dialog } from "@material-ui/core";
+
 import { generateDoc } from "../methods/CreateDoc";
+
 
 const UserTable = () => {
   const tableIcons = {
@@ -57,6 +64,7 @@ const UserTable = () => {
   const [iserror, setIserror] = useState(false)
   const [errorMessages, setErrorMessages] = useState([])
   const navigate = useNavigate();
+  const [title, setTitle] = useState("Employees Table");
 
   useEffect(() => {
     isExpired().then(res => {
@@ -70,37 +78,40 @@ const UserTable = () => {
     });
   }, []);
 
+  useEffect(() => {
+    // This will run when the page first loads and whenever the title changes
+    document.title = title;
+  }, [title]);
+
+
   const columns = [
     {
-
-      title: 'Image',
+      width: 20,
+      title: " ",
       field: 'image',
       filtering: false,
       searchable: false,
       /* render: data => <img src={data.image} style={{width: 50, borderRadius: '50%'}}/>, */
       render: rowData => (
-        <img style={{ height: 36, borderRadius: '50%' }} src={rowData.image} />
+        <img style={{ height: 50, borderRadius: '50%', width: 50, position: 'static' }} src={rowData.image}
+        />
+
       ),
 
       sorting: false
     },
     {
-      title: 'Name',
-      field: 'name',
+      title: 'Full Name',
+      field: 'fullname',
       searchable: true,
       sorting: false
     },
 
-    {
-      title: 'Surname',
-      field: 'surname',
-      searchable: true,
-      sorting: false
-    },
+
     {
 
 
-      title: 'first Job Day',
+      title: 'Orion Start Day',
       field: 'firstJobDay',
       type: 'date',
       searchable: true,
@@ -118,16 +129,47 @@ const UserTable = () => {
 
 
 
+  const [open, setOpen] = React.useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+
+
+
+
   return (
-    <div className="container">
+    <div className="container" background-color="#F7F7F7">
+
       <div className="row mt-4">
+
         <MaterialTable
           icons={tableIcons}
-          title="User List"
+          title="Employees List"
           data={data}
           columns={columns}
 
-          editable={{
+
+          localization={{
+            body: {
+              emptyDataSourceMessage:
+                <h1 style={{
+                  textAlign: 'center', fontSize: 14
+                }}>Loading...</h1>
+            },
+
+            header: {
+              event:
+                <h1 style={{
+                  textAlign: 'center', fontSize: 14
+                }}>Loading...</h1>
+
+            }
 
           }}
 
@@ -138,18 +180,21 @@ const UserTable = () => {
           actions={[
             {
               icon: () => <DeleteIcon />,
-              tooltip: "Delete all selected rows And REFRESH THE PAGE!",
+
+              tooltip: "Delete all selected rows",
               onClick: () => DeleteUsersByIds(selectedRows).then(
                 window.location.reload(true)
-              )
+              ) 
+
             },
             {
               icon: () => <GetAppIcon />,
-
-
               onClick: (event, rowData) => generateDoc(rowData),
             },
+
+
           ]}
+
 
           detailPanel={[
             {
@@ -165,11 +210,21 @@ const UserTable = () => {
             },
           ]}
 
+          components={{
+            Toolbar: props => (
+              <div>
+                <MTableToolbar {...props} />
+                <div style={{ float: 'right', textAlign: 'center', padding: "0px 10px " }}>
+                  <Link to="/" className="btn btn-primary">+</Link>
+                </div>
+              </div>
+            ),
+          }}
+
           options={{
             sorting: true, search: true, searchFieldAlignment: "right", filtering: false, searchFieldVariant: "standard",
-            paging: false, exportButton: false, actionsColumnIndex: -1, exportAllData: true, showTextRowsSelected: false,
-            showSelectAllCheckbox: true, selection: true, addRowPosition: "first", filtering: true
-
+            paging: false, actionsColumnIndex: -1, exportAllData: true, showTextRowsSelected: false,
+            showSelectAllCheckbox: true, selection: true, addRowPosition: "first", filtering: true,
           }}
         />
       </div>

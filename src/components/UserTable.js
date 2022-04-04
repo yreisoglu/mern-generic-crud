@@ -27,14 +27,15 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 
-import { Paragraph, Document, Packer, ImageRun, Table, TableRow, TableCell, RelativeVerticalPosition, WidthType, BorderStyle, TextRun, VerticalAlign } from "docx";
-import { saveAs } from "file-saver";
 import { useNavigate } from "react-router-dom";
 
-import banner from '../Assets/banner.jpg'
 import UserEdit from "./UserEdit";
+
 import { Link } from "react-router-dom";
 import { Dialog } from "@material-ui/core";
+
+import { generateDoc } from "../methods/CreateDoc";
+
 
 const UserTable = () => {
   const tableIcons = {
@@ -126,179 +127,7 @@ const UserTable = () => {
 
   const [tableData, setTableData] = useState(columns);
 
-  const generate = async (rowData) => {
 
-    let objArr = [];
-    let obj = {};
-
-    const awaitBanner = await fetch(banner);
-
-    let s = new Paragraph({
-      children: [
-        new ImageRun({
-          data: await awaitBanner.blob(),
-          transformation: {
-            width: 795,
-            height: 200
-
-          },
-
-          floating: {
-            horizontalPosition: {
-              offset: 1000,
-            },
-            verticalPosition: {
-              offset: 1000,
-            },
-          }
-        })
-      ]
-    });
-    objArr.push(s)
-    console.log(rowData)
-    for (let i = 0; i < rowData.length; i++) {
-      obj['fullname'] = rowData[i].fullname;
-      obj['firstJobDay'] = rowData[i].firstJobDay;
-      obj['university'] = rowData[i].university;
-      obj['description'] = rowData[i].description;
-      obj['image'] = rowData[i].image
-
-      const image = await fetch(obj['image']);
-
-      const borders = {
-        top: {
-          style: BorderStyle.NONE,
-          size: 1,
-
-        },
-        bottom: {
-          style: BorderStyle.NONE,
-          size: 1,
-
-        },
-        left: {
-          style: BorderStyle.NONE,
-          size: 1,
-        },
-        right: {
-          style: BorderStyle.NONE,
-          size: 1,
-        },
-      };
-
-
-      let s1 = new Paragraph({
-        children: [],
-      });
-
-      let t = new Table({
-        borders: borders,
-        rows: [
-          new TableRow({
-
-            children: [
-              new TableCell({
-                borders: borders,
-
-                width: {
-                  size: 30,
-                  type: WidthType.PERCENTAGE
-                },
-                children: [
-                  new Paragraph({
-                    children: [
-                      new ImageRun({
-                        data: await image.blob(),
-                        transformation: {
-                          width: 165,
-                          height: 165
-                        },
-                      }),
-                    ]
-                  })
-                ]
-              }),
-              new TableCell({
-                borders: borders,
-                verticalAlign: VerticalAlign.CENTER,
-
-                children: [
-
-                  new Paragraph({
-                    children: [
-                      new TextRun({
-                        text: obj['fullname'] + ", " + obj['firstJobDay'].substring(0, 10), bold: true,
-                        size: 24, font: "Calibri"
-
-                      }),
-                      new TextRun({ text: " tarihi itibariyle ", size: 24, font: "Calibri" }),
-                      new TextRun({ text: "Orion Innovation Türkiye ", bold: true, size: 24, font: "Calibri" }),
-                      new TextRun({ text: "ailesine ", size: 24, font: "Calibri" }),
-                      new TextRun({ text: "Teknoloji Grubu Mühendisi ", bold: true, size: 24, font: "Calibri" }),
-                      new TextRun({ text: "olarak katılmıştır.", size: 24, font: "Calibri" }),
-                    ]
-                  }),
-
-                  new Paragraph({
-                    children: [],
-                  }),
-
-                  new Paragraph({
-                    children: [
-                      new TextRun({
-                        text: obj['description'], size: 22, font: "Calibri"
-                      })
-                    ]
-                  }),
-
-                  new Paragraph({
-                    children: [],
-                  }),
-
-                  new Paragraph({
-                    children: [
-                      new TextRun({ text: "NRD2208 - *CIM TASARIM* ", bold: true, size: 24, font: "Calibri" }),
-                      new TextRun({
-                        text: "ekibimizde işe başlayan " + obj['name'] + " " + obj['surname'] + "'a 'Orion Innovation Türkiye’ye hoş geldin' der, yeni görevinde başarılar dileriz.",
-                        size: 24, font: "Calibri"
-                      }),
-                    ]
-                  }),
-                  new Paragraph({
-                    children: [],
-                  }),
-
-                  new Paragraph({
-                    children: [
-                      new TextRun({ text: "İnsan Kaynakları Departmanı", size: 24, font: "Calibri" }),
-                    ],
-                  }),
-
-                ]
-              })
-            ]
-          })
-        ]
-      });
-      for (let j = 0; j < 9; j++) {
-        objArr.push(s1);
-      }
-      objArr.push(t);
-    }
-
-    const doc = new Document({
-      sections: [{
-        children: objArr
-      }]
-    })
-
-    Packer.toBlob(doc).then((blob) => {
-      console.log(blob);
-      saveAs(blob, "example.docx");
-      console.log("Document created successfully");
-    });
-
-  };
 
   const [open, setOpen] = React.useState(false);
 
@@ -360,7 +189,7 @@ const UserTable = () => {
             },
             {
               icon: () => <GetAppIcon />,
-              onClick: (event, rowData) => generate(rowData),
+              onClick: (event, rowData) => generateDoc(rowData),
             },
 
 

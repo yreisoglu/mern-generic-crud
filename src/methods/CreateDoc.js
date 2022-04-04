@@ -65,7 +65,7 @@ export const generateDoc = async (rowData) => {
                     size: {
                         orientation: PageOrientation.LANDSCAPE,
                         height: convertMillimetersToTwip(210),
-                        width: convertMillimetersToTwip(170),
+                        width: convertMillimetersToTwip(190),
                     },
                 },
             },
@@ -102,10 +102,11 @@ export const generateDoc = async (rowData) => {
 
                             children: [
                                 new TableCell({
+                                    verticalAlign: VerticalAlign.CENTER,
                                     borders: borders,
 
                                     width: {
-                                        size: 30,
+                                        size: 35,
                                         type: WidthType.PERCENTAGE
                                     },
                                     children: [

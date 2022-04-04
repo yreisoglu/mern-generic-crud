@@ -20,7 +20,6 @@ const LoginPage = () => {
         Login(username, password)
             .then(res => {
                 if (res.status == "200") {
-                    console.log(res.data.token)
                     localStorage.setItem("jwt", res.data.token)
                     navigate("/users")
                 }

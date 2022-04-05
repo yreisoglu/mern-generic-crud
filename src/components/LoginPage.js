@@ -17,10 +17,9 @@ const LoginPage = () => {
         })
     }, [])
 
-    const [title] = useState("Login Page");
-    useEffect(()=>{
-        document.title = title;
-      })
+    useEffect(() => {
+        document.title = "Login Page";
+    }, [])
     const handleLogin = () => {
         Login(username, password)
             .then(res => {
@@ -46,7 +45,7 @@ const LoginPage = () => {
                                         <p>ACCESSING THE USER LIST</p>
                                     </div>
                                     <div style={{ textAlign: 'right' }} className="form-group col-md-3">
-                                        <Link to="/" style={{background: '#495056' }} class="btn btn-primary">
+                                        <Link to="/" style={{ background: '#495056' }} class="btn btn-primary">
                                             Back
                                         </Link>
                                     </div>
@@ -62,7 +61,7 @@ const LoginPage = () => {
                                     </div>
                                 </div>
                                 <div style={{ textAlign: 'center' }} class="form-button mt-3">
-                                    <button style={{background: 'coral ' }} id="submit" type="submit" onClick={() => handleLogin()} class="btn btn-primary">Login</button>
+                                    <button style={{ background: 'coral ' }} id="submit" type="submit" onClick={() => handleLogin()} class="btn btn-primary">Login</button>
                                 </div>
                             </div>
                         </div>

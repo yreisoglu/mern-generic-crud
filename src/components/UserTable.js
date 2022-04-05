@@ -3,7 +3,6 @@ import MaterialTable, { MTableToolbar } from "material-table";
 import { DeleteUsersByIds, GetUsers } from "../methods/GetUsers";
 import { isExpired } from '../methods/Account';
 import '../UserCreate.css';
-//import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import Add from '@material-ui/icons/AddBoxRounded';
@@ -32,11 +31,9 @@ import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 import { useNavigate } from "react-router-dom";
 import UserEdit from "./UserEdit";
 
-//import { Link } from "react-router-dom";
-//import { Dialog } from "@material-ui/core";
 
 import { generateDoc } from "../methods/CreateDoc";
-import { toast } from "react-toastify"; //, ToastContainer
+import { toast } from "react-toastify"; 
 import "react-toastify/dist/ReactToastify.css";
 
 const UserTable = () => {
@@ -63,11 +60,9 @@ const UserTable = () => {
   const [selectedRows, setSelectedRows] = useState([]);
   const [data, setData] = useState([]);
 
-  //const [iserror, setIserror] = useState(false)
-  //const [errorMessages, setErrorMessages] = useState([])
 
   const navigate = useNavigate();
-  const [title] = useState("Employees Table"); //, setTitle
+  const [title] = useState("Employees Table"); 
   const [isLoading, setLoading] = useState(true)
   useEffect(() => {
     isExpired().then(res => {
@@ -136,21 +131,6 @@ const UserTable = () => {
     },
   ]
 
-  //const [tableData, setTableData] = useState(columns);
-
-
-
-  /*const [open, setOpen] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-*/
   const MyNewTitle = ({ text = "Table Title", variant = "h6" }) => (
     <Typography
       variant={variant}

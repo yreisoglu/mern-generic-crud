@@ -23,7 +23,7 @@ const LoginPage = () => {
     const handleLogin = () => {
         Login(username, password)
             .then(res => {
-                if (res.status === "200") {
+                if (res.data.token) {
                     localStorage.setItem("jwt", res.data.token)
                     navigate("/users")
                 }

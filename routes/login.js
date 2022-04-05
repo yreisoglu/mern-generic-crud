@@ -59,7 +59,7 @@ router.post("/login", async (req, res) => {
                 { account_id: account._id, username },
                 process.env.TOKEN_KEY,
                 {
-                    expiresIn: "24h"
+                    expiresIn: "12h"
                 }
             );
             account.token = token;
@@ -77,12 +77,18 @@ router.post("/login", async (req, res) => {
 })
 
 router.post("/is-expired", (req, res) => {
-    const decodedToken = jwt.decode(req.body.token, { complete: true });
-    if (decodedToken.payload.exp < Date.now() / 1000) {
-        res.send(true)
+    try {
+        const decodedToken = jwt.decode(req.body.token, { complete: true });
+        if (decodedToken.payload.exp < Date.now() / 1000) {
+            res.send(true)
+            return
+        }
+        res.send(false)
         return
+    } catch (error) {
+        console.error(error)
+        res.send(true)
     }
-    res.send(false)
-    return
+
 })
 module.exports = router

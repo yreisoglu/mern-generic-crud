@@ -3,7 +3,6 @@ import MaterialTable, { MTableToolbar } from "material-table";
 import { DeleteUsersByIds, GetUsers } from "../methods/GetUsers";
 import { isExpired } from '../methods/Account';
 import '../UserCreate.css';
-import { confirmAlert } from 'react-confirm-alert';
 import 'react-confirm-alert/src/react-confirm-alert.css';
 
 import Add from '@material-ui/icons/AddBoxRounded';
@@ -30,17 +29,20 @@ import KeyboardArrowRightIcon from '@material-ui/icons/KeyboardArrowRight';
 import KeyboardArrowDownIcon from '@material-ui/icons/KeyboardArrowDown';
 
 import { useNavigate } from "react-router-dom";
-
 import UserEdit from "./UserEdit";
 
-import { Link } from "react-router-dom";
-import { Dialog } from "@material-ui/core";
 
 import { generateDoc } from "../methods/CreateDoc";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify"; 
 import "react-toastify/dist/ReactToastify.css";
+import useStore from "../store";
 
 const UserTable = () => {
+
+  const store = useStore();
+  const isUpdated = store.isUpdated;
+  const toggleUpdate = store.toggleUpdate;
+
   const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
     Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -60,30 +62,28 @@ const UserTable = () => {
     ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
     ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
   };
-  const [isDeleted, setDeleted] = useState(false)
   const [selectedRows, setSelectedRows] = useState([]);
   const [data, setData] = useState([]);
 
-  const [iserror, setIserror] = useState(false)
-  const [errorMessages, setErrorMessages] = useState([])
+
   const navigate = useNavigate();
-  const [title, setTitle] = useState("Employees Table");
-  const [isLoading,setLoading] = useState(true)
+
+  const [isLoading, setLoading] = useState(true)
   useEffect(() => {
     isExpired().then(res => {
       if (res) {
-        navigate("/users")
+        navigate("/login")
       }
     })
     GetUsers().then(response => {
       setData(response);
       setLoading(false)
     });
-  }, [isDeleted]);
+  }, [isUpdated]);
 
-
-
-
+  useEffect(() => {
+    document.title = "Employees Table";
+  })
   const columns = [
     {
       width: 20,
@@ -91,7 +91,7 @@ const UserTable = () => {
       field: 'image',
       filtering: false,
       searchable: false,
-      /* render: data => <img src={data.image} style={{width: 50, borderRadius: '50%'}}/>, */
+
       render: rowData => (
         <img style={{ height: 50, borderRadius: '50%', width: 50, position: 'static' }} src={rowData.image}
         />
@@ -106,17 +106,28 @@ const UserTable = () => {
       searchable: true,
       sorting: false
     },
-
-
     {
-
-
       title: 'Orion Start Day',
       field: 'firstJobDay',
       type: 'date',
       searchable: true,
       sorting: true
     },
+    {
+      title: 'Department',
+      field: 'department',
+      searchable: true,
+      sorting: false
+    },
+
+    {
+      title: 'Position',
+      field: 'workTitle',
+      searchable: true,
+      sorting: false
+    },
+
+
     {
       title: 'University',
       field: 'university',
@@ -125,25 +136,10 @@ const UserTable = () => {
     },
   ]
 
-  const [tableData, setTableData] = useState(columns);
-
-
-
-  const [open, setOpen] = React.useState(false);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-
   const MyNewTitle = ({ text = "Table Title", variant = "h6" }) => (
     <Typography
       variant={variant}
-      style={{whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", fontSize:"1.75rem"}}
+      style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", fontSize: "1.75rem" }}
     >
       {text}
     </Typography>
@@ -162,7 +158,7 @@ const UserTable = () => {
           title={<MyNewTitle variant="h3" text="Employee List" />}
           data={data}
           columns={columns}
-          
+
 
           localization={{
             body: {
@@ -184,10 +180,10 @@ const UserTable = () => {
               onClick: () => DeleteUsersByIds(selectedRows)
                 .then(response => {
                   if (response.deletedCount > 0) {
-                    setDeleted(!isDeleted)
+                    toggleUpdate()
                     toast.success(response.deletedCount + " User Deleted!")
                   }
-                }).catch((error)=>{
+                }).catch((error) => {
                   toast.error("Delete Failed.")
                 })
 
@@ -197,8 +193,8 @@ const UserTable = () => {
               onClick: (event, rowData) => generateDoc(rowData),
             },
             {
-              icon:() => <Add htmlColor="coral" fontSize="large"/>,
-              isFreeAction:true,
+              icon: () => <Add htmlColor="coral" fontSize="large" />,
+              isFreeAction: true,
               onClick: (event) => navigate("/")
             }
           ]}
@@ -222,19 +218,21 @@ const UserTable = () => {
             Toolbar: props => (
               <div>
                 <MTableToolbar {...props} />
-                
+
               </div>
             ),
           }}
 
           options={{
-            sorting: true, search: true, searchFieldAlignment: "right", filtering: false, searchFieldVariant: "standard",
+            sorting: true, search: true, searchFieldAlignment: "right", searchFieldVariant: "standard",
             paging: false, actionsColumnIndex: -1, exportAllData: true, showTextRowsSelected: false,
             showSelectAllCheckbox: true, selection: true, addRowPosition: "first", filtering: true,
-            rowStyle: x=>{
-              if(x.tableData.id%2 == 0){
+            rowStyle: x => {
+
+              if (x.tableData.id % 2 === 0) {
+
                 return { backgroundColor: "#f2f2f2" }
-              }else{
+              } else {
                 return { backgroundColor: "#ffffff" }
               }
             }

@@ -1,12 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React from "react"; //, { useState, useEffect }
 import '../UserCreate.css';
 import { UpdateUser } from '../methods/GetUsers';
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify"; //, ToastContainer
 import "react-toastify/dist/ReactToastify.css";
+import useStore from "../store";
 
 const UserEdit = (props) => {
+
   const titles = [
     "Software Engineer",
     "DevOps Engineer",
@@ -20,18 +22,26 @@ const UserEdit = (props) => {
     "Intern",
     "Other"
   ]
+
+  const store = useStore();
+  const toggleUpdate = store.toggleUpdate;
+  const [isLoading, setLoading] = useState(false)
+
+
+
+
   const urlToObject = async (image) => {
     const response = await fetch(image);
     const blob = await response.blob();
     const file = new File([blob], 'image.jpg', { type: blob.type });
     return (file);
   }
-  const FILE_SIZE = 1024 * 1024;
-  const SUPPORTED_FORMATS = [
+  //const FILE_SIZE = 1024 * 1024;
+  /*const SUPPORTED_FORMATS = [
     "image/jpg",
     "image/jpeg",
     "image/png"
-  ];
+  ]; */
 
   const formik = useFormik({
     initialValues: {
@@ -75,19 +85,25 @@ const UserEdit = (props) => {
     }),
 
     onSubmit: async (values) => {
+      setLoading(true)
+
       var form_data = new FormData();
       for (var key in values) {
         form_data.append(key, values[key]);
       }
-      if (formik.values.file == "") {
+      if (formik.values.file === "") {
         form_data.append("file", await urlToObject(props.data.image))
       }
       form_data.append("_id", props.data._id);
+      
       UpdateUser(form_data).then(() => {
         toast.success("Update Succesful!")
-        window.location.reload();
+        toggleUpdate();
       }).catch(() => {
         toast.error("Error! Please try again!")
+      }).finally(() => {
+        setLoading(false)
+
       });
     }
   });
@@ -199,7 +215,13 @@ console.log(formik.values)
             </div>
           </div>
           <div style={{ textAlign: 'center' }} class="form-button mt-4">
-            <button id="submit" type="submit" class="btn btn-primary">Update</button>
+            {!isLoading ?
+              <button id="submit" type="submit" class="btn btn-primary">Update</button>
+              :
+              <button id="submit" type="submit" class="btn btn-primary">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              </button>
+            }
           </div>
         </form>
       </div>

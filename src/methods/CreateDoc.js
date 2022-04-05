@@ -75,8 +75,8 @@ export const generateDoc = async (rowData) => {
 
         const jobDayParse=parseInt(obj['firstJobDay'].substring(5,7));
         const jobDaySet=aylar[jobDayParse-1][jobDayParse];
-        const jobDayBirlestir=obj['firstJobDay'].substring(8,10)+"/"+jobDaySet+"/"+obj['firstJobDay'].substring(0,4);
-        
+        const jobDayBirlestir=obj['firstJobDay'].substring(8,10)+" "+jobDaySet+" "+obj['firstJobDay'].substring(0,4);
+
         const image = await fetch(obj['image']);
         const imageBlob = image.blob();
         let section = {
@@ -86,7 +86,7 @@ export const generateDoc = async (rowData) => {
                     size: {
                         orientation: PageOrientation.LANDSCAPE,
                         height: convertMillimetersToTwip(210),
-                        width: convertMillimetersToTwip(190),
+                        width: convertMillimetersToTwip(200),
                     },
                 },
             },

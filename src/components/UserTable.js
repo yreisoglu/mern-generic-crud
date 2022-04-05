@@ -122,7 +122,7 @@ const UserTable = () => {
 
     {
       title: 'Position',
-      field: 'position',
+      field: 'workTitle',
       searchable: true,
       sorting: false
     },

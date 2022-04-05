@@ -8,9 +8,25 @@ import "react-toastify/dist/ReactToastify.css";
 import useStore from "../store";
 
 const UserEdit = (props) => {
+
+  const titles = [
+    "Software Engineer",
+    "DevOps Engineer",
+    "IT System Admin Engineer",
+    "Test Automation Engineer",
+    "Product Support Engineer",
+    "Backend Developer",
+    "Frontend Developer",
+    "Software Developer",
+    "Fullstack Developer",
+    "Intern",
+    "Other"
+  ]
+
   const store = useStore();
   const toggleUpdate = store.toggleUpdate;
   const [isLoading, setLoading] = useState(false)
+
 
 
 
@@ -33,13 +49,15 @@ const UserEdit = (props) => {
       email: props.data.email,
       file: "",
       firstJobDay: props.data.firstJobDay ? props.data.firstJobDay.substring(0, 10) : null,
-      totalWorkTime: props.data.totalWorkTime,
+      totalWorkTime: props.data.totalWorkTime ? props.data.totalWorkTime : null,
       university: props.data.university,
       department: props.data.department,
       graduationTime: props.data.graduationTime ? props.data.graduationTime.substring(0, 10) : null,
-      previousJob: props.data.previousJob,
+      previousJob: props.data.previousJob ? props.data.previousJob : null,
       skills: props.data.skills,
       description: props.data.description,
+      previousWorkTitle: props.data.previousWorkTitle ? props.data.previousWorkTitle : null,
+      workTitle: props.data.workTitle,
     },
     validationSchema: Yup.object({
       fullname: Yup.string().required("Name and surname is a required field"),
@@ -57,11 +75,9 @@ const UserEdit = (props) => {
       //             "Unsupported Format. (sup: .jpg .png)",
       //             value => value && SUPPORTED_FORMATS.includes(value.type)
       //         ),
-      totalWorkTime: Yup.string().required("Total work day is a required field"),
       university: Yup.string().required("University is a required field"),
       department: Yup.string().required("Orion department is a required field"),
       graduationTime: Yup.date().required("Graduation is a required field"),
-      previousJob: Yup.string().required("Previous job is a required field"),
       skills: Yup.string().min(20, "Skills must be at least 20 characters")
         .required("Technical skills is a required field"),
       description: Yup.string().min(150, "About must be at least 150 characters")
@@ -91,15 +107,10 @@ const UserEdit = (props) => {
       });
     }
   });
-
+console.log(formik.values)
   return (
     <div className="container p-5" style={{ backgroundColor: "#f2f8fc" }}>
       <div className="row">
-        <div className="row">
-          <div className="form-group col-md-9">
-            <p> <h3>Detail <small> or update </small></h3></p>
-          </div>
-        </div>
         <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
           <div className="row mt-4">
             <div className="form-group col-md-6 col-sm-12">
@@ -114,18 +125,28 @@ const UserEdit = (props) => {
             </div>
           </div>
           <div className="row mt-4">
-            <div className="form-group mt-1 col-md-6 col-sm-12">
+            <div className="form-group col-md-4 col-sm-12">
               <label className="mb-2" for="FirstJobDay">Orion Start Day</label>
               <div className="form-group">
                 <input type="date" className="form-control" id="FirstJobDay" onBlur={formik.handleBlur} name="firstJobDay" onChange={formik.handleChange} value={formik.values.firstJobDay} />
                 {formik.touched.firstJobDay && formik.errors.firstJobDay ? <p className="formikValidate">{formik.errors.firstJobDay}</p> : null}
               </div>
             </div>
-            <div className="form-group mt-2 col-md-6 col-sm-12">
+            <div className="form-group col-md-4 col-sm-12">
+              <label for="FirstJobDay">Position</label>
+              <select onChange={formik.handleChange} name="workTitle" class="form-select mt-2" value={formik.values.workTitle}>
+                {titles.map((item,index)=>{
+                  return(
+                    <option {...props.data.workTitle == item ? "selected" : null} value={item}>{item}</option>
+                  )
+                })}
+              </select>
+            </div>
+            <div className="form-group col-md-4 col-sm-12">
               <div className="form-group">
-                <label for="TotalWorkTime">Total Experience</label>
-                <input type="text" className="form-control mt-1" id="TotalWorkTime" onBlur={formik.handleBlur} name="totalWorkTime" placeholder="ex: 2 years " onChange={formik.handleChange} value={formik.values.totalWorkTime} />
-                {formik.touched.totalWorkTime && formik.errors.totalWorkTime ? <p className="formikValidate">{formik.errors.totalWorkTime}</p> : null}
+                <label for="university">Department</label>
+                <input type="text" className="form-control mt-2" onBlur={formik.handleBlur} id="department" placeholder="ex: NRD 2208" name="department" onChange={formik.handleChange} value={formik.values.department} />
+                {formik.touched.department && formik.errors.department ? <p className="formikValidate">{formik.errors.department}</p> : null}
               </div>
             </div>
           </div>
@@ -163,19 +184,20 @@ const UserEdit = (props) => {
             </div>
           </div>
           <div className="row mt-4">
-            <div className="form-group mt-1 col-md-12 col-sm-12">
-              <div className="form-group">
-                <label for="university">Orion Department</label>
-                <input type="text" className="form-control" onBlur={formik.handleBlur} id="department" placeholder="ex: NRD 2208" name="department" onChange={formik.handleChange} value={formik.values.department} />
-                {formik.touched.department && formik.errors.department ? <p className="formikValidate">{formik.errors.department}</p> : null}
-              </div>
-            </div>
-          </div>
-          <div className="row mt-4">
-            <div className="form-group mt-1 col-md-12 col-sm-12">
+            <div className="form-group mt-1 col-md-4 col-sm-12">
               <label for="PreviousJob">Previous Job</label>
               <input type="text" className="form-control mt-2" id="PreviousJob" onBlur={formik.handleBlur} name="previousJob" placeholder="Corporate consulting" onChange={formik.handleChange} value={formik.values.previousJob} />
               {formik.touched.previousJob && formik.errors.previousJob ? <p className="formikValidate">{formik.errors.previousJob}</p> : null}
+            </div>
+            <div className="form-group mt-1 col-md-4 col-sm-12">
+              <label for="PreviousJob">Previous Position</label>
+              <input type="text" className="form-control mt-2" id="PreviousJob" name="previousJob" placeholder="ex: Backend Developer" onChange={formik.handleChange} value={formik.values.previousJob} />
+            </div>
+            <div className="form-group mt-1 col-md-4 col-sm-12">
+              <div className="form-group">
+                <label for="TotalWorkTime">Total Experience</label>
+                <input type="text" className="form-control mt-2" id="TotalWorkTime" onBlur={formik.handleBlur} name="totalWorkTime" placeholder="ex: 2 years " onChange={formik.handleChange} value={formik.values.totalWorkTime} />
+              </div>
             </div>
           </div>
           <div className="row mt-4">

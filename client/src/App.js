@@ -25,7 +25,6 @@ const App = () => {
         draggable
         pauseOnHover
       />
-      <ToastContainer />
       <Routes>
         <Route path="/" >
           <Route index element={<UserCreate />} />

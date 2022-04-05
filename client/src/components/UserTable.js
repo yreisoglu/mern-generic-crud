@@ -72,7 +72,7 @@ const UserTable = () => {
   useEffect(() => {
     isExpired().then(res => {
       if (res) {
-        navigate("/users")
+        navigate("/login")
       }
     })
     GetUsers().then(response => {

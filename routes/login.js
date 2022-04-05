@@ -78,21 +78,16 @@ router.post("/login", async (req, res) => {
 
 router.post("/is-expired", (req, res) => {
     try {
-
-        if (req.body.token !== "") {
-            const decodedToken = jwt.decode(req.body.token, { complete: true });
-            if (decodedToken.payload.exp < Date.now() / 1000) {
-                res.send(true)
-                return
-            }
-            res.send(false)
-            return
-        } else {
+        const decodedToken = jwt.decode(req.body.token, { complete: true });
+        if (decodedToken.payload.exp < Date.now() / 1000) {
             res.send(true)
             return
         }
+        res.send(false)
+        return
     } catch (error) {
-        console.log(error)
+        console.error(error)
+        res.send(true)
     }
 
 })

@@ -123,7 +123,6 @@ export const generateDoc = async (rowData) => {
 
                             children: [
                                 new TableCell({
-                                    verticalAlign: VerticalAlign.CENTER,
                                     borders: borders,
 
                                     width: {

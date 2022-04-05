@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react"; 
+import React, { useEffect, useState } from "react";
 import '../UserCreate.css';
 import { UserSave } from '../methods/UserSave';
 import { Link } from "react-router-dom";
-import {useFormik } from "formik"; // ErrorMessage, 
+import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 
 
 const UserCreate = () => {
-    
+
     const [isLoading, setLoading] = useState(false)
     const FILE_SIZE = 1024 * 1024;
     const SUPPORTED_FORMATS = [
@@ -29,14 +29,11 @@ const UserCreate = () => {
         "Fullstack Developer",
         "Intern",
         "Other"
-      ]
+    ]
 
-
-    
-    useEffect(()=>{
+    useEffect(() => {
         document.title = "Welcome Onboard";
-      },[])
-
+    }, [])
 
     const formik = useFormik({
         initialValues: {
@@ -146,14 +143,14 @@ const UserCreate = () => {
                                         </div>
                                         <div className="form-group mt-1 col-md-4 col-sm-12">
                                             <label for="FirstJobDay">Position</label>
-                                            <select onChange={formik.handleChange} name="workTitle" class="form-select">                                           
-                                                {titles.map((item,index)=>{
-                                                  return(
-                                                    <option value={item}>{item}</option>
-                                                  )
+                                            <select onChange={formik.handleChange} name="workTitle" class="form-select">
+                                                {titles.map((item, index) => {
+                                                    return (
+                                                        <option value={item}>{item}</option>
+                                                    )
                                                 })}
                                             </select>
-                                        </div>   
+                                        </div>
                                         <div className="form-group mt-1 col-md-4 col-sm-12">
                                             <div className="form-group">
                                                 <label for="university">Department</label>

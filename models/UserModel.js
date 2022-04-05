@@ -29,6 +29,16 @@ const UserSchema = new Schema({
         type: String,
         default: ""
     },
+    workTitle: {
+        type: String,
+        default: "",
+        maxlength: 64,
+    },
+    previousWorkTitle: {
+        type: String,
+        default: "",
+        maxlength: 64
+    },
     previousJob: {
         type: String,
         default: "",

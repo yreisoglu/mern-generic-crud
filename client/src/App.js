@@ -5,7 +5,7 @@ import {
   BrowserRouter,
   Routes,
   Route,
-  Link
+  //Link
 } from "react-router-dom";
 import React from 'react';
 import UserTable from './components/UserTable';
@@ -25,7 +25,6 @@ const App = () => {
         draggable
         pauseOnHover
       />
-      <ToastContainer />
       <Routes>
         <Route path="/" >
           <Route index element={<UserCreate />} />

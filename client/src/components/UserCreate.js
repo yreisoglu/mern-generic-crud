@@ -7,6 +7,7 @@ import * as Yup from "yup";
 import { toast } from "react-toastify";
 
 const UserCreate = () => {
+    
     const [isLoading, setLoading] = useState(false)
     const FILE_SIZE = 1024 * 1024;
     const SUPPORTED_FORMATS = [

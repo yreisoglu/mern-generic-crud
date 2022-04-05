@@ -39,8 +39,14 @@ import { Dialog } from "@material-ui/core";
 import { generateDoc } from "../methods/CreateDoc";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import useStore from "../store";
 
 const UserTable = () => {
+
+  const store = useStore();
+  const isUpdated = store.isUpdated;
+  const toggleUpdate = store.toggleUpdate;
+
   const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
     Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
@@ -60,7 +66,6 @@ const UserTable = () => {
     ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
     ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />)
   };
-  const [isDeleted, setDeleted] = useState(false)
   const [selectedRows, setSelectedRows] = useState([]);
   const [data, setData] = useState([]);
 
@@ -79,7 +84,7 @@ const UserTable = () => {
       setData(response);
       setLoading(false)
     });
-  }, [isDeleted]);
+  }, [isUpdated]);
 
 
 
@@ -184,7 +189,7 @@ const UserTable = () => {
               onClick: () => DeleteUsersByIds(selectedRows)
                 .then(response => {
                   if (response.deletedCount > 0) {
-                    setDeleted(!isDeleted)
+                    toggleUpdate()
                     toast.success(response.deletedCount + " User Deleted!")
                   }
                 }).catch((error) => {

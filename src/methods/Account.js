@@ -1,5 +1,5 @@
 const axios = require("axios")
-const jwt = require("jsonwebtoken")
+//const jwt = require("jsonwebtoken")
 const HTTP = axios.create({
     baseURL: "https://mern-generic-crud.herokuapp.com",
 });

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"; 
 import '../UserCreate.css';
 import { UserSave } from '../methods/UserSave';
 import { Link } from "react-router-dom";
-import { ErrorMessage, useFormik } from "formik";
+import {useFormik } from "formik"; // ErrorMessage, 
 import * as Yup from "yup";
 import { toast } from "react-toastify";
+
 
 const UserCreate = () => {
     
@@ -15,6 +16,11 @@ const UserCreate = () => {
         "image/jpeg",
         "image/png"
     ];
+
+    const [title] = useState("Welcome Onboard");
+    useEffect(()=>{
+        document.title = title;
+      })
 
     const formik = useFormik({
         initialValues: {

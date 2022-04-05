@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React from "react"; //, { useState, useEffect }
 import '../UserCreate.css';
 import { UpdateUser } from '../methods/GetUsers';
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify"; //, ToastContainer
 import "react-toastify/dist/ReactToastify.css";
 import useStore from "../store";
 
@@ -20,12 +20,12 @@ const UserEdit = (props) => {
     const file = new File([blob], 'image.jpg', { type: blob.type });
     return (file);
   }
-  const FILE_SIZE = 1024 * 1024;
-  const SUPPORTED_FORMATS = [
+  //const FILE_SIZE = 1024 * 1024;
+  /*const SUPPORTED_FORMATS = [
     "image/jpg",
     "image/jpeg",
     "image/png"
-  ];
+  ]; */
 
   const formik = useFormik({
     initialValues: {
@@ -75,7 +75,7 @@ const UserEdit = (props) => {
       for (var key in values) {
         form_data.append(key, values[key]);
       }
-      if (formik.values.file == "") {
+      if (formik.values.file === "") {
         form_data.append("file", await urlToObject(props.data.image))
       }
       form_data.append("_id", props.data._id);

@@ -68,7 +68,7 @@ const UserTable = () => {
   const [errorMessages, setErrorMessages] = useState([])
   const navigate = useNavigate();
   const [title, setTitle] = useState("Employees Table");
-  const [isLoading,setLoading] = useState(true)
+  const [isLoading, setLoading] = useState(true)
   useEffect(() => {
     isExpired().then(res => {
       if (res) {
@@ -143,7 +143,7 @@ const UserTable = () => {
   const MyNewTitle = ({ text = "Table Title", variant = "h6" }) => (
     <Typography
       variant={variant}
-      style={{whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", fontSize:"1.75rem"}}
+      style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", fontSize: "1.75rem" }}
     >
       {text}
     </Typography>
@@ -162,7 +162,7 @@ const UserTable = () => {
           title={<MyNewTitle variant="h3" text="Employee List" />}
           data={data}
           columns={columns}
-          
+
 
           localization={{
             body: {
@@ -187,7 +187,7 @@ const UserTable = () => {
                     setDeleted(!isDeleted)
                     toast.success(response.deletedCount + " User Deleted!")
                   }
-                }).catch((error)=>{
+                }).catch((error) => {
                   toast.error("Delete Failed.")
                 })
 
@@ -197,8 +197,8 @@ const UserTable = () => {
               onClick: (event, rowData) => generateDoc(rowData),
             },
             {
-              icon:() => <Add htmlColor="coral" fontSize="large"/>,
-              isFreeAction:true,
+              icon: () => <Add htmlColor="coral" fontSize="large" />,
+              isFreeAction: true,
               onClick: (event) => navigate("/")
             }
           ]}
@@ -222,7 +222,7 @@ const UserTable = () => {
             Toolbar: props => (
               <div>
                 <MTableToolbar {...props} />
-                
+
               </div>
             ),
           }}
@@ -231,10 +231,10 @@ const UserTable = () => {
             sorting: true, search: true, searchFieldAlignment: "right", filtering: false, searchFieldVariant: "standard",
             paging: false, actionsColumnIndex: -1, exportAllData: true, showTextRowsSelected: false,
             showSelectAllCheckbox: true, selection: true, addRowPosition: "first", filtering: true,
-            rowStyle: x=>{
-              if(x.tableData.id%2 == 0){
+            rowStyle: x => {
+              if (x.tableData.id % 2 == 0) {
                 return { backgroundColor: "#f2f2f2" }
-              }else{
+              } else {
                 return { backgroundColor: "#ffffff" }
               }
             }

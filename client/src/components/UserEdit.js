@@ -5,8 +5,14 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import useStore from "../store";
 
 const UserEdit = (props) => {
+  const store = useStore();
+  const toggleUpdate = store.toggleUpdate;
+  const [isLoading, setLoading] = useState(false)
+
+
 
   const urlToObject = async (image) => {
     const response = await fetch(image);
@@ -63,6 +69,8 @@ const UserEdit = (props) => {
     }),
 
     onSubmit: async (values) => {
+      setLoading(true)
+
       var form_data = new FormData();
       for (var key in values) {
         form_data.append(key, values[key]);
@@ -71,17 +79,21 @@ const UserEdit = (props) => {
         form_data.append("file", await urlToObject(props.data.image))
       }
       form_data.append("_id", props.data._id);
+      
       UpdateUser(form_data).then(() => {
         toast.success("Update Succesful!")
-        window.location.reload();
+        toggleUpdate();
       }).catch(() => {
         toast.error("Error! Please try again!")
+      }).finally(() => {
+        setLoading(false)
+
       });
     }
   });
 
   return (
-    <div className="container p-5" style={{backgroundColor:"#f2f8fc"}}>
+    <div className="container p-5" style={{ backgroundColor: "#f2f8fc" }}>
       <div className="row">
         <div className="row">
           <div className="form-group col-md-9">
@@ -181,7 +193,13 @@ const UserEdit = (props) => {
             </div>
           </div>
           <div style={{ textAlign: 'center' }} class="form-button mt-4">
-            <button id="submit" type="submit" class="btn btn-primary">Update</button>
+            {!isLoading ?
+              <button id="submit" type="submit" class="btn btn-primary">Update</button>
+              :
+              <button id="submit" type="submit" class="btn btn-primary">
+                <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+              </button>
+            }
           </div>
         </form>
       </div>

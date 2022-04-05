@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"; 
 import '../UserCreate.css';
 import { UserSave } from '../methods/UserSave';
 import { Link } from "react-router-dom";
-import { ErrorMessage, useFormik } from "formik";
+import {useFormik } from "formik"; // ErrorMessage, 
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 
+
 const UserCreate = () => {
+    
     const [isLoading, setLoading] = useState(false)
     const FILE_SIZE = 1024 * 1024;
     const SUPPORTED_FORMATS = [
@@ -14,6 +16,7 @@ const UserCreate = () => {
         "image/jpeg",
         "image/png"
     ];
+
     const titles = [
         "Software Engineer",
         "DevOps Engineer",
@@ -27,6 +30,14 @@ const UserCreate = () => {
         "Intern",
         "Other"
       ]
+
+
+    
+    useEffect(()=>{
+        document.title = "Welcome Onboard";
+      },[])
+
+
     const formik = useFormik({
         initialValues: {
             fullname: "",
@@ -100,7 +111,7 @@ const UserCreate = () => {
                                         <p>TELL US ABOUT YOURSELF</p>
                                     </div>
                                     <div style={{ textAlign: 'right' }} className="form-group col-md-9">
-                                        <Link to="/login" class="btn btn-primary">
+                                        <Link to="/users" class="btn btn-primary">
                                             Admin Panel
                                         </Link>
                                     </div>
@@ -109,7 +120,7 @@ const UserCreate = () => {
                                     <div className="row mt-4">
                                         <div className="form-group col-md-4 col-sm-12">
                                             <label for="Surname">Full Name</label>
-                                            <input type="text" className="form-control" id="fullname" onBlur={formik.handleBlur} placeholder="name surname" name="fullname" onChange={formik.handleChange} value={formik.values.fullname} />
+                                            <input type="text" className="form-control" id="fullname" onBlur={formik.handleBlur} placeholder="Name Surname" name="fullname" onChange={formik.handleChange} value={formik.values.fullname} />
                                             {formik.touched.fullname && formik.errors.fullname ? <p className="formikValidate">{formik.errors.fullname}</p> : null}
                                         </div>
                                         <div className="form-group col-md-4 col-sm-12">

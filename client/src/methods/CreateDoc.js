@@ -8,15 +8,15 @@ import {
     Table,
     TableRow,
     TableCell,
-    RelativeVerticalPosition,
+    //RelativeVerticalPosition,
     WidthType,
     BorderStyle,
     TextRun,
     VerticalAlign,
-    PageBreak,
+    //PageBreak,
     SectionType,
-    sectionPageSizeDefaults,
-    PageSize,
+    //sectionPageSizeDefaults,
+    //PageSize,
     convertMillimetersToTwip,
     PageOrientation
 } from "docx";
@@ -50,12 +50,33 @@ export const generateDoc = async (rowData) => {
         },
     };
 
+    const aylar=[
+     {"1":"Ocak"},
+     {"2":"Şubat"},
+     {"3":"Mart"},
+     {"4":"Nisan"},
+     {"5":"Mayıs"},
+     {"6":"Haziran"},
+     {"7":"Temmuz"},
+     {"8":"Ağustos"},
+     {"9":"Eylül"},
+     {"10":"Ekim"},
+     {"11":"Kasım"},
+     {"12":"Aralık"},
+    ]
+   
     for (let i = 0; i < rowData.length; i++) {
         obj['fullname'] = rowData[i].fullname;
         obj['firstJobDay'] = rowData[i].firstJobDay;
         obj['university'] = rowData[i].university;
         obj['description'] = rowData[i].description;
         obj['image'] = rowData[i].image
+        obj['department'] = rowData[i].department;
+
+        const jobDayParse=parseInt(obj['firstJobDay'].substring(5,7));
+        const jobDaySet=aylar[jobDayParse-1][jobDayParse];
+        const jobDayBirlestir=obj['firstJobDay'].substring(8,10)+"/"+jobDaySet+"/"+obj['firstJobDay'].substring(0,4);
+        
         const image = await fetch(obj['image']);
         const imageBlob = image.blob();
         let section = {
@@ -132,7 +153,7 @@ export const generateDoc = async (rowData) => {
                                         new Paragraph({
                                             children: [
                                                 new TextRun({
-                                                    text: obj['fullname'] + ", " + obj['firstJobDay'].substring(0, 10), bold: true,
+                                                    text: obj['fullname'] + ", " + jobDayBirlestir, bold: true,
                                                     size: 24, font: "Calibri"
 
                                                 }),
@@ -162,7 +183,7 @@ export const generateDoc = async (rowData) => {
 
                                         new Paragraph({
                                             children: [
-                                                new TextRun({ text: "NRD2208 - *CIM TASARIM* ", bold: true, size: 24, font: "Calibri" }),
+                                                new TextRun({ text: obj['department']+" ", bold: true, size: 24, font: "Calibri" }),
                                                 new TextRun({
                                                     text: "ekibimizde işe başlayan " + obj['fullname'] + "'a 'Orion Innovation Türkiye’ye hoş geldin' der, yeni görevinde başarılar dileriz.",
                                                     size: 24, font: "Calibri"

@@ -16,10 +16,15 @@ const LoginPage = () => {
             }
         })
     }, [])
+
+    const [title] = useState("Login Page");
+    useEffect(()=>{
+        document.title = title;
+      })
     const handleLogin = () => {
         Login(username, password)
             .then(res => {
-                if (res.status == "200") {
+                if (res.status === "200") {
                     localStorage.setItem("jwt", res.data.token)
                     navigate("/users")
                 }

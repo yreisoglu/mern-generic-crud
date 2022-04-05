@@ -88,7 +88,7 @@ const UserCreate = () => {
                                         <p>TELL US ABOUT YOURSELF</p>
                                     </div>
                                     <div style={{ textAlign: 'right' }} className="form-group col-md-9">
-                                        <Link to="/login" class="btn btn-primary">
+                                        <Link to="/users" class="btn btn-primary">
                                             Admin Panel
                                         </Link>
                                     </div>
@@ -97,7 +97,7 @@ const UserCreate = () => {
                                     <div className="row mt-4">
                                         <div className="form-group col-md-6 col-sm-12">
                                             <label for="Surname">Full Name</label>
-                                            <input type="text" className="form-control" id="fullname" onBlur={formik.handleBlur} placeholder="name surname" name="fullname" onChange={formik.handleChange} value={formik.values.fullname} />
+                                            <input type="text" className="form-control" id="fullname" onBlur={formik.handleBlur} placeholder="Name Surname" name="fullname" onChange={formik.handleChange} value={formik.values.fullname} />
                                             {formik.touched.fullname && formik.errors.fullname ? <p className="formikValidate">{formik.errors.fullname}</p> : null}
                                         </div>
                                         <div className="form-group col-md-6 col-sm-12">

@@ -68,6 +68,7 @@ const UserCreate = () => {
                     value => value && SUPPORTED_FORMATS.includes(value.type)
                 ),
             university: Yup.string().required("University is a required field"),
+            workTitle: Yup.string().required("Position is a required field"),
             department: Yup.string().required("Orion department is a required field"),
             graduationTime: Yup.date().required("Graduation is a required field"),
             skills: Yup.string().min(20, "Skills must be at least 20 characters")
@@ -144,12 +145,14 @@ const UserCreate = () => {
                                         <div className="form-group mt-1 col-md-4 col-sm-12">
                                             <label for="FirstJobDay">Position</label>
                                             <select onChange={formik.handleChange} name="workTitle" class="form-select">
+                                                <option value={formik.values.workTitle}>Open this select menu</option>
                                                 {titles.map((item, index) => {
                                                     return (
                                                         <option value={item}>{item}</option>
                                                     )
                                                 })}
                                             </select>
+                                            {formik.touched.workTitle && formik.errors.workTitle ? <p className="formikValidate">{formik.errors.workTitle}</p> : null}
                                         </div>
                                         <div className="form-group mt-1 col-md-4 col-sm-12">
                                             <div className="form-group">

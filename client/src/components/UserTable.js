@@ -110,6 +110,7 @@ const UserTable = () => {
       title: 'Orion Başlangıç Tarihi',
       field: 'firstJobDay',
       type: 'date',
+      dateSetting: { locale: "tr-TR" },
       searchable: true,
       sorting: true
     },

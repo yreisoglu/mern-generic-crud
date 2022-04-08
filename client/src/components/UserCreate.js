@@ -24,7 +24,7 @@ const UserCreate = () => {
         "IT Sistem Mühendisi",
         "Test Otomasyon Mühendisi",
         "Ürün Destek Mühendisi",
-        "Arka Uç Geşiştirici",
+        "Arka Uç Geliştirici",
         "Ön Uç Geliştirici",
         "Stajyer",
         "Diğer"
@@ -156,7 +156,7 @@ const UserCreate = () => {
                                         <div className="form-group mt-1 col-md-4 col-sm-12">
                                             <div className="form-group">
                                                 <label for="university">Departman</label>
-                                                <input type="text" className="form-control" onBlur={formik.handleBlur} id="department" placeholder="ex: NRD2208" name="department" onChange={formik.handleChange} value={formik.values.department} />
+                                                <input type="text" className="form-control" onBlur={formik.handleBlur} id="department" placeholder="ör: NRD2208" name="department" onChange={formik.handleChange} value={formik.values.department} />
                                                 {formik.touched.department && formik.errors.department ? <p className="formikValidate">{formik.errors.department}</p> : null}
                                             </div>
                                         </div>

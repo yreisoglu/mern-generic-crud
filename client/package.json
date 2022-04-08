@@ -1,6 +1,7 @@
 {
   "name": "client",
   "version": "0.1.0",
+  "homepage": "http://172.28.226.108/welcome",
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.12.3",

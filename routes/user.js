@@ -8,7 +8,7 @@ const auth = require("../middleware/auth")
 const usersSecretKey = process.env.USERS_SECRET_KEY
 
 
-const firebaseAdmin = require('firebase-admin');
+/* const firebaseAdmin = require('firebase-admin');
 
 const serviceAccount = {
     "type": process.env.type,
@@ -35,7 +35,7 @@ const parseImageName = (url) => {
 }
 
 const storageRef = admin.storage().bucket(`gs://mern-generic-crud.appspot.com`);
-
+ */
 
 
 const storage = multer.diskStorage({
@@ -102,9 +102,10 @@ router.post("/", upload.single('file'), async (req, res) => {
 
         } else {
             const user = new UserModel(encryptBody(req.body))
-            await storageRef.upload(req.file.path, { public: true }).then(snapshot => {
+            user.image = `/img/${req.file.filename}`
+            /* await storageRef.upload(req.file.path, { public: true }).then(snapshot => {
                 user.image = snapshot[0].metadata.mediaLink
-            })
+            }) */
             user.save()
                 .then((response) => {
                     res.json(response);
@@ -148,7 +149,7 @@ router.delete("/", auth, (req, res) => {
 router.delete("/delete-multiple", auth, (req, res) => {
     try {
         const ids = req.body["ids"];
-        let images;
+        /* let images;
         UserModel.find({ "_id": { $in: ids } }, { "image": 1 }).then(response => { images = response }).then(() => {
             UserModel.deleteMany({ _id: { $in: ids } })
                 .then(response => {
@@ -162,7 +163,12 @@ router.delete("/delete-multiple", auth, (req, res) => {
                     res.json(response)
                 })
                 .catch(error => console.log(error))
-        })
+        }) */
+        UserModel.deleteMany({ _id: { $in: ids } })
+            .then(response => {
+                res.json(response)
+            })
+            .catch(error => console.log(error))
     } catch (error) {
         console.log(error)
     }

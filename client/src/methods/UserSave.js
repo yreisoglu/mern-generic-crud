@@ -1,7 +1,10 @@
 import axios from 'axios';
 
+const labURL = "http://172.28.226.108:5000"
+const devURL = "https://mern-generic-crud.herokuapp.com"
+
 const HTTP = axios.create({
-    baseURL: "https://mern-generic-crud.herokuapp.com",
+    baseURL: labURL
 });
 
 export const UserSave = async (body) => {

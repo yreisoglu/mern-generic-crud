@@ -33,7 +33,7 @@ import UserEdit from "./UserEdit";
 
 
 import { generateDoc } from "../methods/CreateDoc";
-import { toast } from "react-toastify"; 
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useStore from "../store";
 
@@ -82,7 +82,7 @@ const UserTable = () => {
   }, [isUpdated]);
 
   useEffect(() => {
-    document.title = "Employees Table";
+    document.title = "Personel Listesi";
   })
   const columns = [
     {
@@ -93,7 +93,7 @@ const UserTable = () => {
       searchable: false,
 
       render: rowData => (
-        <img style={{ height: 50, borderRadius: '50%', width: 50, position: 'static' }} src={"http://172.28.226.108:5000"+rowData.image}
+        <img style={{ height: 50, borderRadius: '50%', width: 50, position: 'static' }} src={"http://172.28.226.108:5000" + rowData.image}
         />
 
       ),
@@ -101,27 +101,27 @@ const UserTable = () => {
       sorting: false
     },
     {
-      title: 'Full Name',
+      title: 'Ad Soyad',
       field: 'fullname',
       searchable: true,
       sorting: false
     },
     {
-      title: 'Orion Start Day',
+      title: 'Orion Başlangıç Tarihi',
       field: 'firstJobDay',
       type: 'date',
       searchable: true,
       sorting: true
     },
     {
-      title: 'Department',
+      title: 'Departman',
       field: 'department',
       searchable: true,
       sorting: false
     },
 
     {
-      title: 'Position',
+      title: 'Pozisyon',
       field: 'workTitle',
       searchable: true,
       sorting: false
@@ -136,7 +136,7 @@ const UserTable = () => {
     // },
   ]
 
-  const MyNewTitle = ({ text = "Table Title", variant = "h6" }) => (
+  const MyNewTitle = ({ text = "Tablo Adı", variant = "h6" }) => (
     <Typography
       variant={variant}
       style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", fontSize: "1.75rem" }}
@@ -155,7 +155,7 @@ const UserTable = () => {
         <MaterialTable
           isLoading={isLoading}
           icons={tableIcons}
-          title={<MyNewTitle variant="h3" text="Employee List" />}
+          title={<MyNewTitle variant="h3" text="Personel Listesi" />}
           data={data}
           columns={columns}
 
@@ -165,7 +165,10 @@ const UserTable = () => {
               emptyDataSourceMessage:
                 <h1 style={{
                   textAlign: 'center', fontSize: 14
-                }}>There is no user available</h1>
+                }}>Listede kayıtlı kullanıcı bulunamadı.</h1>
+            },
+            toolbar: {
+              searchPlaceholder: "Arama"
             }
           }}
 
@@ -176,15 +179,15 @@ const UserTable = () => {
           actions={[
             {
               icon: () => <DeleteIcon />,
-              tooltip: "Delete all selected rows",
+              tooltip: "Seçilen tüm satırları sil.",
               onClick: () => DeleteUsersByIds(selectedRows)
                 .then(response => {
                   if (response.deletedCount > 0) {
                     toggleUpdate()
-                    toast.success(response.deletedCount + " User Deleted!")
+                    toast.success(response.deletedCount + " Kullanıcı Silindi!")
                   }
                 }).catch((error) => {
-                  toast.error("Delete Failed.")
+                  toast.error("Silme işlemi başarısız.")
                 })
 
             },
@@ -204,7 +207,7 @@ const UserTable = () => {
             {
               icon: () => <KeyboardArrowRightIcon />,
               openIcon: () => <KeyboardArrowDownIcon />,
-              tooltip: 'Show Both',
+              tooltip: 'Detayları Göster',
               render: rowData => {
                 return (
                   <UserEdit data={rowData}></UserEdit>

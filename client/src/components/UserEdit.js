@@ -11,17 +11,16 @@ import useStore from "../store";
 const UserEdit = (props) => {
 
   const titles = [
-    "Software Engineer",
-    "DevOps Engineer",
-    "IT System Admin Engineer",
-    "Test Automation Engineer",
-    "Product Support Engineer",
-    "Backend Developer",
-    "Frontend Developer",
-    "Software Developer",
-    "Fullstack Developer",
-    "Intern",
-    "Other"
+    "Yazılım Mühendisi",
+    "Teknoloji Grubu Mühendisi",
+    "DevOps Mühendisi",
+    "IT Sistem Mühendisi",
+    "Test Otomasyon Mühendisi",
+    "Ürün Destek Mühendisi",
+    "Arka Uç Geşiştirici",
+    "Ön Uç Geliştirici",
+    "Stajyer",
+    "Diğer"
   ]
 
   const store = useStore();

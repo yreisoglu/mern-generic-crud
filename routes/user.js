@@ -125,10 +125,11 @@ router.post("/", upload.single('file'), async (req, res) => {
 router.put("/", auth, upload.single("file"), async (req, res) => {
     try {
         let newObject = encryptBody(req.body);
-        await storageRef.upload(req.file.path, { public: true }).then(snapshot => {
+        newObject.image =`/img/${req.file.filename}`
+        /*await storageRef.upload(req.file.path, { public: true }).then(snapshot => {
             console.log(snapshot[0].metadata.mediaLink);
             newObject.image = snapshot[0].metadata.mediaLink
-        })
+        })*/
         UserModel.findByIdAndUpdate(req.body._id, newObject)
             .then(response => res.json(decryptResponse(response)))
             .catch(error => console.log(error))

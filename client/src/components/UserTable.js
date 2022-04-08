@@ -93,7 +93,7 @@ const UserTable = () => {
       searchable: false,
 
       render: rowData => (
-        <img style={{ height: 50, borderRadius: '50%', width: 50, position: 'static' }} src={rowData.image}
+        <img style={{ height: 50, borderRadius: '50%', width: 50, position: 'static' }} src={"http://172.28.226.108:5000"+rowData.image}
         />
 
       ),

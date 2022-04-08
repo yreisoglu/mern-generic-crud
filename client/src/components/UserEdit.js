@@ -93,10 +93,11 @@ const UserEdit = (props) => {
         form_data.append(key, values[key]);
       }
       if (formik.values.file === "") {
-        form_data.append("file", await urlToObject(props.data.image))
+        console.log("http://172.28.226.108:5000"+props.data.image)
+        form_data.append("file", await urlToObject("http://172.28.226.108:5000"+props.data.image))
       }
       form_data.append("_id", props.data._id);
-      
+
       UpdateUser(form_data).then(() => {
         toast.success("Update Succesful!")
         toggleUpdate();
@@ -108,7 +109,6 @@ const UserEdit = (props) => {
       });
     }
   });
-console.log(formik.values)
   return (
     <div className="container p-5" style={{ backgroundColor: "#f2f8fc" }}>
       <div className="row">
@@ -136,8 +136,8 @@ console.log(formik.values)
             <div className="form-group col-md-4 col-sm-12">
               <label for="FirstJobDay">Position</label>
               <select onChange={formik.handleChange} name="workTitle" class="form-select mt-2" value={formik.values.workTitle}>
-                {titles.map((item,index)=>{
-                  return(
+                {titles.map((item, index) => {
+                  return (
                     <option {...props.data.workTitle == item ? "selected" : null} value={item}>{item}</option>
                   )
                 })}
@@ -156,7 +156,7 @@ console.log(formik.values)
               <div className="form-group">
                 <label className="mb-3" for="file">Current Photo</label>
                 <div className="currentPhoto">
-                  <img className="currentPhotoImg" src={props.data.image} />
+                  <img className="currentPhotoImg" src={"http://172.28.226.108:5000"+props.data.image} />
                 </div>
               </div>
             </div>

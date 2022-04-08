@@ -26,8 +26,8 @@ const LoginPage = () => {
             password: "",
         },
         validationSchema: Yup.object({
-            username: Yup.string().required('Username is required'),
-            password: Yup.string().required('Password is required')
+            username: Yup.string().required('Kullanıcı adı gereklidir'),
+            password: Yup.string().required('Şifre gereklidir')
         }),
         onSubmit: (values) => {
             setLoading(true)
@@ -40,7 +40,7 @@ const LoginPage = () => {
                     }
                 }).catch(err => {
                     setLoading(false)
-                    toast.error("Login failed! Wrong username or password.", { autoClose: 2000 })
+                    toast.error("Hatalı kullanıcı adı ve şifre.", { autoClose: 2000 })
                     console.log(err)
                 })
         }
@@ -55,31 +55,31 @@ const LoginPage = () => {
                             <div className="form-items login">
                                 <div className="row">
                                     <div className="form-group col-md-9">
-                                        <h3>LOG IN</h3>
-                                        <p>ACCESSING THE USER LIST</p>
+                                        <h3>Giriş Yap</h3>
+                                        <p>PANEL ERİŞİMİ</p>
                                     </div>
                                     <div style={{ textAlign: 'right' }} className="form-group col-md-3">
                                         <Link to="/" style={{ background: '#495056' }} class="btn btn-primary">
-                                            Back
+                                            Geri
                                         </Link>
                                     </div>
                                 </div>
                                 <form onSubmit={formik.handleSubmit} encType="">
                                     <div className="row mt-4">
                                         <div className="form-group col-md-12">
-                                            <label for="name">Username</label>
+                                            <label for="name">Kullanıcı Adı</label>
                                             <input type="text" className="form-control" id="name" onChange={formik.handleChange} value={formik.username} name="username" />
                                             {formik.errors.username && formik.errors.username ? <p className="formikValidate">{formik.errors.username}</p> : null}
                                         </div>
                                         <div className="form-group mt-4 col-md-12">
-                                            <label for="Surname">Password</label>
+                                            <label for="Surname">Şifre</label>
                                             <input type="password" className="form-control" id="surname" onChange={formik.handleChange} value={formik.password} name="password" />
                                             {formik.touched.password && formik.errors.password ? <p className="formikValidate">{formik.errors.password}</p> : null}
                                         </div>
                                     </div>
                                     <div style={{ textAlign: 'center' }} class="form-button mt-3">
                                         {!isLoading ?
-                                            <button style={{ background: 'coral ' }} id="submit" type="submit" class="btn btn-primary">Login</button>
+                                            <button style={{ background: 'coral ' }} id="submit" type="submit" class="btn btn-primary">Giriş</button>
                                             :
                                             <button style={{ background: 'coral ' }} id="submit" type="submit" class="btn btn-primary">
                                                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>

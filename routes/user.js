@@ -4,38 +4,8 @@ const router = express.Router();
 const Cryptr = require('cryptr');
 const multer = require("multer");
 const auth = require("../middleware/auth")
-
+const fs = require("fs")
 const usersSecretKey = process.env.USERS_SECRET_KEY
-
-
-/* const firebaseAdmin = require('firebase-admin');
-
-const serviceAccount = {
-    "type": process.env.type,
-    "project_id": process.env.project_id,
-    "private_key_id": process.env.private_key_id,
-    "private_key": process.env.private_key.replace(/\\n/g, '\n'),
-    "client_email": process.env.client_email,
-    "client_id": process.env.client_id,
-    "auth_uri": process.env.auth_uri,
-    "token_uri": process.env.token_uri,
-    "auth_provider_x509_cert_url": process.env.auth_provider_x509_cert_url,
-    "client_x509_cert_url": process.env.client_x509_cert_url
-};
-
-
-const admin = firebaseAdmin.initializeApp({
-    credential: firebaseAdmin.credential.cert(serviceAccount)
-})
-
-const parseImageName = (url) => {
-    const endOfURL = url.split("/o/")
-    const parsedUrl = endOfURL[1].split("?generation")
-    return (parsedUrl[0])
-}
-
-const storageRef = admin.storage().bucket(`gs://mern-generic-crud.appspot.com`);
- */
 
 
 const storage = multer.diskStorage({
@@ -103,9 +73,7 @@ router.post("/", upload.single('file'), async (req, res) => {
         } else {
             const user = new UserModel(encryptBody(req.body))
             user.image = `/img/${req.file.filename}`
-            /* await storageRef.upload(req.file.path, { public: true }).then(snapshot => {
-                user.image = snapshot[0].metadata.mediaLink
-            }) */
+            
             user.save()
                 .then((response) => {
                     res.json(response);
@@ -125,11 +93,17 @@ router.post("/", upload.single('file'), async (req, res) => {
 router.put("/", auth, upload.single("file"), async (req, res) => {
     try {
         let newObject = encryptBody(req.body);
-        newObject.image =`/img/${req.file.filename}`
-        /*await storageRef.upload(req.file.path, { public: true }).then(snapshot => {
-            console.log(snapshot[0].metadata.mediaLink);
-            newObject.image = snapshot[0].metadata.mediaLink
-        })*/
+        if (req.file) {
+            newObject.image = `/img/${req.file.filename}`
+            UserModel.find({ "_id": req.body._id }, { "image": 1 }).then(response => {
+                if (fs.existsSync("./images" + response[0].image.replace("/img", ""))) {
+                    fs.unlink("./images" + response[0].image.replace("/img", ""), (err) => {
+                        if (err) console.log(err);
+                    });
+                }
+
+            });
+        }
         UserModel.findByIdAndUpdate(req.body._id, newObject)
             .then(response => res.json(decryptResponse(response)))
             .catch(error => console.log(error))
@@ -150,26 +124,19 @@ router.delete("/", auth, (req, res) => {
 router.delete("/delete-multiple", auth, (req, res) => {
     try {
         const ids = req.body["ids"];
-        /* let images;
+        let images;
         UserModel.find({ "_id": { $in: ids } }, { "image": 1 }).then(response => { images = response }).then(() => {
             UserModel.deleteMany({ _id: { $in: ids } })
                 .then(response => {
                     for (var index in images) {
-                        storageRef.file(parseImageName(images[index].image))
-                            .delete()
-                            .then(res => console.log(res[0].body))
-                            .catch(err => console.log(err))
-
+                        fs.unlink("./images" + images[index].image.replace("/img", ""), (err) => {
+                            if (err) console.log(error);
+                        });
                     }
                     res.json(response)
                 })
                 .catch(error => console.log(error))
-        }) */
-        UserModel.deleteMany({ _id: { $in: ids } })
-            .then(response => {
-                res.json(response)
-            })
-            .catch(error => console.log(error))
+        })
     } catch (error) {
         console.log(error)
     }

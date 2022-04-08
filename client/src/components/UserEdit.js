@@ -61,9 +61,9 @@ const UserEdit = (props) => {
       workTitle: props.data.workTitle,
     },
     validationSchema: Yup.object({
-      fullname: Yup.string().required("Name and surname is a required field"),
-      email: Yup.string().email("Invalid email address").required("Email is a required field"),
-      firstJobDay: Yup.date().required("Orion start day is a required field"),
+      fullname: Yup.string().required("Ad soyad alanı boş bırakılamaz"),
+      email: Yup.string().email("Geçersiz email").required("Email alanı boş bırakılamaz"),
+      firstJobDay: Yup.date().required("Orion başlangıç tarihi alanı boş bırakılamaz."),
       // file: Yup.mixed()
       //         .NoRequired("Image is a required field")
       //         .test(
@@ -81,8 +81,9 @@ const UserEdit = (props) => {
       // graduationTime: Yup.date().required("Graduation is a required field"),
       // skills: Yup.string().min(20, "Skills must be at least 20 characters")
       //   .required("Technical skills is a required field"),
-      description: Yup.string().min(150, "About must be at least 150 characters")
-        .required("About is a required field"),
+      workTitle: Yup.string().required("Çalıştığın pozisyonu seç"),
+      description: Yup.string().min(150, "Hakkımda alanında min(150) karakter kullanmalısın.")
+      .required("Hakkımda alanı boş bırakılamaz"),
     }),
 
     onSubmit: async (values) => {
@@ -99,10 +100,10 @@ const UserEdit = (props) => {
       form_data.append("_id", props.data._id);
 
       UpdateUser(form_data).then(() => {
-        toast.success("Update Succesful!")
+        toast.success("Güncelleme Başarılı!")
         toggleUpdate();
       }).catch(() => {
-        toast.error("Error! Please try again!")
+        toast.error("Hata! Bilgilerini kontrol et!")
       }).finally(() => {
         setLoading(false)
 
@@ -115,7 +116,7 @@ const UserEdit = (props) => {
         <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
           <div className="row mt-4">
             <div className="form-group col-md-6 col-sm-12">
-              <label for="Surname">Full Name</label>
+              <label for="Surname">Ad Soyad</label>
               <input type="text" className="form-control mt-2" id="fullname" onBlur={formik.handleBlur} placeholder="name surname" name="fullname" onChange={formik.handleChange} value={formik.values.fullname} />
               {formik.touched.fullname && formik.errors.fullname ? <p className="formikValidate">{formik.errors.fullname}</p> : null}
             </div>
@@ -127,14 +128,14 @@ const UserEdit = (props) => {
           </div>
           <div className="row mt-4">
             <div className="form-group col-md-4 col-sm-12">
-              <label className="mb-2" for="FirstJobDay">Orion Start Day</label>
+              <label className="mb-2" for="FirstJobDay">Orion Başlangıç Tarihi</label>
               <div className="form-group">
                 <input type="date" className="form-control" id="FirstJobDay" onBlur={formik.handleBlur} name="firstJobDay" onChange={formik.handleChange} value={formik.values.firstJobDay} />
                 {formik.touched.firstJobDay && formik.errors.firstJobDay ? <p className="formikValidate">{formik.errors.firstJobDay}</p> : null}
               </div>
             </div>
             <div className="form-group col-md-4 col-sm-12">
-              <label for="FirstJobDay">Position</label>
+              <label for="FirstJobDay">Pozisyon</label>
               <select onChange={formik.handleChange} name="workTitle" class="form-select mt-2" value={formik.values.workTitle}>
                 {titles.map((item, index) => {
                   return (
@@ -145,7 +146,7 @@ const UserEdit = (props) => {
             </div>
             <div className="form-group col-md-4 col-sm-12">
               <div className="form-group">
-                <label for="university">Department</label>
+                <label for="university">Departman</label>
                 <input type="text" className="form-control mt-2" onBlur={formik.handleBlur} id="department" placeholder="ex: NRD 2208" name="department" onChange={formik.handleChange} value={formik.values.department} />
                 {formik.touched.department && formik.errors.department ? <p className="formikValidate">{formik.errors.department}</p> : null}
               </div>
@@ -154,7 +155,7 @@ const UserEdit = (props) => {
           <div className="row mt-4">
             <div className="form-group mt-2 col-md-2">
               <div className="form-group">
-                <label className="mb-3" for="file">Current Photo</label>
+                <label className="mb-3" for="file">Mevcut Fotoğraf</label>
                 <div className="currentPhoto">
                   <img className="currentPhotoImg" src={"http://172.28.226.108:5000"+props.data.image} />
                 </div>
@@ -162,7 +163,7 @@ const UserEdit = (props) => {
             </div>
             <div className="form-group mt-5 col-md-10">
               <div className="form-group">
-                <label className="mb-3" for="file">Click to update photo</label>
+                <label className="mb-3" for="file">Mevcut fotoğrafı günlellemek için tıkla</label>
                 <input type="file" className="form-control" id="file" name="file" onChange={(e) => { formik.setFieldValue("file", (e.target.files[0])) }} />
                 {/* {formik.errors.file ? <p className="formikValidate">{formik.errors.file}</p> : null} */}
               </div>
@@ -210,14 +211,14 @@ const UserEdit = (props) => {
           </div> */}
           <div className="row mt-4">
             <div className="form-group mt-1 col-md-12 col-sm-12">
-              <label for="Description">About</label>
+              <label for="Description">Kişisel Bilgiler</label>
               <textarea className="form-control mt-2" name="description" onBlur={formik.handleBlur} id="description" rows="3" onChange={formik.handleChange} value={formik.values.description}></textarea>
               {formik.touched.description && formik.errors.description ? <p className="formikValidate">{formik.errors.description}</p> : null}
             </div>
           </div>
           <div style={{ textAlign: 'center' }} class="form-button mt-4">
             {!isLoading ?
-              <button id="submit" type="submit" class="btn btn-primary">Update</button>
+              <button id="submit" type="submit" class="btn btn-primary">Güncelle</button>
               :
               <button id="submit" type="submit" class="btn btn-primary">
                 <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>

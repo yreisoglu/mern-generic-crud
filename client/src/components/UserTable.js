@@ -128,12 +128,12 @@ const UserTable = () => {
     },
 
 
-    {
-      title: 'University',
-      field: 'university',
-      searchable: true,
-      sorting: false
-    },
+    // {
+    //   title: 'University',
+    //   field: 'university',
+    //   searchable: true,
+    //   sorting: false
+    // },
   ]
 
   const MyNewTitle = ({ text = "Table Title", variant = "h6" }) => (

@@ -50,14 +50,14 @@ const UserEdit = (props) => {
       email: props.data.email,
       file: "",
       firstJobDay: props.data.firstJobDay ? props.data.firstJobDay.substring(0, 10) : null,
-      totalWorkTime: props.data.totalWorkTime ? props.data.totalWorkTime : null,
-      university: props.data.university,
+      // totalWorkTime: props.data.totalWorkTime ? props.data.totalWorkTime : null,
+      // university: props.data.university,
       department: props.data.department,
-      graduationTime: props.data.graduationTime ? props.data.graduationTime.substring(0, 10) : null,
-      previousJob: props.data.previousJob ? props.data.previousJob : null,
-      skills: props.data.skills,
+      // graduationTime: props.data.graduationTime ? props.data.graduationTime.substring(0, 10) : null,
+      // previousJob: props.data.previousJob ? props.data.previousJob : null,
+      // skills: props.data.skills,
       description: props.data.description,
-      previousWorkTitle: props.data.previousWorkTitle ? props.data.previousWorkTitle : null,
+      // previousWorkTitle: props.data.previousWorkTitle ? props.data.previousWorkTitle : null,
       workTitle: props.data.workTitle,
     },
     validationSchema: Yup.object({
@@ -76,11 +76,11 @@ const UserEdit = (props) => {
       //             "Unsupported Format. (sup: .jpg .png)",
       //             value => value && SUPPORTED_FORMATS.includes(value.type)
       //         ),
-      university: Yup.string().required("University is a required field"),
-      department: Yup.string().required("Orion department is a required field"),
-      graduationTime: Yup.date().required("Graduation is a required field"),
-      skills: Yup.string().min(20, "Skills must be at least 20 characters")
-        .required("Technical skills is a required field"),
+      // university: Yup.string().required("University is a required field"),
+      // department: Yup.string().required("Orion department is a required field"),
+      // graduationTime: Yup.date().required("Graduation is a required field"),
+      // skills: Yup.string().min(20, "Skills must be at least 20 characters")
+      //   .required("Technical skills is a required field"),
       description: Yup.string().min(150, "About must be at least 150 characters")
         .required("About is a required field"),
     }),
@@ -168,7 +168,7 @@ const UserEdit = (props) => {
               </div>
             </div>
           </div>
-          <div className="row mt-4">
+          {/* <div className="row mt-4">
             <div className="form-group mt-1 col-md-9 col-sm-12">
               <div className="form-group">
                 <label for="university">University</label>
@@ -207,7 +207,7 @@ const UserEdit = (props) => {
               <textarea className="form-control mt-2" id="Skills" name="skills" placeholder=" ex: PHP, Vue.js, AWS.." onBlur={formik.handleBlur} rows="3" onChange={formik.handleChange} value={formik.values.skills}></textarea>
               {formik.touched.skills && formik.errors.skills ? <p className="formikValidate">{formik.errors.skills}</p> : null}
             </div>
-          </div>
+          </div> */}
           <div className="row mt-4">
             <div className="form-group mt-1 col-md-12 col-sm-12">
               <label for="Description">About</label>

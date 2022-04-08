@@ -41,14 +41,14 @@ const UserCreate = () => {
             email: "",
             file: "",
             firstJobDay: "",
-            totalWorkTime: "",
+            // totalWorkTime: "",
             department: "",
             workTitle: "",
-            university: "",
-            graduationTime: "",
-            previousJob: "",
-            previousWorkTitle: "",
-            skills: "",
+            // university: "",
+            // graduationTime: "",
+            // previousJob: "",
+            // previousWorkTitle: "",
+            // skills: "",
             description: "",
         },
         validationSchema: Yup.object({
@@ -67,12 +67,12 @@ const UserCreate = () => {
                     "Unsupported Format. (sup: .jpg .png)",
                     value => value && SUPPORTED_FORMATS.includes(value.type)
                 ),
-            university: Yup.string().required("University is a required field"),
-            workTitle: Yup.string().required("Position is a required field"),
+            // university: Yup.string().required("University is a required field"),
+            // workTitle: Yup.string().required("Position is a required field"),
             department: Yup.string().required("Orion department is a required field"),
-            graduationTime: Yup.date().required("Graduation is a required field"),
-            skills: Yup.string().min(20, "Skills must be at least 20 characters")
-                .required("Technical skills is a required field"),
+            // graduationTime: Yup.date().required("Graduation is a required field"),
+            // skills: Yup.string().min(20, "Skills must be at least 20 characters")
+            //     .required("Technical skills is a required field"),
             description: Yup.string().min(150, "About must be at least 150 characters")
                 .required("About is a required field"),
         }),
@@ -162,45 +162,45 @@ const UserCreate = () => {
                                             </div>
                                         </div>
                                     </div>
-                                    <div className="row mt-4">
-                                        <div className="form-group mt-1 col-md-8 col-sm-12">
-                                            <div className="form-group">
-                                                <label for="university">University</label>
-                                                <input type="text" className="form-control" onBlur={formik.handleBlur} id="university" placeholder="ex: Corban University" name="university" onChange={formik.handleChange} value={formik.values.university} />
-                                                {formik.touched.university && formik.errors.university ? <p className="formikValidate">{formik.errors.university}</p> : null}
-                                            </div>
-                                        </div>
-                                        <div className="form-group mt-1 col-md-4 col-sm-12">
-                                            <label className="mb-2" for="GraduationTime">Graduation</label>
-                                            <div className="form-group">
-                                                <input type="month" className="form-control" id="GraduationTime" onBlur={formik.handleBlur} name="graduationTime" onChange={formik.handleChange} value={formik.values.graduationTime} />
-                                                {formik.touched.graduationTime && formik.errors.graduationTime ? <p className="formikValidate">{formik.errors.graduationTime}</p> : null}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="row mt-4">
-                                        <div className="form-group mt-1 col-md-4 col-sm-12">
-                                            <label for="PreviousJob">Previous Job</label>
-                                            <input type="text" className="form-control" id="PreviousJob" name="previousJob" placeholder="ex: Corporate consulting" onChange={formik.handleChange} value={formik.values.previousJob} />
-                                        </div>
-                                        <div className="form-group mt-1 col-md-4 col-sm-12">
-                                            <label for="PreviousJob">Previous Position</label>
-                                            <input type="text" className="form-control" id="PreviousJob" name="previousWorkTitle" placeholder="ex: Backend Developer" onChange={formik.handleChange} value={formik.values.previousJobTitle} />
-                                        </div>
-                                        <div className="form-group mt-1 col-md-4 col-sm-12">
-                                            <div className="form-group">
-                                                <label for="TotalWorkTime">Total Experience</label>
-                                                <input type="text" className="form-control" id="TotalWorkTime" name="totalWorkTime" placeholder="ex: 2 years " onChange={formik.handleChange} value={formik.values.totalWorkTime} />
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="row mt-4">
+                                    {/* <div className="row mt-4"> */}
+                                        {/* <div className="form-group mt-1 col-md-8 col-sm-12"> */}
+                                            {/* <div className="form-group"> */}
+                                                {/* <label for="university">University</label> */}
+                                                {/* <input type="text" className="form-control" onBlur={formik.handleBlur} id="university" placeholder="ex: Corban University" name="university" onChange={formik.handleChange} value={formik.values.university} /> */}
+                                                {/* {formik.touched.university && formik.errors.university ? <p className="formikValidate">{formik.errors.university}</p> : null} */}
+                                            {/* </div> */}
+                                        {/* </div> */}
+                                        {/* <div className="form-group mt-1 col-md-4 col-sm-12"> */}
+                                            {/* <label className="mb-2" for="GraduationTime">Graduation</label> */}
+                                            {/* <div className="form-group"> */}
+                                                {/* <input type="month" className="form-control" id="GraduationTime" onBlur={formik.handleBlur} name="graduationTime" onChange={formik.handleChange} value={formik.values.graduationTime} /> */}
+                                                {/* {formik.touched.graduationTime && formik.errors.graduationTime ? <p className="formikValidate">{formik.errors.graduationTime}</p> : null} */}
+                                            {/* </div> */}
+                                        {/* </div> */}
+                                    {/* </div> */}
+                                    {/* <div className="row mt-4"> */}
+                                        {/* <div className="form-group mt-1 col-md-4 col-sm-12"> */}
+                                            {/* <label for="PreviousJob">Previous Job</label> */}
+                                            {/* <input type="text" className="form-control" id="PreviousJob" name="previousJob" placeholder="ex: Corporate consulting" onChange={formik.handleChange} value={formik.values.previousJob} /> */}
+                                        {/* </div> */}
+                                        {/* <div className="form-group mt-1 col-md-4 col-sm-12"> */}
+                                            {/* <label for="PreviousJob">Previous Position</label> */}
+                                            {/* <input type="text" className="form-control" id="PreviousJob" name="previousWorkTitle" placeholder="ex: Backend Developer" onChange={formik.handleChange} value={formik.values.previousJobTitle} /> */}
+                                        {/* </div> */}
+                                        {/* <div className="form-group mt-1 col-md-4 col-sm-12"> */}
+                                            {/* <div className="form-group"> */}
+                                                {/* <label for="TotalWorkTime">Total Experience</label> */}
+                                                {/* <input type="text" className="form-control" id="TotalWorkTime" name="totalWorkTime" placeholder="ex: 2 years " onChange={formik.handleChange} value={formik.values.totalWorkTime} /> */}
+                                            {/* </div> */}
+                                        {/* </div> */}
+                                    {/* </div> */}
+                                    {/* <div className="row mt-4">
                                         <div className="form-group mt-1 col-md-12 col-sm-12">
                                             <label for="Skills">Technical Skills</label>
                                             <textarea className="form-control mt-2" id="Skills" name="skills" placeholder=" ex: PHP, Vue.js, AWS.." onBlur={formik.handleBlur} rows="3" onChange={formik.handleChange} value={formik.values.skills}></textarea>
                                             {formik.touched.skills && formik.errors.skills ? <p className="formikValidate">{formik.errors.skills}</p> : null}
                                         </div>
-                                    </div>
+                                    </div> */}
                                     <div className="row mt-4">
                                         <div className="form-group mt-1 col-md-12 col-sm-12">
                                             <label for="Description">About</label>

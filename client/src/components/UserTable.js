@@ -4,7 +4,7 @@ import { DeleteUsersByIds, GetUsers } from "../methods/GetUsers";
 import { isExpired } from '../methods/Account';
 import '../UserCreate.css';
 import 'react-confirm-alert/src/react-confirm-alert.css';
-
+import Swal from 'sweetalert2';
 import Add from '@material-ui/icons/AddBoxRounded';
 import AddBox from '@material-ui/icons/AddBox';
 import ArrowDownward from '@material-ui/icons/ArrowDownward';
@@ -177,15 +177,33 @@ const UserTable = () => {
             {
               icon: () => <DeleteIcon />,
               tooltip: "Delete all selected rows",
-              onClick: () => DeleteUsersByIds(selectedRows)
-                .then(response => {
-                  if (response.deletedCount > 0) {
-                    toggleUpdate()
-                    toast.success(response.deletedCount + " User Deleted!")
-                  }
-                }).catch((error) => {
-                  toast.error("Delete Failed.")
-                })
+              onClick: () => Swal.fire({
+                title: 'Emin misin?',
+                text: "Seçilen kullanıcılar silinecektir!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Sil',
+                cancelButtonText: 'Vazgeç',
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  DeleteUsersByIds(selectedRows)
+                  .then(response => {
+                    if (response.deletedCount > 0) {
+                      toggleUpdate()
+                      Swal.fire(
+                        'Silme işlemi başarılı',
+                        response.deletedCount + ' adet kullanıcı başarıyla silindi.',
+                      )
+                    }
+                  }).catch((error) => {
+                    toast.error("Delete Failed.")
+                  })
+                }
+              })
+              
+              
 
             },
             {

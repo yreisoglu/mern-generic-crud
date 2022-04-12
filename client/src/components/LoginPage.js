@@ -13,6 +13,7 @@ const LoginPage = () => {
     const [isLoading, setLoading] = useState(false);
     const navigate = useNavigate();
     useEffect(() => {
+        window.document.title = "Giriş Yap"
         isExpired().then(res => {
             if (!res) {
                 navigate("/users")

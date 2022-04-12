@@ -17,7 +17,7 @@ const UserEdit = (props) => {
     "IT Sistem Mühendisi",
     "Test Otomasyon Mühendisi",
     "Ürün Destek Mühendisi",
-    "Arka Uç Geşiştirici",
+    "Arka Uç Geliştirici",
     "Ön Uç Geliştirici",
     "Stajyer",
     "Diğer"
@@ -76,7 +76,7 @@ const UserEdit = (props) => {
       //             value => value && SUPPORTED_FORMATS.includes(value.type)
       //         ),
       // university: Yup.string().required("University is a required field"),
-      // department: Yup.string().required("Orion department is a required field"),
+      department: Yup.string().required("Orion departman alanı boş bırakılamaz"),
       // graduationTime: Yup.date().required("Graduation is a required field"),
       // skills: Yup.string().min(20, "Skills must be at least 20 characters")
       //   .required("Technical skills is a required field"),
@@ -93,7 +93,6 @@ const UserEdit = (props) => {
         form_data.append(key, values[key]);
       }
       if (formik.values.file === "") {
-        console.log("http://172.28.226.108:5000"+props.data.image)
         form_data.append("file", await urlToObject("http://172.28.226.108:5000"+props.data.image))
       }
       form_data.append("_id", props.data._id);

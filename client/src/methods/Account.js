@@ -1,5 +1,5 @@
 const axios = require("axios")
-const labURL = "http://172.28.226.108:5000"
+const labURL = "http://47.168.155.32:5000"
 const devURL = "https://mern-generic-crud.herokuapp.com"
 
 const HTTP = axios.create({

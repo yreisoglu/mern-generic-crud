@@ -93,7 +93,7 @@ const UserEdit = (props) => {
         form_data.append(key, values[key]);
       }
       if (formik.values.file === "") {
-        form_data.append("file", await urlToObject("http://172.28.226.108:5000"+props.data.image))
+        form_data.append("file", await urlToObject("http://47.168.155.32:5000"+props.data.image))
       }
       form_data.append("_id", props.data._id);
 
@@ -155,7 +155,7 @@ const UserEdit = (props) => {
               <div className="form-group">
                 <label className="mb-3" for="file">Mevcut Fotoğraf</label>
                 <div className="currentPhoto">
-                  <img className="currentPhotoImg" src={"http://172.28.226.108:5000"+props.data.image} />
+                  <img className="currentPhotoImg" src={"http://47.168.155.32:5000"+props.data.image} />
                 </div>
               </div>
             </div>

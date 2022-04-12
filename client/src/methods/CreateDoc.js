@@ -82,7 +82,7 @@ export const generateDoc = async (rowData) => {
                     size: {
                         orientation: PageOrientation.LANDSCAPE,
                         height: convertMillimetersToTwip(210),
-                        width: convertMillimetersToTwip(200),
+                        width: convertMillimetersToTwip(220),
                     },
                 },
             },

@@ -73,7 +73,7 @@ export const generateDoc = async (rowData) => {
         const jobDaySet = aylar[jobDayParse - 1][jobDayParse];
         const jobDayBirlestir = obj['firstJobDay'].substring(8, 10) + " " + jobDaySet + " " + obj['firstJobDay'].substring(0, 4);
 
-        const image = await fetch(obj['image']);
+        const image = await fetch("http://172.28.226.108:5000"+obj['image']);
         const imageBlob = image.blob();
         let section = {
             properties: {

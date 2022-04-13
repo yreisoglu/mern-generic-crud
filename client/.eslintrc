@@ -27,6 +27,9 @@
         "react/prefer-stateless-function": [1],
         "react/static-property-placement": [1, "property assignment"],
         "react/display-name": "off",
-        "react/jsx-props-no-spreading": "off"
+        "react/jsx-props-no-spreading": "off",
+        "no-console": "off",
+        "jsx-a11y/label-has-associated-control": "off",
+        "jsx-a11y/label-has-for": "off"
     }
 }

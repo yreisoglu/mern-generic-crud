@@ -1,49 +1,55 @@
-import axios from 'axios';
+import axios from 'axios'
 
 const HTTP = axios.create({
-    baseURL: "https://mern-generic-crud.herokuapp.com",
-});
-
+    baseURL: 'https://mern-generic-crud.herokuapp.com',
+})
 
 export const GetUsers = async () => {
     return new Promise((resolve, reject) => {
-        HTTP.get('/api/user', { headers: { 'x-access-token': localStorage.getItem("jwt") } })
-            .then(response => {
-                resolve(response.data);
-            }).catch(error => reject(error))
+        HTTP.get('/api/user', { headers: { 'x-access-token': localStorage.getItem('jwt') } })
+            .then((response) => {
+                resolve(response.data)
+            })
+            .catch((error) => reject(error))
     })
-
-};
+}
 
 export const GetUserById = async (id) => {
     return new Promise((resolve, reject) => {
-        HTTP.get('/api/user/get-user-by-id', { params: { "id": id }, headers: { 'x-access-token': localStorage.getItem("jwt") } })
-            .then(response => {
+        HTTP.get('/api/user/get-user-by-id', {
+            params: { id },
+            headers: { 'x-access-token': localStorage.getItem('jwt') },
+        })
+            .then((response) => {
                 resolve(response.data)
-            }).catch(error => {
+            })
+            .catch((error) => {
                 reject(error)
             })
     })
 }
 
 export const UpdateUser = async (body) => {
+    await HTTP.put('/api/user', body, {
+        headers: { 'x-access-token': localStorage.getItem('jwt') },
+    })
 
-    await HTTP.put('/api/user', body, { headers: { "x-access-token": localStorage.getItem("jwt") } })
-
-        .then(response => console.log(response))
-        .catch(error => console.log(error));
-};
+        .then((response) => console.log(response))
+        .catch((error) => console.log(error))
+}
 
 export const DeleteUsersByIds = async (ids) => {
-    let payload = {
-        ids: ids,
-        token: localStorage.getItem("jwt")
+    const payload = {
+        ids,
+        token: localStorage.getItem('jwt'),
     }
     return new Promise((resolve, reject) => {
-        HTTP.delete("/api/user/delete-multiple", { data: payload }).then(response => {
-            resolve(response.data)
-        }).catch(error => {
-            reject(error)
-        })
+        HTTP.delete('/api/user/delete-multiple', { data: payload })
+            .then((response) => {
+                resolve(response.data)
+            })
+            .catch((error) => {
+                reject(error)
+            })
     })
 }

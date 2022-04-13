@@ -11,7 +11,7 @@ import UserCreate from './components/UserCreate'
 import LoginPage from './components/LoginPage'
 import UserTable from './components/UserTable'
 
-const App = function () {
+const App = () => {
     return (
         <BrowserRouter>
             <ToastContainer

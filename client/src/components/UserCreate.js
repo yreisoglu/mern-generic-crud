@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { toast } from 'react-toastify'
-import { UserSave } from '../methods/UserSave'
+import UserSave from '../methods/UserSave'
 
 const UserCreate = function () {
     const [isLoading, setLoading] = useState(false)

@@ -47,14 +47,30 @@ router.get("/", auth, (req, res) => {
 
 router.get("/get-users-by-department", auth, (req, res) => {
   try {
-      const decryptedResponse = [];
-      UserModel.find({ department: req.query.department })
-          .then((response) => {
-              response.forEach((item) => {
-                  decryptedResponse.push(decryptResponse(item));
-              });
-              res.json(decryptedResponse);
-          })
+    const decryptedResponse = [];
+    UserModel.find({ department: req.query.department })
+      .then((response) => {
+        response.forEach((item) => {
+          decryptedResponse.push(decryptResponse(item));
+        });
+        res.json(decryptedResponse);
+      })
+      .catch((err) => res.json(err));
+  } catch (error) {}
+});
+
+router.get("/get-existing-departments", auth, (req, res) => {
+  try {
+    UserModel.find({}, { department: 1, _id: 0 })
+      .then((response) => {
+        const departments = [];
+        Object.keys(response).forEach((key) => {
+          if (!departments.includes(response[key].department)) {
+            departments.push(response[key].department);
+          }
+        });
+        res.json(departments);
+      })
       .catch((err) => res.json(err));
   } catch (error) {}
 });

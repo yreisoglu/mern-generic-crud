@@ -66,3 +66,13 @@ export const DeleteUsersByIds = async (ids) => {
       });
   });
 };
+
+export const GetExistingDepartments = () => {
+  return new Promise((resolve, reject) => {
+    HTTP.get("/api/user/get-existing-departments", {
+      headers: { "x-access-token": localStorage.getItem("jwt") },
+    })
+      .then((response) => resolve(response.data))
+      .catch((err) => reject(err));
+  });
+};

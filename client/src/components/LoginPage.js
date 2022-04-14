@@ -8,12 +8,12 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { toast } from "react-toastify";
 import useStore from "../store";
+import { GetExistingDepartments } from "../methods/GetUsers";
 
 const LoginPage = () => {
   const [isLoading, setLoading] = useState(false);
   const [selectedDepartment, setDepartment] = useState("Hepsi");
-  const store = useStore();
-  const { departments } = store;
+  const [departments, setDepartmentList] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,6 +23,12 @@ const LoginPage = () => {
         navigate("/users");
       }
     });
+    GetExistingDepartments()
+      .then((res) => {
+        const list = ["Hepsi"].concat(res);
+        setDepartmentList(list);
+      })
+      .catch((err) => console.log(err));
   }, []);
 
   const formik = useFormik({

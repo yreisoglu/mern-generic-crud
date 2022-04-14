@@ -1,10 +1,22 @@
-import create from 'zustand';
-
+import create from "zustand";
 
 const useStore = create((set) => ({
-    isUpdated: false,
-    toggleUpdate: () => set(state => ({ isUpdated: !state.isUpdated })),
-}))
-
+  isUpdated: false,
+  departments: [
+    "Hepsi",
+    "NRD03",
+    "NRD12",
+    "NRD15",
+    "NRD17",
+    "NRD21",
+    "NRD22",
+    "NRD23",
+    "NRD0101",
+    "NRD0201",
+  ],
+  selectedDepartment: "Hepsi",
+  setDepartment: (department) => set((state) => ({ selectedDepartment: department })),
+  toggleUpdate: () => set((state) => ({ isUpdated: !state.isUpdated })),
+}));
 
 export default useStore;

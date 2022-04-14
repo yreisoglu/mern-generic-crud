@@ -6,7 +6,7 @@ import * as Yup from 'yup'
 import { toast } from 'react-toastify'
 import { isExpired, Login } from '../methods/Account'
 
-function LoginPage() {
+const LoginPage = () => {
     const [isLoading, setLoading] = useState(false)
     const navigate = useNavigate()
     useEffect(() => {

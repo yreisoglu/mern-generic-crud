@@ -22,7 +22,7 @@ export const GetUsersByDepartment = async (selectedDepartment) => {
   return new Promise((resolve, reject) => {
     HTTP.get("/api/user/get-users-by-department", {
       headers: { "x-access-token": localStorage.getItem("jwt") },
-      data: { department: selectedDepartment },
+      params: { department: selectedDepartment },
     })
       .then((response) => resolve(response.data))
       .catch((error) => reject(error));

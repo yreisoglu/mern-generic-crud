@@ -14,8 +14,7 @@ const useStore = create((set) => ({
     "NRD0101",
     "NRD0201",
   ],
-  selectedDepartment: "Hepsi",
-  setDepartment: (department) => set((state) => ({ selectedDepartment: department })),
+  setDepartment: (department) => (localStorage.setItem("department",department)),
   toggleUpdate: () => set((state) => ({ isUpdated: !state.isUpdated })),
 }));
 

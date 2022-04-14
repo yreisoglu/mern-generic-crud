@@ -47,8 +47,14 @@ router.get("/", auth, (req, res) => {
 
 router.get("/get-users-by-department", auth, (req, res) => {
   try {
-    UserModel.find({ department: req.body.department })
-      .then((response) => res.json(response))
+      const decryptedResponse = [];
+      UserModel.find({ department: req.query.department })
+          .then((response) => {
+              response.forEach((item) => {
+                  decryptedResponse.push(decryptResponse(item));
+              });
+              res.json(decryptedResponse);
+          })
       .catch((err) => res.json(err));
   } catch (error) {}
 });

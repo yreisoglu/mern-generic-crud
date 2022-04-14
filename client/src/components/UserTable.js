@@ -25,6 +25,7 @@ import ViewColumn from "@material-ui/icons/ViewColumn";
 import { Typography } from "@material-ui/core";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import DeleteIcon from "@material-ui/icons/Delete";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import KeyboardArrowRightIcon from "@material-ui/icons/KeyboardArrowRight";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 
@@ -35,10 +36,11 @@ import { generateDoc } from "../methods/CreateDoc";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import useStore from "../store";
+import { Logout } from "../methods/Logout";
 
 const UserTable = () => {
   const store = useStore();
-  const { isUpdated, toggleUpdate, selectedDepartment } = store;
+  const { isUpdated, toggleUpdate } = store;
 
   const tableIcons = {
     Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -66,18 +68,19 @@ const UserTable = () => {
 
   const [isLoading, setLoading] = useState(true);
   useEffect(() => {
+    const department = localStorage.getItem("department");
     isExpired().then((res) => {
       if (res) {
         navigate("/login");
       }
     });
-    if (selectedDepartment === "Hepsi") {
-      GetUsers().then((response) => {
+    if (department !== "Hepsi") {
+      GetUsersByDepartment(department).then((response) => {
         setData(response);
         setLoading(false);
       });
     } else {
-      GetUsersByDepartment(selectedDepartment).then((response) => {
+      GetUsers().then((response) => {
         setData(response);
         setLoading(false);
       });
@@ -222,6 +225,14 @@ const UserTable = () => {
               icon: () => <Add htmlColor="coral" fontSize="large" />,
               isFreeAction: true,
               onClick: (event) => navigate("/"),
+            },
+            {
+              icon: () => <ExitToAppIcon htmlColor="coral" fontSize="large"></ExitToAppIcon>,
+              isFreeAction: true,
+              onClick: () => {
+                Logout();
+                navigate("/login");
+              },
             },
           ]}
           detailPanel={[

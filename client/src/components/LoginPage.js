@@ -11,9 +11,10 @@ import useStore from "../store";
 
 const LoginPage = () => {
   const [isLoading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [selectedDepartment, setDepartment] = useState("Hepsi");
   const store = useStore();
-  const { departments, setDepartment, selectedDepartment } = store;
+  const { departments } = store;
+  const navigate = useNavigate();
 
   useEffect(() => {
     window.document.title = "Giriş Yap";
@@ -34,6 +35,7 @@ const LoginPage = () => {
       password: Yup.string().required("Şifre gereklidir"),
     }),
     onSubmit: (values) => {
+      localStorage.setItem("department", selectedDepartment);
       setLoading(true);
       Login(values.username, values.password)
         .then((res) => {
@@ -105,7 +107,6 @@ const LoginPage = () => {
                         className="form-select"
                         onChange={(e) => {
                           setDepartment(e.target.value);
-                          console.log(selectedDepartment);
                         }}
                       >
                         {departments.map((item) => {

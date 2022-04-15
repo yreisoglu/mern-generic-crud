@@ -1,10 +1,8 @@
-import create from 'zustand';
-
+import create from 'zustand'
 
 const useStore = create((set) => ({
     isUpdated: false,
-    toggleUpdate: () => set(state => ({ isUpdated: !state.isUpdated })),
+    toggleUpdate: () => set((state) => ({ isUpdated: !state.isUpdated })),
 }))
 
-
-export default useStore;
+export default useStore

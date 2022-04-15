@@ -10,14 +10,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kaledibif/mern-generic-crud.git"
+    "url": "git+https://github.com/yreisoglu/mern-generic-crud.git"
   },
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/kaledibif/mern-generic-crud/issues"
+    "url": "https://github.com/yreisoglu/mern-generic-crud/issues"
   },
-  "homepage": "https://github.com/kaledibif/mern-generic-crud#readme",
+  "homepage": "https://github.com/yreisoglu/mern-generic-crud#readme",
   "dependencies": {
     "bcrypt": "^5.0.1",
     "body-parser": "^1.19.2",

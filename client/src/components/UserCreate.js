@@ -119,7 +119,7 @@ const UserCreate = function () {
                                 <form onSubmit={formik.handleSubmit} encType="multipart/form-data">
                                     <div className="row mt-4">
                                         <div className="form-group col-md-4 col-sm-12">
-                                            <label htmlFor="Surname">Full Name</label>
+                                            <label htmlFor="fullname">Full Name</label>
                                             <input
                                                 type="text"
                                                 className="form-control"
@@ -207,6 +207,7 @@ const UserCreate = function () {
                                             <select
                                                 onChange={formik.handleChange}
                                                 name="workTitle"
+                                                id="FirstJobDay"
                                                 className="form-select"
                                             >
                                                 <option value={formik.values.workTitle}>
@@ -228,7 +229,7 @@ const UserCreate = function () {
                                         </div>
                                         <div className="form-group mt-1 col-md-4 col-sm-12">
                                             <div className="form-group">
-                                                <label htmlFor="university">Department</label>
+                                                <label htmlFor="department">Department</label>
                                                 <input
                                                     type="text"
                                                     className="form-control"
@@ -307,11 +308,13 @@ const UserCreate = function () {
                                             />
                                         </div>
                                         <div className="form-group mt-1 col-md-4 col-sm-12">
-                                            <label htmlFor="PreviousJob">Previous Position</label>
+                                            <label htmlFor="previousWorkTitle">
+                                                Previous Position
+                                            </label>
                                             <input
                                                 type="text"
                                                 className="form-control"
-                                                id="PreviousJob"
+                                                id="previousWorkTitle"
                                                 name="previousWorkTitle"
                                                 placeholder="ex: Backend Developer"
                                                 onChange={formik.handleChange}

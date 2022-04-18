@@ -130,7 +130,7 @@ router.delete("/delete-multiple", auth, (req, res) => {
                 .then(response => {
                     for (var index in images) {
                         fs.unlink("./images" + images[index].image.replace("/img", ""), (err) => {
-                            if (err) console.log(error);
+                            if (err) console.log(err);
                         });
                     }
                     res.json(response)

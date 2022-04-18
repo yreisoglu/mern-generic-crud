@@ -155,7 +155,7 @@ router.delete("/delete-multiple", auth, (req, res) => {
                     for (var index in images) {
                         storageRef.file(parseImageName(images[index].image))
                             .delete()
-                            .then(res => console.log(res[0].body))
+                            .then()
                             .catch(err => console.log(err))
 
                     }

@@ -5,7 +5,6 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "heroku-postbuild": "cd client && DISABLE_ESLINT_PLUGIN='true' && ESLINT_NO_DEV_ERRORS='true' && npm install && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

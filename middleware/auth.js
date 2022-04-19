@@ -2,20 +2,33 @@ const jwt = require("jsonwebtoken");
 
 const config = process.env;
 
-const verifyToken = (req, res, next) => {
-    const token =
-        req.body.token || req.query.token || req.headers["x-access-token"];
+const auth = (req, res, next) => {
+  const token = req.body.token || req.query.token || req.headers["x-access-token"];
 
-    if (!token) {
-        return res.status(403).send("A token is required for authentication");
-    }
-    try {
-        const decoded = jwt.verify(token, config.TOKEN_KEY);
-        req.account = decoded;
-    } catch (err) {
-        return res.status(401).send("Invalid Token");
-    }
-    return next();
+  if (!token) {
+    return res.status(403).send("A token is required for authentication");
+  }
+  try {
+    const decoded = jwt.verify(token, config.TOKEN_KEY);
+    req.account = decoded;
+  } catch (err) {
+    return res.status(401).send("Invalid Token");
+  }
+  return next();
 };
 
-module.exports = verifyToken;
+const verifyRootLevel = (req, res, next) => {
+  const token = req.body.token || req.query.token || req.headers["x-access-token"];
+  if (!token) {
+    return res.status(403).send("A token is required for authentication");
+  }
+  try {
+    const decoded = jwt.verify(token, config.TOKEN_KEY);
+    console.log(decoded)
+    if (decoded.role == "root") return next();
+  } catch (err) {
+    return res.status(401).send("Invalid Token");
+  }
+};
+
+module.exports = { auth, verifyRootLevel };

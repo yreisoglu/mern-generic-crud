@@ -5,7 +5,7 @@ const HTTP = axios.create({
 })
 const GetAvailableForms = () => {
     return new Promise((resolve, reject) => {
-        HTTP.get('http://mern-generic-crud.herokuapp.com/api/dynamic/get-forms')
+        HTTP.get('api/dynamic/get-forms')
             .then((res) => {
                 resolve(res.data)
             })

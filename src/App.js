@@ -10,6 +10,9 @@ import { ToastContainer } from 'react-toastify'
 import UserCreate from './components/UserCreate'
 import LoginPage from './components/LoginPage'
 import UserTable from './components/UserTable'
+import DynamicLoginPage from './Pages/DynamicLoginPage'
+import RootPanel from './Pages/RootPanel'
+import AdminPanel from './Pages/AdminPanel'
 
 const App = () => {
     return (
@@ -30,6 +33,11 @@ const App = () => {
                     <Route index element={<UserCreate />} />
                     <Route path="login" element={<LoginPage />} />
                     <Route path="users" element={<UserTable />} />
+                </Route>
+                <Route path="/dynamic">
+                    <Route path="login" element={<DynamicLoginPage />} />
+                    <Route path="root-panel" element={<RootPanel />} />
+                    <Route path="admin-panel" element={<AdminPanel />} />
                 </Route>
             </Routes>
         </BrowserRouter>

@@ -22,3 +22,14 @@ export const isExpired = () => {
             })
     })
 }
+
+export const getRole = () => {
+    return new Promise((resolve, reject) => {
+        HTTP.post('/api/account/get-role', { token: localStorage.getItem('jwt') })
+            .then((res) => resolve(res.data))
+            .catch((err) => {
+                console.log(err)
+                reject(err)
+            })
+    })
+}

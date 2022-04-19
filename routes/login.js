@@ -81,7 +81,7 @@ router.post("/login", async (req, res) => {
         { account_id: account._id, username, role: account.role },
         process.env.TOKEN_KEY,
         {
-          expiresIn: "1m",
+          expiresIn: "12h",
         }
       );
       account.token = token;

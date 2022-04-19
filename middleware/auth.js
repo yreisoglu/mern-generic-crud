@@ -24,7 +24,6 @@ const verifyRootLevel = (req, res, next) => {
   }
   try {
     const decoded = jwt.verify(token, config.TOKEN_KEY);
-    console.log(decoded)
     if (decoded.role == "root") return next();
   } catch (err) {
     return res.status(401).send("Invalid Token");

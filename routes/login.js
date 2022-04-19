@@ -81,7 +81,7 @@ router.post("/login", async (req, res) => {
         { account_id: account._id, username, role: account.role },
         process.env.TOKEN_KEY,
         {
-          expiresIn: "12h",
+          expiresIn: "1m",
         }
       );
       account.token = token;
@@ -107,6 +107,20 @@ router.post("/is-expired", (req, res) => {
   } catch (error) {
     console.error(error);
     res.send(true);
+  }
+});
+
+router.post("/get-role", (req, res) => {
+  try {
+    if (req.body.token) {
+      const decoded = jwt.verify(req.body.token, process.env.TOKEN_KEY);
+      if (decoded.role) res.json({ role: decoded.role });
+      res.status(404).send();
+    }
+    res.status(404).send();
+  } catch (error) {
+    console.log(error);
+    res.status(404).send();
   }
 });
 module.exports = router;

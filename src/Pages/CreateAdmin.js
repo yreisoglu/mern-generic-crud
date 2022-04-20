@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { isExpired, RegisterAsAdmin } from '../methods/Account'
+import { getRole, isExpired, RegisterAsAdmin } from '../methods/Account'
 import GetAvailableForms from '../methods/DynamicForms'
 
 const CreateAdmin = () => {
@@ -19,9 +19,11 @@ const CreateAdmin = () => {
         isExpired()
             .then((res) => {
                 if (res) {
-                    console.log(res)
-                    navigate('/dynamic/login')
+                    navigate('/dynamic')
                 }
+                getRole().then((roleResponse) => {
+                    if (roleResponse.role !== 'root') navigate('/dynamic')
+                })
             })
             .catch((error) => {
                 console.error(error)

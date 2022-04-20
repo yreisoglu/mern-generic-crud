@@ -1,35 +1,34 @@
-const express = require('express');
-const cors = require('cors')
-require('dotenv').config()
-const bodyParser = require('body-parser');
+const express = require("express");
+const cors = require("cors");
+require("dotenv").config();
+const bodyParser = require("body-parser");
 const database = require("./database")();
 const path = require("path");
 
 const app = express();
-app.use(cors())
+app.use(cors());
 const port = process.env.PORT || 5000;
 
-
 app.use(express.static(__dirname + "/client/build"));
-app.use('/img', express.static(__dirname + '/images'));
-
+app.use("/img", express.static(__dirname + "/images"));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-const userRouter = require("./routes/user")
-app.use("/api/user", userRouter)
+const userRouter = require("./routes/user");
+app.use("/api/user", userRouter);
 
 const accountRouter = require("./routes/login");
-app.use("/api/account", accountRouter)
+app.use("/api/account", accountRouter);
 
 const dynamicRouter = require("./routes/dynamic");
-app.use("/api/dynamic", dynamicRouter)
+app.use("/api/dynamic", dynamicRouter);
 
+const dynamicAccountRouter = require("./routes/dynamicAccount");
+app.use("/api/dynamic-account", dynamicAccountRouter);
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "/client/build/index.html"));
 });
-
 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);

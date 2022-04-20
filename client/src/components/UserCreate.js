@@ -20,6 +20,8 @@ const UserCreate = () => {
     const titles = [
         "Yazılım Mühendisi",
         "Teknoloji Grubu Mühendisi",
+        "Teknoloji Grubu Yarı Zamanlı Mühendisi",
+        "Yazılım Mimarı",
         "DevOps Mühendisi",
         "IT Sistem Mühendisi",
         "Test Otomasyon Mühendisi",

@@ -13,6 +13,8 @@ const UserEdit = (props) => {
   const titles = [
     "Yazılım Mühendisi",
     "Teknoloji Grubu Mühendisi",
+    "Teknoloji Grubu Yarı Zamanlı Mühendisi",
+    "Yazılım Mimarı",
     "DevOps Mühendisi",
     "IT Sistem Mühendisi",
     "Test Otomasyon Mühendisi",
@@ -161,7 +163,7 @@ const UserEdit = (props) => {
             </div>
             <div className="form-group mt-5 col-md-10">
               <div className="form-group">
-                <label className="mb-3" for="file">Mevcut fotoğrafı günlellemek için tıkla</label>
+                <label className="mb-3" for="file">Mevcut fotoğrafı güncellemek için tıkla</label>
                 <input type="file" className="form-control" id="file" name="file" onChange={(e) => { formik.setFieldValue("file", (e.target.files[0])) }} />
                 {/* {formik.errors.file ? <p className="formikValidate">{formik.errors.file}</p> : null} */}
               </div>

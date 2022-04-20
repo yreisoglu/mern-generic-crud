@@ -10,7 +10,7 @@ const AdminPanel = () => {
             .then((res) => {
                 if (res) {
                     console.log(res)
-                    navigate('/dynamic/login')
+                    navigate('/dynamic')
                 }
             })
             .catch((error) => {

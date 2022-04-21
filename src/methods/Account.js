@@ -1,7 +1,7 @@
 const axios = require('axios')
 
 const HTTP = axios.create({
-    baseURL: 'https://mern-generic-crud.herokuapp.com',
+    baseURL: process.env.REACT_APP_API_URL,
 })
 
 export const Login = (username, password) => {

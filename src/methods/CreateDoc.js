@@ -73,7 +73,7 @@ const generateDoc = async (rowData) => {
         )} ${jobDaySet} ${obj.firstJobDay.substring(0, 4)}`
 
         // eslint-disable-next-line no-await-in-loop
-        const image = await fetch(obj.image)
+        const image = await fetch(process.env.REACT_APP_API_URL + obj.image)
         const imageBlob = image.blob()
         const section = {
             properties: {

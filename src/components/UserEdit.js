@@ -28,7 +28,7 @@ const UserEdit = (props) => {
     const [isLoading, setLoading] = useState(false)
 
     const urlToObject = async (image) => {
-        const response = await fetch(image)
+        const response = await fetch(process.env.REACT_APP_API_URL + image)
         const blob = await response.blob()
         const file = new File([blob], 'image.jpg', { type: blob.type })
         return file
@@ -217,7 +217,10 @@ const UserEdit = (props) => {
                                     Current Photo
                                 </label>
                                 <div className="currentPhoto">
-                                    <img className="currentPhotoImg" src={props.data.image} />
+                                    <img
+                                        className="currentPhotoImg"
+                                        src={`${process.env.REACT_APP_API_URL}${props.data.image}`}
+                                    />
                                 </div>
                             </div>
                         </div>

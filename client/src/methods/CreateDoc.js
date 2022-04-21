@@ -14,7 +14,8 @@ import {
     VerticalAlign,
     SectionType,
     convertMillimetersToTwip,
-    PageOrientation
+    PageOrientation,
+    AlignmentType
 } from "docx";
 import { saveAs } from "file-saver";
 
@@ -122,7 +123,7 @@ export const generateDoc = async (rowData) => {
                                     borders: borders,
 
                                     width: {
-                                        size: 35,
+                                        size: 30,
                                         type: WidthType.PERCENTAGE
                                     },
                                     children: [
@@ -146,6 +147,7 @@ export const generateDoc = async (rowData) => {
                                     children: [
 
                                         new Paragraph({
+                                            alignment:AlignmentType.JUSTIFIED,
                                             children: [
                                                 new TextRun({
                                                     text: obj['fullname'] + ", " + jobDayBirlestir, bold: true,
@@ -158,6 +160,7 @@ export const generateDoc = async (rowData) => {
                                                 new TextRun({ text: obj['workTitle'], bold: true, size: 24, font: "Calibri" }),
                                                 new TextRun({ text: " olarak katılmıştır.", size: 24, font: "Calibri" }),
                                             ]
+                                    
                                         }),
 
                                         new Paragraph({
@@ -165,6 +168,7 @@ export const generateDoc = async (rowData) => {
                                         }),
 
                                         new Paragraph({
+                                            alignment:AlignmentType.JUSTIFIED,
                                             children: [
                                                 new TextRun({
                                                     text: obj['description'], size: 22, font: "Calibri"
@@ -177,6 +181,7 @@ export const generateDoc = async (rowData) => {
                                         }),
 
                                         new Paragraph({
+                                            alignment:AlignmentType.JUSTIFIED,
                                             children: [
                                                 new TextRun({ text: obj['department'] + " ", bold: true, size: 24, font: "Calibri" }),
                                                 new TextRun({
@@ -190,6 +195,7 @@ export const generateDoc = async (rowData) => {
                                         }),
 
                                         new Paragraph({
+                                            alignment:AlignmentType.JUSTIFIED,
                                             children: [
                                                 new TextRun({ text: "İnsan Kaynakları Departmanı", size: 24, font: "Calibri" }),
                                             ],

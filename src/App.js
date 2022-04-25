@@ -10,10 +10,11 @@ import { ToastContainer } from 'react-toastify'
 import UserCreate from './components/UserCreate'
 import LoginPage from './components/LoginPage'
 import UserTable from './components/UserTable'
+import CreateForms from './components/CreateForms'
 
 const App = () => {
     return (
-        <BrowserRouter>
+        /* <BrowserRouter>
             <ToastContainer
                 position="top-right"
                 autoClose={500}
@@ -32,7 +33,8 @@ const App = () => {
                     <Route path="users" element={<UserTable />} />
                 </Route>
             </Routes>
-        </BrowserRouter>
+        </BrowserRouter> */
+        <CreateForms />
     )
 }
 

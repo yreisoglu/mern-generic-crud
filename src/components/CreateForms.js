@@ -92,12 +92,12 @@ const CreateForms = () => {
         }
     }
 
-    const lengthFieldName = (index) => {
+    /* const lengthFieldName = (index) => {
         const lengthSizeMax = document.getElementById(`MaxLength${index}`).value
         const lengthSizeMin = document.getElementById(`MinLength${index}`).value
         document.getElementById(`fieldInput${index}`).maxLength = lengthSizeMax
         document.getElementById(`fieldInput${index}`).minLength = lengthSizeMin
-    }
+    } */
 
     /* const icon = () => {
         const Favicon = document.getElementById('file').value
@@ -261,7 +261,6 @@ const CreateForms = () => {
                                             name="textForm"
                                             id={`fieldInput${index}`}
                                             onChange={(event) => handleFormChange(event, index)}
-                                            onClick={() => lengthFieldName(index)}
                                             placeholder="Please Select a field"
                                             type="text"
                                             className="form-control themed-grid-col"

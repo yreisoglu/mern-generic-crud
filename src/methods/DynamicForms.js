@@ -1,11 +1,11 @@
 import axios from 'axios'
 
 const HTTP = axios.create({
-    baseURL: 'https://mern-generic-crud.herokuapp.com',
+    baseURL: process.env.REACT_APP_API_URL,
 })
 const GetAvailableForms = () => {
     return new Promise((resolve, reject) => {
-        HTTP.get('http://mern-generic-crud.herokuapp.com/api/dynamic/get-forms')
+        HTTP.get('api/dynamic/get-forms')
             .then((res) => {
                 resolve(res.data)
             })

@@ -109,7 +109,7 @@ const UserTable = () => {
             render: (rowData) => (
                 <img
                     style={{ height: 50, borderRadius: '50%', width: 50, position: 'static' }}
-                    src={rowData.image}
+                    src={`${process.env.REACT_APP_API_URL}${rowData.image}`}
                     alt=""
                 />
             ),

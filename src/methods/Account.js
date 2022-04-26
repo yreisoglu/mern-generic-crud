@@ -12,9 +12,32 @@ export const Login = (username, password) => {
     })
 }
 
+export const RegisterAsAdmin = (data) => {
+    return new Promise((resolve, reject) => {
+        HTTP.post('/api/account/register-as-admin', data, {
+            headers: { 'x-access-token': localStorage.getItem('jwt') },
+        })
+            .then((res) => resolve(res))
+            .catch((err) => reject(err))
+    })
+}
+
 export const isExpired = () => {
     return new Promise((resolve, reject) => {
         HTTP.post('/api/account/is-expired', { token: localStorage.getItem('jwt') })
+            .then((res) => {
+                resolve(res.data)
+            })
+            .catch((err) => {
+                console.log(err)
+                reject(err)
+            })
+    })
+}
+
+export const getRole = () => {
+    return new Promise((resolve, reject) => {
+        HTTP.post('/api/account/get-role', { token: localStorage.getItem('jwt') })
             .then((res) => resolve(res.data))
             .catch((err) => {
                 console.log(err)

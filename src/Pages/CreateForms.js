@@ -167,7 +167,6 @@ const CreateForms = () => {
                             style={{ backgroundColor: 'coral', color: 'white' }}
                             role="button"
                             aria-pressed="true"
-                            onClick={startAdd}
                         >
                             Start Adding
                         </a>

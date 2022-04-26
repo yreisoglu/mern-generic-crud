@@ -4,7 +4,9 @@ import DeleteForeverRoundedIcon from '@material-ui/icons/DeleteForeverRounded'
 import DynamicFeedRoundedIcon from '@material-ui/icons/DynamicFeedRounded'
 import AddCircleSharpIcon from '@material-ui/icons/AddCircleSharp'
 import RateReviewRoundedIcon from '@material-ui/icons/RateReviewRounded'
-import GetAvailableForms from '../methods/DynamicForms'
+import Swal from 'sweetalert2'
+import { GetAvailableForms, DeleteFormsByIds } from '../methods/DynamicForms'
+import 'react-confirm-alert/src/react-confirm-alert.css'
 
 const AdminPanel = () => {
     const [data, setData] = useState([])
@@ -50,7 +52,45 @@ const AdminPanel = () => {
             setData(tempForm)
         }
     }
-    console.log(search)
+
+    const DeleteForms = () => {
+        let ids = []
+        data.map((form) => {
+            if (form.isChecked) {
+                ids.push(form._id)
+            }
+        })
+        Swal.fire({
+            title: 'Emin misin?',
+            text: 'Seçilen formlar silinecektir!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sil',
+            cancelButtonText: 'Vazgeç',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                DeleteFormsByIds(ids)
+                    .then((response) => {
+                        if (response.deletedCount > 0) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Başarılı',
+                                text: response.deletedCount + ' adet form başarıyla silindi.',
+                            })
+                        }
+                    })
+                    .catch((error) => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Silme işlemi geçersiz.',
+                        })
+                    })
+            }
+        })
+    }
+
     return (
         <div className="container">
             <div className="form-body">
@@ -134,6 +174,9 @@ const AdminPanel = () => {
                                         <button
                                             style={{ marginLeft: '0.4rem' }}
                                             type="button"
+                                            onClick={() => {
+                                                DeleteForms()
+                                            }}
                                             id="sil"
                                             className="btn btn-danger btn-sm"
                                         >

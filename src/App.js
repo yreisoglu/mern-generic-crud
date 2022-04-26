@@ -13,6 +13,7 @@ import UserTable from './components/UserTable'
 import DynamicLoginPage from './Pages/DynamicLoginPage'
 import RootPanel from './Pages/RootPanel'
 import AdminPanel from './Pages/AdminPanel'
+import CreateAdmin from './Pages/CreateAdmin'
 
 const App = () => {
     return (
@@ -35,9 +36,10 @@ const App = () => {
                     <Route path="users" element={<UserTable />} />
                 </Route>
                 <Route path="/dynamic">
-                    <Route path="login" element={<DynamicLoginPage />} />
+                    <Route index element={<DynamicLoginPage />} />
                     <Route path="root-panel" element={<RootPanel />} />
                     <Route path="admin-panel" element={<AdminPanel />} />
+                    <Route path="create-admin" element={<CreateAdmin />} />
                 </Route>
             </Routes>
         </BrowserRouter>

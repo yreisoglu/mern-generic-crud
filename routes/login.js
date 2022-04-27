@@ -14,8 +14,7 @@ router.post("/welcome", auth, (req, res) => {
 router.post("/register", async (req, res) => {
 
     try {
-        const { username, password } = req.body;
-
+        const { username, password, departments } = req.body;
         if (!(username && password)) {
             res.status(400).send("All input is required")
         }
@@ -23,7 +22,8 @@ router.post("/register", async (req, res) => {
         const encryptedPassword = await bcrypt.hash(password, 10);
         const account = await Account.create({
             username: username,
-            password: encryptedPassword
+            password: encryptedPassword,
+            departments: departments
         })
 
         const token = jwt.sign(

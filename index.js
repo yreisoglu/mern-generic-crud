@@ -26,6 +26,7 @@ app.use("/api/dynamic", dynamicRouter);
 
 const dynamicAccountRouter = require("./routes/dynamicAccount");
 app.use("/api/dynamic-account", dynamicAccountRouter);
+
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "/client/build/index.html"));
 });

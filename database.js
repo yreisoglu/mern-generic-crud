@@ -5,7 +5,7 @@ const password = process.env.DB_PASSWORD;
 const databaseName = process.env.DB_NAME;
 module.exports = () => {
   mongoose.connect(
-    `mongodb://localhost:27017/mern-generic-crud`,
+    `mongodb+srv://${username}:${password}@mern-generic-crud.m9kah.mongodb.net/${databaseName}?retryWrites=true&w=majority`,
     {
       useNewUrlParser: true,
     }
@@ -17,5 +17,4 @@ module.exports = () => {
     console.log("MongoDB error: " + err);
   });
   mongoose.Promise = global.Promise;
-
 };

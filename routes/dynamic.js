@@ -1,11 +1,32 @@
 const express = require("express");
 const { default: mongoose, Schema } = require("mongoose");
 const router = express.Router();
+const multer = require("multer");
+const fs = require("fs");
+
+const storage = multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, "./images/formIcons");
+  },
+  filename: function (req, file, callback) {
+    let fileType;
+    if (file.mimetype === "image/png") {
+      fileType = ".png";
+    } else if (file.mimetype === "image/jpeg") {
+      fileType = ".jpg";
+    }
+    callback(null, Date.now() + fileType);
+  },
+});
+
+const upload = multer({ storage: storage });
 
 // Creates a form by requested fields
-router.post("/create-form", (req, res) => {
+router.post("/create-form", upload.single("file"), (req, res) => {
   try {
-    userDefinedFormPattern = req.body[0];
+    const formStructure = JSON.parse(req.body.formStructure);
+
+    userDefinedFormPattern = formStructure[0];
 
     if (!mongoose.models.formSchemas) {
       createSchemasModel();
@@ -13,9 +34,11 @@ router.post("/create-form", (req, res) => {
     const formSetupModel = mongoose.models.formSchemas;
 
     const formSetupData = {
-      formName: req.body[1].formName,
-      description: req.body[1].description,
+      formName: formStructure[1].formName,
+      description: formStructure[1].description,
       formDetails: userDefinedFormPattern,
+      icon: `/img/formIcons/${req.file.filename}`,
+      primaryColor: formStructure[1].primaryColor,
     };
     const formSetup = new formSetupModel(formSetupData);
     formSetup
@@ -49,22 +72,29 @@ router.get("/get-forms", (req, res) => {
   } catch (error) {}
 });
 
-router.put("/update-form", (req, res) => {
+router.put("/update-form", upload.single("file"), (req, res) => {
   try {
+    const formStructure = JSON.parse(req.body.formStructure);
     if (!mongoose.models.formSchemas) {
       createSchemasModel();
     }
     const formSetupModel = mongoose.models.formSchemas;
 
     const formSetupData = {
-      formName: req.body[1].formName,
-      description: req.body[1].description,
-      formDetails: req.body[0],
+      formName: formStructure[1].formName,
+      description: formStructure[1].description,
+      formDetails: formStructure[0],
+      icon: `/img/formIcons/${req.file.filename}`,
+      primaryColor: formStructure[1].primaryColor,
     };
-
     formSetupModel
-      .findByIdAndUpdate({ _id: req.body[2].form_id }, formSetupData)
+      .findByIdAndUpdate({ _id: formStructure[2].form_id }, formSetupData)
       .then((response) => {
+        if (fs.existsSync("./images/formIcons" + response.icon.replace("/img/formIcons", ""))) {
+          fs.unlink("./images/formIcons" + response.icon.replace("/img/formIcons", ""), (err) => {
+            if (err) console.log(err);
+          });
+        }
         res.json(response);
       })
       .catch((err) => {
@@ -72,6 +102,7 @@ router.put("/update-form", (req, res) => {
         res.status(404).send();
       });
   } catch (error) {
+    console.log(error);
     res.status(404).send();
   }
 });
@@ -249,6 +280,8 @@ const createSchemasModel = () => {
     formName: { type: String, unique: true, required: true },
     description: { type: String, required: true },
     formDetails: Object,
+    icon: { type: String, required: true },
+    primaryColor: { type: String, required: true },
   };
   const formSetupSchema = new Schema(formUploadSetup);
   mongoose.model("formSchemas", formSetupSchema);

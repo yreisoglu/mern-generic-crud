@@ -7,12 +7,15 @@ import RateReviewRoundedIcon from '@material-ui/icons/RateReviewRounded'
 import Swal from 'sweetalert2'
 import { GetAvailableForms, DeleteFormsByIds } from '../methods/DynamicForms'
 import 'react-confirm-alert/src/react-confirm-alert.css'
+import useStore from '../store'
 
 const AdminPanel = () => {
     const [data, setData] = useState([])
     const [isChecked, setChecked] = useState(false)
     const [search, setSearch] = useState('')
-
+    const store = useStore()
+    const { toggleUpdate } = store
+    const { isUpdated } = store
     const countChecked = () => {
         let count = 0
         data.map((form) => {
@@ -36,7 +39,7 @@ const AdminPanel = () => {
         GetAvailableForms().then((response) => {
             setData(response)
         })
-    }, [])
+    }, [isUpdated])
 
     const handleChange = (e) => {
         const { name, checked } = e.target
@@ -76,9 +79,10 @@ const AdminPanel = () => {
                         if (response.deletedCount > 0) {
                             Swal.fire({
                                 icon: 'success',
-                                title: 'Başarılı',
+                                title: 'Başarılı!',
                                 text: response.deletedCount + ' adet form başarıyla silindi.',
                             })
+                            toggleUpdate()
                         }
                     })
                     .catch((error) => {

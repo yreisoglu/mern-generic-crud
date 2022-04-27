@@ -59,7 +59,7 @@ router.get("/get-users-by-department", auth, (req, res) => {
   } catch (error) {}
 });
 
-router.get("/get-existing-departments", auth, (req, res) => {
+router.get("/get-existing-departments", (req, res) => {
   try {
     UserModel.find({}, { department: 1, _id: 0 })
       .then((response) => {

@@ -67,96 +67,136 @@ const CreateAdmin = () => {
 
     if (!isLoading) {
         return (
-            <div className="container d-flex justify-content-center bg-white">
-                <form className="" onSubmit={submitAdminUser}>
-                    <div className="col">
-                        <h2 className="row">Create an Admin Account</h2>
-                        <div className="row">
-                            <label htmlFor="">
-                                Username
-                                <input type="text" onChange={(e) => setUsername(e.target.value)} />
-                            </label>
-                        </div>
-                        <div className="row">
-                            <label htmlFor="">
-                                Password
-                                <input
-                                    type="password"
-                                    onChange={(e) => setPassword(e.target.value)}
-                                />
-                            </label>
-                        </div>
-                        <div className="row">
-                            <label htmlFor="">
-                                permission
-                                <select
-                                    name="permission"
-                                    id="permission"
-                                    onChange={(e) => setPermissionType(e.target.value)}
-                                >
-                                    <option value="read">read</option>
-                                    <option value="write">write</option>
-                                </select>
-                            </label>
-                        </div>
-                        <div className="row">
-                            <label htmlFor="">
-                                Allowed Forms
-                                <select
-                                    name="allowedForms"
-                                    id="allowedForms"
-                                    onChange={(e) => {
-                                        setSelectedForm(e.target.value)
-                                    }}
-                                >
-                                    {forms.map((form, index) => {
-                                        return (
-                                            <option key={form.formName} value={index}>
-                                                {form.formName}
-                                            </option>
-                                        )
-                                    })}
-                                </select>
-                            </label>
-                        </div>
-                        {selectedForm && (
-                            <div className="row">
-                                <label htmlFor="allowField">
-                                    Allowed Fields
-                                    <select
-                                        name="allowedField"
-                                        id="allowedField"
-                                        onChange={(e) => setAllowedField(e.target.value)}
-                                    >
-                                        {Object.keys(forms[selectedForm].formDetails).map(
-                                            (detail) => {
-                                                return (
-                                                    <option value={detail} key={detail}>
-                                                        {detail}
+            <div className="container">
+                <div className="form-body">
+                    <div className="row">
+                        <div className="form-holder">
+                            <div className="form-content">
+                                <div className="form-items">
+                                    <div className="row">
+                                        <div className="form-group col-md-4">
+                                            <h3>Yeni Hesap</h3>
+                                            <p>HESAP OLUŞTURMA VE YETKİLENDİRME</p>
+                                        </div>
+                                    </div>
+                                    <form onSubmit={submitAdminUser} encType="multipart/form-data">
+                                        <div className="row mt-4">
+                                            <div className="form-group col-md-6 col-sm-12">
+                                                <label htmlFor="fullname">Kullanıcı Adı</label>
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    placeholder="Kullanıcı Adı"
+                                                    name="fullname"
+                                                    onChange={(e) => setUsername(e.target.value)}
+                                                />
+                                            </div>
+                                            <div className="form-group col-md-6 col-sm-12">
+                                                <label htmlFor="fullname">Şifre</label>
+                                                <input
+                                                    type="password"
+                                                    className="form-control"
+                                                    onChange={(e) => setPassword(e.target.value)}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="row mt-4">
+                                            <div className="form-group col-md-6 col-sm-12">
+                                                <label htmlFor="fullname">Form Atama</label>
+                                                <select
+                                                    name="allowedForms"
+                                                    id="allowedForms"
+                                                    className="form-select"
+                                                    onChange={(e) => {
+                                                        setSelectedForm(e.target.value)
+                                                    }}
+                                                >
+                                                    {forms.map((form, index) => {
+                                                        return (
+                                                            <option
+                                                                key={form.formName}
+                                                                value={index}
+                                                            >
+                                                                {form.formName}
+                                                            </option>
+                                                        )
+                                                    })}
+                                                </select>
+                                            </div>
+                                            <div className="form-group col-md-6 col-sm-12">
+                                                <label htmlFor="fullname">Yetkilendirme</label>
+                                                <select
+                                                    name="permission"
+                                                    id="permission"
+                                                    onChange={(e) =>
+                                                        setPermissionType(e.target.value)
+                                                    }
+                                                    className="form-select"
+                                                >
+                                                    <option value="read">
+                                                        İlgili formu görebilir.
                                                     </option>
-                                                )
-                                            }
+                                                    <option value="write">
+                                                        İlgili form üzerinde işlem yapabilir.
+                                                    </option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        {selectedForm && (
+                                            <div className="row mt-4">
+                                                <div className="form-group col-md-6 col-sm-12">
+                                                    <label htmlFor="fullname">Alan Atama</label>
+                                                    <select
+                                                        name="allowedField"
+                                                        id="allowedField"
+                                                        className="form-select"
+                                                        onChange={(e) =>
+                                                            setAllowedField(e.target.value)
+                                                        }
+                                                    >
+                                                        {Object.keys(
+                                                            forms[selectedForm].formDetails
+                                                        ).map((detail) => {
+                                                            return (
+                                                                <option value={detail} key={detail}>
+                                                                    {detail}
+                                                                </option>
+                                                            )
+                                                        })}
+                                                    </select>
+                                                </div>
+                                                <div className="form-group col-md-6 col-sm-12">
+                                                    <label htmlFor="fullname">Değer Atama</label>
+                                                    <input
+                                                        type="text"
+                                                        className="form-control"
+                                                        name="fullname"
+                                                        onChange={(e) =>
+                                                            setAllowedValue(e.target.value)
+                                                        }
+                                                    />
+                                                </div>
+                                            </div>
                                         )}
-                                    </select>
-                                </label>
+                                        <div
+                                            style={{ textAlign: 'center' }}
+                                            className="form-button mt-4"
+                                        >
+                                            <button
+                                                style={{ background: 'coral ' }}
+                                                id="submit"
+                                                type="submit"
+                                                className="btn btn-primary"
+                                            >
+                                                Kaydet
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
-                        )}
-                        {selectedForm && (
-                            <div className="row">
-                                <label htmlFor="">
-                                    Allowed Value
-                                    <input
-                                        type="text"
-                                        onChange={(e) => setAllowedValue(e.target.value)}
-                                    />
-                                </label>
-                            </div>
-                        )}
+                        </div>
                     </div>
-                    <button className="btn btn-secondary" type="submit">
-                        Save
-                    </button>
-                </form>
+                </div>
             </div>
         )
     }

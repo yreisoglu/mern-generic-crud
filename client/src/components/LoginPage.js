@@ -12,7 +12,7 @@ import { GetExistingDepartments } from "../methods/GetUsers";
 
 const LoginPage = () => {
   const [isLoading, setLoading] = useState(false);
-  const [selectedDepartment, setDepartment] = useState("Hepsi");
+  const [selectedDepartment, setDepartment] = useState("Yok");
   const [departments, setDepartmentList] = useState([]);
   const navigate = useNavigate();
 
@@ -25,7 +25,7 @@ const LoginPage = () => {
     });
     GetExistingDepartments()
       .then((res) => {
-        const list = ["Hepsi"].concat(res);
+        const list = ["Yok"].concat(res);
         setDepartmentList(list);
       })
       .catch((err) => console.log(err));
@@ -67,16 +67,22 @@ const LoginPage = () => {
             <div className="form-content">
               <div className="form-items login">
                 <div className="row">
-                  <div className="form-group col-md-9">
+                  <div className="form-group col-md-8">
                     <h3>Giriş Yap</h3>
-                    <p>PANEL ERİŞİMİ</p>
                   </div>
-                  <div style={{ textAlign: "right" }} className="form-group col-md-3">
+                  <div style={{ textAlign: "right" }} className="form-group col-md-4">
                     <Link to="/" style={{ background: "#495056" }} class="btn btn-primary">
-                      Geri
+                      Yeni Form Ekle
                     </Link>
                   </div>
                 </div>
+                <div className="mt-2 col-md-9">
+                  <p style={{ fontSize: 15 }}>
+                    Kullanıcı girişi yaparak eklenen formları görüntüleyebilir ve
+                    düzenleyebilirsiniz
+                  </p>
+                </div>
+
                 <form onSubmit={formik.handleSubmit} encType="">
                   <div className="row mt-4">
                     <div className="form-group col-md-12">
@@ -108,7 +114,7 @@ const LoginPage = () => {
                       ) : null}
                     </div>
                     <div className="form-group mt-4 col-md-12 ">
-                      <label for="Surname">Departman</label>
+                      <label for="Surname">Departman Filtresi</label>
                       <select
                         className="form-select"
                         onChange={(e) => {
@@ -148,6 +154,11 @@ const LoginPage = () => {
                   </div>
                 </form>
               </div>
+            </div>
+            <div className="mt-3">
+              <p className="font-weight-light" style={{ fontSize: 18 }}>
+                Not: Yeni form eklemek için kullanıcı girişi yapılması gerekmiyor.
+              </p>
             </div>
           </div>
         </div>

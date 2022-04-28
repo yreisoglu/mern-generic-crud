@@ -74,7 +74,7 @@ const UserTable = () => {
         navigate("/login");
       }
     });
-    if (department !== "Hepsi") {
+    if (department !== "Yok") {
       GetUsersByDepartment(department).then((response) => {
         setData(response);
         setLoading(false);

@@ -11,7 +11,7 @@ router.post("/welcome", auth, (req, res) => {
 })
 
 
-router.post("/register", async (req, res) => {
+/*router.post("/register", async (req, res) => {
 
     try {
         const { username, password } = req.body;
@@ -41,7 +41,7 @@ router.post("/register", async (req, res) => {
         console.log(err)
     }
 
-})
+})*/
 
 
 router.post("/login", async (req, res) => {

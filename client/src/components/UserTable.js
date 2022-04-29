@@ -74,14 +74,14 @@ const UserTable = () => {
         navigate("/login");
       }
     });
-    if (department !== "Hepsi") {
+    if (department !== "Yok") {
       GetUsersByDepartment(department).then((response) => {
-        setData(response);
+        setData(response.sort((a, b) => Date.parse(b.firstJobDay) - Date.parse(a.firstJobDay)));
         setLoading(false);
       });
     } else {
       GetUsers().then((response) => {
-        setData(response);
+        setData(response.sort((a, b) => Date.parse(b.firstJobDay) - Date.parse(a.firstJobDay)));
         setLoading(false);
       });
     }
@@ -92,7 +92,7 @@ const UserTable = () => {
   });
   const columns = [
     {
-      width: 20,
+      width: "20",
       title: " ",
       field: "image",
       filtering: false,
@@ -181,6 +181,8 @@ const UserTable = () => {
             },
             toolbar: {
               searchPlaceholder: "Arama",
+              exportCSVName: "Docx",
+              exportTitle: "Export",
             },
           }}
           onSelectionChange={(rows) => setSelectedRows(rows)}
@@ -260,6 +262,12 @@ const UserTable = () => {
             paging: false,
             actionsColumnIndex: -1,
             exportAllData: true,
+            exportButton: {
+              csv: true,
+            },
+            exportCsv: (columns, data) => {
+              generateDoc(data);
+            },
             showTextRowsSelected: false,
             showSelectAllCheckbox: true,
             selection: true,

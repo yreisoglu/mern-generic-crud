@@ -6,6 +6,10 @@ const multer = require("multer");
 const auth = require("../middleware/auth");
 const fs = require("fs");
 const usersSecretKey = process.env.USERS_SECRET_KEY;
+const jwt = require("jsonwebtoken");
+const AccountModel = require("../models/AccountModel");
+
+const config = process.env;
 
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
@@ -47,15 +51,22 @@ router.get("/", auth, (req, res) => {
 
 router.get("/get-users-by-department", auth, (req, res) => {
   try {
-    const decryptedResponse = [];
-    UserModel.find({ department: req.query.department })
-      .then((response) => {
-        response.forEach((item) => {
-          decryptedResponse.push(decryptResponse(item));
-        });
-        res.json(decryptedResponse);
+    const token = req.headers["x-access-token"];
+    const decoded = jwt.verify(token, config.TOKEN_KEY);
+    AccountModel.findById({ _id: decoded.account_id }, { departments: 1 })
+      .then((departmentResponse) => {
+        console.log(departmentResponse)
+        const decryptedResponse = [];
+        UserModel.find({ department: { $in: departmentResponse.departments } })
+          .then((response) => {
+            response.forEach((item) => {
+              decryptedResponse.push(decryptResponse(item));
+            });
+            res.json(decryptedResponse);
+          })
+          .catch((err) => res.json(err));
       })
-      .catch((err) => res.json(err));
+      .catch((err) => console.log(err));
   } catch (error) {}
 });
 

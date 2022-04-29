@@ -3,7 +3,7 @@ import create from "zustand";
 const useStore = create((set) => ({
   isUpdated: false,
   departments: [
-    "Hepsi",
+    "Yok",
     "NRD03",
     "NRD12",
     "NRD15",

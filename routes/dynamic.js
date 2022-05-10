@@ -3,6 +3,9 @@ const { default: mongoose, Schema } = require("mongoose");
 const router = express.Router();
 const multer = require("multer");
 const fs = require("fs");
+const { auth, verifyRootLevel } = require("../middleware/auth");
+const jsonwebtoken = require("jsonwebtoken");
+const AccountModel = require("../models/AccountModel");
 
 const storage = multer.diskStorage({
   destination: function (req, file, callback) {
@@ -22,7 +25,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 // Creates a form by requested fields
-router.post("/create-form", upload.single("file"), (req, res) => {
+router.post("/create-form", verifyRootLevel, upload.single("file"), (req, res) => {
   try {
     const formStructure = JSON.parse(req.body.formStructure);
 
@@ -55,52 +58,79 @@ router.post("/create-form", upload.single("file"), (req, res) => {
 });
 
 // Returns list of forms
-router.get("/get-forms", (req, res) => {
+router.get("/get-forms", auth, (req, res) => {
   try {
-    if (!mongoose.models.formSchemas) {
-      createSchemasModel();
+    const decoded = req.account;
+    if (decoded.role === "admin") {
+      if (!mongoose.models.formSchemas) {
+        createSchemasModel();
+      }
+      AccountModel.findById(decoded.account_id, { "allowedForms.formId": 1, _id: 0 }).then(
+        (formResponse) => {
+          let formIds = [];
+          Object.values(formResponse.allowedForms).forEach((value) => {
+            formIds.push(value.formId);
+          });
+          mongoose.models.formSchemas
+            .find({ _id: { $in: formIds } })
+            .then((response) => {
+              res.json(response);
+            })
+            .catch((err) => {
+              console.log;
+              res.status(404).send();
+            });
+        }
+      );
+    } else if (decoded.role === "root") {
+      if (!mongoose.models.formSchemas) {
+        createSchemasModel();
+      }
+      mongoose.models.formSchemas
+        .find()
+        .then((response) => {
+          res.json(response);
+        })
+        .catch((err) => {
+          console.log;
+          res.status(404).send();
+        });
     }
-    mongoose.models.formSchemas
-      .find()
-      .then((response) => {
-        res.json(response);
-      })
-      .catch((err) => {
-        console.log;
-        res.status(404).send();
-      });
   } catch (error) {}
 });
 
-router.put("/update-form", upload.single("file"), (req, res) => {
+router.put("/update-form", auth, upload.single("file"), async (req, res) => {
   try {
     const formStructure = JSON.parse(req.body.formStructure);
-    if (!mongoose.models.formSchemas) {
-      createSchemasModel();
-    }
-    const formSetupModel = mongoose.models.formSchemas;
+    const isAllowed = await checkPermission(req.account, formStructure[2].form_id);
+    if (req.account.role === "root" || (req.account.role === "admin" && isAllowed)) {
+      if (!mongoose.models.formSchemas) {
+        createSchemasModel();
+      }
+      const formSetupModel = mongoose.models.formSchemas;
 
-    const formSetupData = {
-      formName: formStructure[1].formName,
-      description: formStructure[1].description,
-      formDetails: formStructure[0],
-      icon: `/img/formIcons/${req.file.filename}`,
-      primaryColor: formStructure[1].primaryColor,
-    };
-    formSetupModel
-      .findByIdAndUpdate({ _id: formStructure[2].form_id }, formSetupData)
-      .then((response) => {
-        if (fs.existsSync("./images/formIcons" + response.icon.replace("/img/formIcons", ""))) {
-          fs.unlink("./images/formIcons" + response.icon.replace("/img/formIcons", ""), (err) => {
-            if (err) console.log(err);
-          });
-        }
-        res.json(response);
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(404).send();
-      });
+      const formSetupData = {
+        formName: formStructure[1].formName,
+        description: formStructure[1].description,
+        formDetails: formStructure[0],
+        icon: `/img/formIcons/${req.file.filename}`,
+        primaryColor: formStructure[1].primaryColor,
+      };
+      formSetupModel
+        .findByIdAndUpdate({ _id: formStructure[2].form_id }, formSetupData)
+        .then((response) => {
+          if (fs.existsSync("./images/formIcons" + response.icon.replace("/img/formIcons", ""))) {
+            fs.unlink("./images/formIcons" + response.icon.replace("/img/formIcons", ""), (err) => {
+              if (err) console.log(err);
+            });
+          }
+          res.json(response);
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(404).send();
+        });
+    }
   } catch (error) {
     console.log(error);
     res.status(404).send();
@@ -285,6 +315,23 @@ const createSchemasModel = () => {
   };
   const formSetupSchema = new Schema(formUploadSetup);
   mongoose.model("formSchemas", formSetupSchema);
+};
+
+const checkPermission = async (account, form_id) => {
+  return new Promise((resolve, reject) => {
+    AccountModel.findById(account.account_id, { allowedForms: 1, _id: 0 })
+      .then((formResponse) => {
+        for (item of formResponse.allowedForms) {
+          if (item.formId === form_id && item.permissionType === "write") {
+            resolve(true);
+          }
+        }
+        resolve(false);
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
 };
 
 module.exports = router;

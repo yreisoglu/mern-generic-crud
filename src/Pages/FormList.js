@@ -4,7 +4,7 @@ import DeleteForeverRoundedIcon from '@material-ui/icons/DeleteForeverRounded'
 import DynamicFeedRoundedIcon from '@material-ui/icons/DynamicFeedRounded'
 import AddCircleSharpIcon from '@material-ui/icons/AddCircleSharp'
 import RateReviewRoundedIcon from '@material-ui/icons/RateReviewRounded'
-import GetAvailableForms from '../methods/DynamicForms'
+import { GetAvailableForms } from '../methods/DynamicForms'
 
 const AdminPanel = () => {
     const [data, setData] = useState([])

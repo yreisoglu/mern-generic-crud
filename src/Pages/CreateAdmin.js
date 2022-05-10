@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { getRole, isExpired, RegisterAsAdmin } from '../methods/Account'
-import GetAvailableForms from '../methods/DynamicForms'
+import { GetAvailableForms } from '../methods/DynamicForms'
 
 const CreateAdmin = () => {
     const navigate = useNavigate()

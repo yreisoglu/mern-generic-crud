@@ -137,20 +137,44 @@ router.put("/update-form", auth, upload.single("file"), async (req, res) => {
   }
 });
 
-router.delete("/delete-forms", (req, res) => {
+const checkDeletionPermission = async (account, form_ids) => {
+  let isAllowed = true;
+  return new Promise((resolve, reject) => {
+    AccountModel.findById(account.account_id, { allowedForms: 1, _id: 0 })
+      .then((formResponse) => {
+        for (item of formResponse.allowedForms) {
+          //console.log(!form_ids.includes(item.formId) && item.permissionType !== "write");
+          if (!form_ids.includes(item.formId) || item.permissionType !== "write") {
+            isAllowed = false;
+            break;
+          }
+        }
+        resolve(isAllowed);
+      })
+      .catch((err) => {
+        console.log(error);
+      });
+  });
+};
+
+router.delete("/delete-forms", auth, async (req, res) => {
   try {
+    const form_ids = req.body["form_ids"];
+    let isAllowed = await checkDeletionPermission(req.account, form_ids);
     if (!mongoose.models.formSchemas) {
       createSchemasModel();
     }
-    const form_ids = req.body["form_ids"];
-
-    mongoose.models.formSchemas
-      .find({ _id: { $in: form_ids } }, { formName: 1 })
-      .then((response) => {
-        if (response) {
-          response.forEach((item) => {
-            mongoose.connection.dropCollection(item.formName, (err, result) => {});
-          });
+    if (req.account.role === "root" || (req.account.role === "admin" && isAllowed)) {
+      mongoose.models.formSchemas
+        .find({ _id: { $in: form_ids } }, { formName: 1 })
+        .then((response) => {
+          if (response) {
+            response.forEach((item) => {
+              mongoose.connection.dropCollection(item.formName, (err, result) => {});
+            });
+          }
+        })
+        .then(() => {
           mongoose.models.formSchemas
             .deleteMany({
               _id: { $in: form_ids },
@@ -161,11 +185,11 @@ router.delete("/delete-forms", (req, res) => {
             .catch((error) => {
               console.log(error);
             });
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   } catch (error) {}
 });
 
@@ -203,7 +227,7 @@ router.post("/", (req, res) => {
   }
 });
 // Returns the requested form documents
-router.get("/", (req, res) => {
+router.get("/", verifyRootLevel, (req, res) => {
   try {
     if (!mongoose.models.formSchemas) {
       createSchemasModel();
@@ -237,29 +261,34 @@ router.get("/", (req, res) => {
 });
 
 // Update a document from a Form
-router.put("/", (req, res) => {
+router.put("/", auth, async (req, res) => {
   try {
-    if (!mongoose.models.formSchemas) {
-      createSchemasModel();
-    }
-    mongoose.models.formSchemas
-      .findOne({ _id: req.body.form_id })
-      .then((response) => {
-        if (response) {
-          const formModel = getModel(response);
-          formModel
-            .findByIdAndUpdate(req.body.document_id, req.body)
-            .then((response) => res.json(response))
-            .catch((err) => console.log(err));
+    const isAllowed = await checkPermission(req.account, req.body.form_id);
+    if (req.account.role === "root" || (req.account.role === "admin" && isAllowed)) {
+      if (!mongoose.models.formSchemas) {
+        createSchemasModel();
+      }
+      mongoose.models.formSchemas
+        .findOne({ _id: req.body.form_id })
+        .then((response) => {
+          if (response) {
+            const formModel = getModel(response);
+            formModel
+              .findByIdAndUpdate(req.body.document_id, req.body)
+              .then((response) => res.json(response))
+              .catch((err) => console.log(err));
+            return;
+          }
+          res.status(404).send("Form is unavailable");
           return;
-        }
-        res.status(404).send("Form is unavailable");
-        return;
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(404).send();
-      });
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(404).send();
+        });
+    } else {
+      res.status(401).send("You are not authorized for that operation");
+    }
   } catch (error) {
     console.log(error);
     res.status(404).send();
@@ -267,30 +296,35 @@ router.put("/", (req, res) => {
 });
 
 // Delete a Document from a form
-router.delete("/", (req, res) => {
+router.delete("/", auth, async (req, res) => {
   try {
-    const ids = req.body["document_ids"];
-    if (!mongoose.models.formSchemas) {
-      createSchemasModel();
-    }
-    mongoose.models.formSchemas
-      .findOne({ _id: req.body.form_id })
-      .then((response) => {
-        if (response) {
-          const formModel = getModel(response);
-          formModel
-            .deleteMany({ _id: { $in: ids } })
-            .then((response) => res.json(response))
-            .catch((err) => console.log(err));
+    const isAllowed = await checkPermission(req.account, req.body.form_id);
+    if (req.account.role === "root" || (req.account.role === "admin" && isAllowed)) {
+      const ids = req.body["document_ids"];
+      if (!mongoose.models.formSchemas) {
+        createSchemasModel();
+      }
+      mongoose.models.formSchemas
+        .findOne({ _id: req.body.form_id })
+        .then((response) => {
+          if (response) {
+            const formModel = getModel(response);
+            formModel
+              .deleteMany({ _id: { $in: ids } })
+              .then((response) => res.json(response))
+              .catch((err) => console.log(err));
+            return;
+          }
+          res.status(404).send("Form is unavailable");
           return;
-        }
-        res.status(404).send("Form is unavailable");
-        return;
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(404).send();
-      });
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(404).send();
+        });
+    }else{
+      res.status(401).send("You are not authorized for that operation.")
+    }
   } catch (error) {
     console.log(error);
     res.status(404).send();

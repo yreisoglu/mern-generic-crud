@@ -13,10 +13,13 @@ router.post("/get-admin-form", (req, res) => {
       const id = decoded.account_id;
       AccountModel.findById(id, { allowedForms: 1 })
         .then((response) => {
+          const index = response.allowedForms.findIndex((object) => {
+            return object.formId === req.body.formId;
+          });
           getRequestedForm(
-            response.allowedForms[0].formId,
-            response.allowedForms[0].allowedField,
-            response.allowedForms[0].allowedValue
+            response.allowedForms[index].formId,
+            response.allowedForms[index].allowedField,
+            response.allowedForms[index].allowedValue
           )
             .then((allowedFormResponse) => {
               res.json(allowedFormResponse);
@@ -82,6 +85,8 @@ const createSchemasModel = () => {
     formName: { type: String, unique: true, required: true },
     description: { type: String, required: true },
     formDetails: Object,
+    icon: { type: String, required: true },
+    primaryColor: { type: String, required: true },
   };
   const formSetupSchema = new Schema(formUploadSetup);
   mongoose.model("formSchemas", formSetupSchema);

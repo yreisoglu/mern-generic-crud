@@ -227,38 +227,80 @@ router.post("/", (req, res) => {
   }
 });
 // Returns the requested form documents
-router.get("/", verifyRootLevel, (req, res) => {
+router.post("/get-form", auth, (req, res) => {
   try {
-    if (!mongoose.models.formSchemas) {
-      createSchemasModel();
-    }
-    mongoose.models.formSchemas
-      .findById(req.body.form_id)
-      .then((response) => {
-        if (response) {
-          const formModel = getModel(response);
-          formModel
-            .find()
-            .then((response) => res.json(response))
+    if (req.account.role === "root") {
+      getRequestedForm(req.body.formId, null, null)
+        .then((allowedFormResponse) => {
+          res.json(allowedFormResponse);
+          return;
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(404).send();
+          return;
+        });
+    } else {
+      const id = req.account.account_id;
+      AccountModel.findById(id, { allowedForms: 1 })
+        .then((response) => {
+          const index = response.allowedForms.findIndex((object) => {
+            return object.formId === req.body.formId;
+          });
+          getRequestedForm(
+            response.allowedForms[index].formId,
+            response.allowedForms[index].allowedField,
+            response.allowedForms[index].allowedValue
+          )
+            .then((allowedFormResponse) => {
+              res.json(allowedFormResponse);
+              return;
+            })
             .catch((err) => {
               console.log(err);
-              res.status(400).json(err.errors.title.message);
+              res.status(404).send();
             });
-
-          return;
-        }
-        res.status(404).send("Form is unavailable");
-        return;
-      })
-      .catch((err) => {
-        console.log(err);
-        res.status(404).send();
-      });
+        })
+        .catch((err) => {
+          console.log(err);
+          res.status(404).send();
+        });
+    }
   } catch (error) {
-    console.log(error);
-    res.status(404).send();
+    res.status(404).send(error);
   }
 });
+
+const getRequestedForm = (formId, field, value) => {
+  return new Promise((resolve, reject) => {
+    try {
+      if (!mongoose.models.formSchemas) {
+        createSchemasModel();
+      }
+      mongoose.models.formSchemas
+        .findById(formId)
+        .then((response) => {
+          if (response) {
+            const formModel = getModel(response);
+            formModel
+              .find({ [field]: [value] })
+              .then((response) => {
+                resolve(response);
+              })
+              .catch((err) => {
+                reject(err);
+              });
+          }
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    } catch (error) {
+      reject(error);
+    }
+  });
+};
+
 
 // Update a document from a Form
 router.put("/", auth, async (req, res) => {
@@ -322,8 +364,8 @@ router.delete("/", auth, async (req, res) => {
           console.log(err);
           res.status(404).send();
         });
-    }else{
-      res.status(401).send("You are not authorized for that operation.")
+    } else {
+      res.status(401).send("You are not authorized for that operation.");
     }
   } catch (error) {
     console.log(error);

@@ -66,6 +66,72 @@ router.post("/register-as-admin", verifyRootLevel, async (req, res) => {
   }
 });
 
+router.get("/get-admins", verifyRootLevel, (req, res) => {
+  try {
+    Account.find({ role: "admin" })
+      .then((response) => res.json(response))
+      .catch((error) => {
+        console.log(error);
+        res.status(404).send(error);
+      });
+  } catch (error) {}
+});
+
+router.delete("/delete-admin", verifyRootLevel, (req, res) => {
+  try {
+    const { accountId } = req.body;
+    if (!accountId) {
+      res.status(400).send("All input is required");
+      return;
+    }
+    Account.findById(accountId)
+      .then((response) => {
+        console.log(response);
+        if (response.role !== "root") {
+          Account.findByIdAndDelete({ _id: accountId })
+            .then((deleteResponse) => res.json(deleteResponse))
+            .catch((err) => {
+              console.log(err);
+              res.status(404).send(err);
+            });
+        } else {
+          res.status(400).send("You cannot delete an root levet user.");
+          return;
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+        res.status(404).send(error);
+      });
+  } catch (error) {
+    console.log(error);
+    res.status(404).send(error);
+  }
+});
+
+router.put("/update-admin", verifyRootLevel, (req, res) => {
+  try {
+    const { accountId, updatedAccount } = req.body;
+    if (!(accountId, updatedAccount)) {
+      res.status(404).send("All input is required.");
+      return;
+    }
+    if (updatedAccount.role && updatedAccount.role !== "admin") {
+      res.status(404).send("You cannot change an account's role.");
+      return;
+    }
+    Account.findByIdAndUpdate(accountId, updatedAccount)
+      .then((response) => res.json(response))
+      .catch((error) => {
+        console.log(error);
+        res.status(404).send(error);
+      });
+  } catch (error) {
+    console.log(error);
+    res.status(404).send(error);
+  }
+});
+
 router.post("/login", async (req, res) => {
   try {
     const { username, password } = req.body;

@@ -3,7 +3,7 @@ const Account = require("../models/AccountModel");
 const express = require("express");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
-const { verifyRootLevel } = require("../middleware/auth");
+const { verifyRootLevel, auth } = require("../middleware/auth");
 
 /* router.post("/register", async (req, res) => {
   try {
@@ -65,7 +65,15 @@ router.post("/register-as-admin", verifyRootLevel, async (req, res) => {
     res.status(404).send();
   }
 });
-
+router.get("/get-admin-details", auth, (req, res) => {
+  try {
+    Account.findById(req.account.account_id, { password: 0 })
+      .then((response) => res.json(response))
+      .catch((err) => console.log(err));
+  } catch (error) {
+    console.log(error);
+  }
+});
 router.get("/get-admins", verifyRootLevel, (req, res) => {
   try {
     Account.find({ role: "admin" })

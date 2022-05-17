@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useFormik } from 'formik'
 import * as Yup from 'yup'
 import { toast } from 'react-toastify'
-import { getRole, isExpired, Login } from '../methods/Account'
+import { isExpired, Login } from '../methods/Account'
 
 const DynamicLoginPage = () => {
     const [isLoading, setLoading] = useState(false)
@@ -11,19 +11,7 @@ const DynamicLoginPage = () => {
     useEffect(() => {
         isExpired().then((res) => {
             if (!res) {
-                getRole().then((roleResponse) => {
-                    switch (roleResponse.role) {
-                        case 'root':
-                            navigate('/dynamic/root-panel')
-                            break
-                        case 'admin':
-                            navigate('/dynamic/admin-panel')
-                            break
-                        default:
-                            break
-                    }
-                })
-                // navigate('/users')
+                navigate('/dynamic/form-list')
             }
         })
     }, [navigate])
@@ -41,19 +29,9 @@ const DynamicLoginPage = () => {
             setLoading(true)
             Login(values.username, values.password)
                 .then((res) => {
-                    switch (res.data.role) {
-                        case 'root':
-                            setLoading(false)
-                            localStorage.setItem('jwt', res.data.token)
-                            navigate('/dynamic/root-panel')
-                            break
-                        case 'admin':
-                            setLoading(false)
-                            localStorage.setItem('jwt', res.data.token)
-                            navigate('/dynamic/admin-panel')
-                            break
-                        default:
-                            break
+                    if (res.data.token) {
+                        localStorage.setItem('jwt', res.data.token)
+                        navigate('/dynamic/form-list')
                     }
                 })
                 .catch((err) => {

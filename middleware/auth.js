@@ -24,6 +24,7 @@ const verifyRootLevel = (req, res, next) => {
   }
   try {
     const decoded = jwt.verify(token, config.TOKEN_KEY);
+    req.account = decoded;
     if (decoded.role == "root") return next();
     else res.status(401).send("You are not a root level user.")
   } catch (err) {

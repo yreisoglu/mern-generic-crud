@@ -5,7 +5,9 @@ const HTTP = axios.create({
 })
 export const GetAvailableForms = () => {
     return new Promise((resolve, reject) => {
-        HTTP.get('api/dynamic/get-forms')
+        HTTP.get('api/dynamic/get-forms', {
+            headers: { 'x-access-token': localStorage.getItem('jwt') },
+        })
             .then((res) => {
                 resolve(res.data)
             })
@@ -21,6 +23,19 @@ export const DeleteFormsByIds = (ids) => {
     }
     return new Promise((resolve, reject) => {
         HTTP.delete('/api/dynamic/delete-forms', { data: payload })
+            .then((response) => {
+                resolve(response.data)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}
+export const CreateAdminAccount = (body) => {
+    return new Promise((resolve, reject) => {
+        HTTP.post('/api/account/register-as-admin', body, {
+            headers: { 'x-access-token': localStorage.getItem('jwt') },
+        })
             .then((response) => {
                 resolve(response.data)
             })

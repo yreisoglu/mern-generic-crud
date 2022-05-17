@@ -12,8 +12,6 @@ import LoginPage from './components/LoginPage'
 import UserTable from './components/UserTable'
 import FormList from './Pages/FormList'
 import DynamicLoginPage from './Pages/DynamicLoginPage'
-import RootPanel from './Pages/RootPanel'
-import AdminPanel from './Pages/AdminPanel'
 import CreateAdmin from './Pages/CreateAdmin'
 import CreateForms from './Pages/CreateForms'
 
@@ -39,8 +37,6 @@ const App = () => {
                 </Route>
                 <Route path="/dynamic">
                     <Route index element={<DynamicLoginPage />} />
-                    <Route path="root-panel" element={<RootPanel />} />
-                    <Route path="admin-panel" element={<AdminPanel />} />
                     <Route path="create-admin" element={<CreateAdmin />} />
                     <Route path="form-create" element={<CreateForms />} />
                     <Route path="form-list" element={<FormList />} />

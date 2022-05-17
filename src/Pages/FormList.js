@@ -8,6 +8,8 @@ import Swal from 'sweetalert2'
 import { GetAvailableForms, DeleteFormsByIds } from '../methods/DynamicForms'
 import 'react-confirm-alert/src/react-confirm-alert.css'
 import useStore from '../store'
+import { isExpired } from '../methods/Account'
+import { useNavigate } from 'react-router-dom'
 
 const AdminPanel = () => {
     const [data, setData] = useState([])
@@ -16,6 +18,8 @@ const AdminPanel = () => {
     const store = useStore()
     const { toggleUpdate } = store
     const { isUpdated } = store
+    const navigate = useNavigate()
+
     const countChecked = () => {
         let count = 0
         data.map((form) => {
@@ -25,7 +29,15 @@ const AdminPanel = () => {
         })
         return count > 1 ? true : false
     }
-
+    useEffect(() => {
+        isExpired()
+            .then((res) => {
+                if (res) {
+                    navigate('/dynamic')
+                }
+            })
+            .catch((error) => console.log(error))
+    })
     useEffect(() => {
         let condition = countChecked()
         setChecked(condition)

@@ -65,6 +65,7 @@ router.post("/register-as-admin", verifyRootLevel, async (req, res) => {
     res.status(404).send();
   }
 });
+
 router.get("/get-admin-details", auth, (req, res) => {
   try {
     Account.findById(req.account.account_id, { password: 0 })
@@ -74,6 +75,7 @@ router.get("/get-admin-details", auth, (req, res) => {
     console.log(error);
   }
 });
+
 router.get("/get-admins", verifyRootLevel, (req, res) => {
   try {
     Account.find({ role: "admin" })

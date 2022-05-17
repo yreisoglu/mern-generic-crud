@@ -109,7 +109,7 @@ router.delete("/delete-admin", verifyRootLevel, (req, res) => {
   }
 });
 
-router.put("/update-admin", verifyRootLevel, (req, res) => {
+router.put("/update-admin", verifyRootLevel, async (req, res) => {
   try {
     const { accountId, updatedAccount } = req.body;
     if (!(accountId, updatedAccount)) {
@@ -120,6 +120,8 @@ router.put("/update-admin", verifyRootLevel, (req, res) => {
       res.status(404).send("You cannot change an account's role.");
       return;
     }
+    if (updatedAccount.password)
+      updatedAccount.password = await bcrypt.hash(updatedAccount.password, 10);
     Account.findByIdAndUpdate(accountId, updatedAccount)
       .then((response) => res.json(response))
       .catch((error) => {

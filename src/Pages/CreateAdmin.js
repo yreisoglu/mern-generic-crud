@@ -39,7 +39,7 @@ const CreateAdmin = () => {
             valueArray.push(index)
         } else {
             Swal.fire({
-                icon: 'Geçersiz',
+                icon: 'error',
                 title: 'Bu izini daha önce gerçekleştirdiniz.',
             })
         }
@@ -51,24 +51,40 @@ const CreateAdmin = () => {
         body.password = password
         body.allowedForms = valueArray
 
-        CreateAdminAccount(body)
-            .then((res) => {
+        if (body.username !== '' && body.password !== '') {
+            if (body.allowedForms.length > 0) {
+                CreateAdminAccount(body)
+                    .then((res) => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Başarılı!',
+                            text: 'Hesap başarıyla oluşturuldu.',
+                        })
+                        toggleUpdate()
+                        console.log(res)
+                    })
+                    .catch((error) => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Hesap oluşturma işlemi gerçekleştirilemedi.',
+                        })
+                        console.log(error)
+                    })
+                e.preventDefault()
+            } else {
                 Swal.fire({
-                    icon: 'success',
-                    title: 'Başarılı!',
-                    text: 'Hesap başarıyla oluşturuldu.',
+                    icon: 'error',
+                    title: 'Oluşturulan hesaba, en az 1 form yetkisi verilmesi gerektir.',
                 })
-                toggleUpdate()
-                console.log(res)
+                e.preventDefault()
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Kullanıcı adı ve şifre olmadan hesap oluşturulamaz.',
             })
-            .catch((error) => {
-                Swal.fire({
-                    icon: 'Hata!',
-                    title: 'Hesap oluşturma işlemi gerçekleştirilemedi.',
-                })
-                console.log(error)
-            })
-        e.preventDefault()
+            e.preventDefault()
+        }
     }
 
     useEffect(() => {

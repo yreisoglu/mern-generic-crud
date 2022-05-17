@@ -118,30 +118,6 @@ const AdminPanelDetail = (props) => {
                                     }}
                                 />
                             </div>{' '}
-                            <div className="row">
-                                <div className="form-group col-12 col-md-12 col-sm-12">
-                                    <div style={{ textAlign: 'right' }} className="form-group mt-4">
-                                        <button
-                                            type="button"
-                                            id="removeForm"
-                                            className="btn btn-danger btn-sm"
-                                            style={{ marginLeft: '5px' }}
-                                            onClick={(e) => handleRemoveFieldsChild(e.target)}
-                                        >
-                                            Sil
-                                        </button>
-                                        <button
-                                            type="button"
-                                            id="removeForm"
-                                            className="btn btn-success btn-sm"
-                                            style={{ marginLeft: '5px' }}
-                                            onClick={(e) => handlePermissionValueChild(e.target)}
-                                        >
-                                            Ekle
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     ) : (
                         <div className="row">
@@ -155,6 +131,30 @@ const AdminPanelDetail = (props) => {
             ) : (
                 ''
             )}
+            <div className="row">
+                <div className="form-group col-12 col-md-12 col-sm-12">
+                    <div style={{ textAlign: 'right' }} className="form-group mt-4">
+                        <button
+                            type="button"
+                            id="removeForm"
+                            className="btn btn-danger btn-sm"
+                            style={{ marginLeft: '5px' }}
+                            onClick={(e) => handleRemoveFieldsChild(e.target)}
+                        >
+                            Sil
+                        </button>
+                        <button
+                            type="button"
+                            id="removeForm"
+                            className="btn btn-success btn-sm"
+                            style={{ marginLeft: '5px' }}
+                            onClick={(e) => handlePermissionValueChild(e.target)}
+                        >
+                            Ekle
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     )
 }

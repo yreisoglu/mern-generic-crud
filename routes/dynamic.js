@@ -271,6 +271,27 @@ router.post("/get-form", auth, (req, res) => {
   }
 });
 
+router.get("/get-form-details", auth, async (req, res) => {
+  try {
+    const isAllowed = await checkPermission(req.account, req.body.formId);
+    if (req.account.role === "root" || (req.account.role === "admin" && isAllowed)) {
+      if (!mongoose.models.formSchemas) {
+        createSchemasModel();
+      }
+      mongoose.models.formSchemas
+        .findById(req.body.formId)
+        .then((response) => {
+          res.json(response);
+          console.log(response);
+        })
+        .catch((error) => console.log(error));
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(404).send(error);
+  }
+});
+
 const getRequestedForm = (formId, field, value) => {
   return new Promise((resolve, reject) => {
     try {
@@ -300,7 +321,6 @@ const getRequestedForm = (formId, field, value) => {
     }
   });
 };
-
 
 // Update a document from a Form
 router.put("/", auth, async (req, res) => {
@@ -395,6 +415,7 @@ const createSchemasModel = () => {
 
 const checkPermission = async (account, form_id) => {
   return new Promise((resolve, reject) => {
+    if (account.role === "root") resolve(true);
     AccountModel.findById(account.account_id, { allowedForms: 1, _id: 0 })
       .then((formResponse) => {
         for (item of formResponse.allowedForms) {

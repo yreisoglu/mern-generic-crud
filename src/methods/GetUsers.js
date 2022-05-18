@@ -14,6 +14,18 @@ export const GetUsers = async () => {
     })
 }
 
+export const GetUserDetails = async () => {
+    return new Promise((resolve, reject) => {
+        HTTP.get('/api/account/get-admin-details', {
+            headers: { 'x-access-token': localStorage.getItem('jwt') },
+        })
+            .then((response) => {
+                resolve(response.data)
+            })
+            .catch((error) => reject(error))
+    })
+}
+
 export const GetUserById = async (id) => {
     return new Promise((resolve, reject) => {
         HTTP.get('/api/user/get-user-by-id', {

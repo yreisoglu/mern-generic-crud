@@ -5,14 +5,16 @@ import DynamicFeedRoundedIcon from '@material-ui/icons/DynamicFeedRounded'
 import AddCircleSharpIcon from '@material-ui/icons/AddCircleSharp'
 import RateReviewRoundedIcon from '@material-ui/icons/RateReviewRounded'
 import Swal from 'sweetalert2'
+import { useNavigate } from 'react-router-dom'
 import { GetAvailableForms, DeleteFormsByIds } from '../methods/DynamicForms'
 import 'react-confirm-alert/src/react-confirm-alert.css'
 import useStore from '../store'
 import { isExpired } from '../methods/Account'
-import { useNavigate } from 'react-router-dom'
+import { GetUserDetails } from '../methods/GetUsers'
 
 const AdminPanel = () => {
     const [data, setData] = useState([])
+    const [userDetail, setUserDetail] = useState('')
     const [isChecked, setChecked] = useState(false)
     const [search, setSearch] = useState('')
     const store = useStore()
@@ -37,21 +39,24 @@ const AdminPanel = () => {
                 }
             })
             .catch((error) => console.log(error))
-    })
-    useEffect(() => {
-        let condition = countChecked()
-        setChecked(condition)
-    }, [data])
+    }, [])
 
     useEffect(() => {
-        setData(data)
-    }, [])
+        const condition = countChecked()
+        setChecked(condition)
+    }, [data])
 
     useEffect(() => {
         GetAvailableForms().then((response) => {
             setData(response)
         })
     }, [isUpdated])
+
+    useEffect(() => {
+        GetUserDetails().then((response) => {
+            setUserDetail(response)
+        })
+    }, [])
 
     const handleChange = (e) => {
         const { name, checked } = e.target
@@ -137,6 +142,44 @@ const AdminPanel = () => {
                                         style={{ textAlign: 'right' }}
                                         className="form-group col-md-4 mt-2"
                                     >
+                                        {userDetail.role === 'admin' ? (
+                                            <a
+                                                style={{ background: 'coral ', color: 'white' }}
+                                                href="#"
+                                                id="add"
+                                                className="btn btn-sm"
+                                            >
+                                                <small> Hesap Yönetimi </small>
+                                            </a>
+                                        ) : (
+                                            ''
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="row">
+                                    <div
+                                        className="col-md-6 col-sm-6 mt-1"
+                                        style={{ textAlign: 'left' }}
+                                    >
+                                        <div className="form-check">
+                                            <input
+                                                className="form-check-input"
+                                                name="allSelect"
+                                                type="checkbox"
+                                                checked={
+                                                    !data.some((form) =>
+                                                        form.isChecked !== true ? true : false
+                                                    )
+                                                }
+                                                onChange={handleChange}
+                                            />
+                                            <label>Tümünü Seç</label>
+                                        </div>
+                                    </div>
+                                    <div
+                                        className="col-md-6 col-sm-6 mt-1"
+                                        style={{ textAlign: 'right' }}
+                                    >
                                         {isChecked !== true ? (
                                             <button
                                                 type="button"
@@ -203,24 +246,6 @@ const AdminPanel = () => {
                                             />
                                             <small style={{ marginLeft: '-4px' }}> Sil </small>
                                         </button>
-                                    </div>
-                                </div>
-                                <div className="row">
-                                    <div className="col-md-12 col-sm-12 mt-1">
-                                        <div className="form-check">
-                                            <input
-                                                className="form-check-input"
-                                                name="allSelect"
-                                                type="checkbox"
-                                                checked={
-                                                    !data.some((form) =>
-                                                        form.isChecked !== true ? true : false
-                                                    )
-                                                }
-                                                onChange={handleChange}
-                                            />
-                                            <label>Tümünü Seç</label>
-                                        </div>
                                     </div>
                                 </div>
                                 <div className="row">

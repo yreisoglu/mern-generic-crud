@@ -271,7 +271,7 @@ router.post("/get-form", auth, (req, res) => {
   }
 });
 
-router.get("/get-form-details", auth, async (req, res) => {
+router.post("/get-form-details", auth, async (req, res) => {
   try {
     const isAllowed = await checkPermission(req.account, req.body.formId);
     if (req.account.role === "root" || (req.account.role === "admin" && isAllowed)) {

@@ -44,3 +44,87 @@ export const CreateAdminAccount = (body) => {
             })
     })
 }
+/**
+ * Method to get forms by form id
+ * @param {String} formId
+ * @returns Promise
+ */
+export const GetForm = (formId) => {
+    return new Promise((resolve, reject) => {
+        HTTP.post(
+            '/api/dynamic/get-form',
+            { formId },
+            {
+                headers: { 'x-access-token': localStorage.getItem('jwt') },
+            }
+        )
+            .then((response) => {
+                resolve(response.data)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}
+
+export const GetFormDetails = (formId) => {
+    return new Promise((resolve, reject) => {
+        HTTP.post(
+            '/api/dynamic/get-form-details',
+            {
+                formId,
+            },
+            {
+                headers: { 'x-access-token': localStorage.getItem('jwt') },
+            }
+        )
+            .then((response) => {
+                resolve(response.data)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}
+/**
+ * Method to delete form documents by document ids
+ *
+ * @param {Array} documentIds
+ * @param {String} formId
+ *
+ */
+export const DeleteFormDocuments = (documentIds, formId) => {
+    const payload = {
+        document_ids: documentIds,
+        form_id: formId,
+        token: localStorage.getItem('jwt'),
+    }
+    return new Promise((resolve, reject) => {
+        HTTP.delete('/api/dynamic/', { data: payload })
+            .then((response) => {
+                resolve(response.data)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}
+
+export const UpdateSelectedDocument = (document, formId) => {
+
+     return new Promise((resolve, reject) => {
+        HTTP.put(
+            '/api/dynamic/',
+            {
+                ...document,
+                document_id: document._id,
+                form_id: formId,
+            },
+            {
+                headers: { 'x-access-token': localStorage.getItem('jwt') },
+            }
+        )
+            .then((res) => resolve(res.data))
+            .catch((err) => reject(err))
+    })
+}

@@ -210,7 +210,7 @@ router.post("/", (req, res) => {
             .then((response) => res.json(response))
             .catch((err) => {
               console.log(err);
-              res.status(400).send(err.errors.title.message);
+              res.status(400).send();
             });
           return;
         }

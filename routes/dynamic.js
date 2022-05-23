@@ -77,7 +77,7 @@ router.get("/get-forms", auth, (req, res) => {
               res.json(response);
             })
             .catch((err) => {
-              console.log;
+              console.log(err);
               res.status(404).send();
             });
         }
@@ -92,7 +92,7 @@ router.get("/get-forms", auth, (req, res) => {
           res.json(response);
         })
         .catch((err) => {
-          console.log;
+          console.log(err);
           res.status(404).send();
         });
     }
@@ -143,7 +143,6 @@ const checkDeletionPermission = async (account, form_ids) => {
     AccountModel.findById(account.account_id, { allowedForms: 1, _id: 0 })
       .then((formResponse) => {
         for (item of formResponse.allowedForms) {
-          //console.log(!form_ids.includes(item.formId) && item.permissionType !== "write");
           if (!form_ids.includes(item.formId) || item.permissionType !== "write") {
             isAllowed = false;
             break;
@@ -282,7 +281,6 @@ router.post("/get-form-details", auth, async (req, res) => {
         .findById(req.body.formId)
         .then((response) => {
           res.json(response);
-          console.log(response);
         })
         .catch((error) => console.log(error));
     }

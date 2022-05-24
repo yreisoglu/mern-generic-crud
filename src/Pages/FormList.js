@@ -4,14 +4,16 @@ import DeleteForeverRoundedIcon from '@material-ui/icons/DeleteForeverRounded'
 import DynamicFeedRoundedIcon from '@material-ui/icons/DynamicFeedRounded'
 import AddCircleSharpIcon from '@material-ui/icons/AddCircleSharp'
 import RateReviewRoundedIcon from '@material-ui/icons/RateReviewRounded'
+import LogoutIcon from '@material-ui/icons/ExitToApp'
 import Tooltip from '@material-ui/core/Tooltip'
 import Swal from 'sweetalert2'
-import { useNavigate } from 'react-router-dom'
 import { GetAvailableForms, DeleteFormsByIds } from '../methods/DynamicForms'
 import 'react-confirm-alert/src/react-confirm-alert.css'
 import useStore from '../store'
 import { isExpired } from '../methods/Account'
 import { GetUserDetails } from '../methods/GetUsers'
+import logout from '../methods/Logout'
+import { useNavigate } from 'react-router-dom'
 
 const AdminPanel = () => {
   const [data, setData] = useState([])
@@ -188,11 +190,11 @@ const AdminPanel = () => {
                         ''
                       )}
                       {userDetail.role === 'root' ? (
-                        <Tooltip title="Admin Hesaplarını Erişim">
+                        <Tooltip title="Admin Hesaplarına Erişim">
                           <button
                             type="button"
                             style={{
-                              background: '#495056',
+                              background: 'coral',
                               marginLeft: '0.4rem',
                             }}
                             className="btn btn-sm text-white"
@@ -203,6 +205,18 @@ const AdminPanel = () => {
                       ) : (
                         ''
                       )}
+                      <Tooltip title="Çıkış Yap">
+                        <button
+                          style={{
+                            background: '#495056',
+                            marginLeft: '0.4rem',
+                          }}
+                          className="btn btn-sm text-white"
+                          onClick={() => logout(navigate)}
+                        >
+                          <LogoutIcon htmlColor="white" fontSize="small" marginRight={1} />
+                        </button>
+                      </Tooltip>
                     </div>
                   </div>
 
@@ -263,7 +277,7 @@ const AdminPanel = () => {
           </div>
         </div>
       ) : (
-        <div> yükleniyor... </div>
+        <div> Yükleniyor... </div>
       )}
     </div>
   )

@@ -6,11 +6,14 @@ import {
     GetFormDetails,
     UpdateSelectedDocument,
 } from '../methods/DynamicForms'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@mui/material'
-import { Delete } from '@material-ui/icons'
+import { Delete, Edit } from '@material-ui/icons'
 import Swal from 'sweetalert2'
 import useStore from '../store'
+import { isExpired } from '../methods/Account'
+import Tooltip from '@mui/material/Tooltip'
+import { toast } from 'react-toastify'
 
 const FormTable = () => {
     const { id } = useParams()
@@ -19,10 +22,14 @@ const FormTable = () => {
     const [columns, setColumns] = useState([])
     const [isLoading, setLoading] = useState(true)
     const [selectionModel, setSelectionModel] = useState([])
+    const [isEditEnabled, setEditEnabled] = useState(false)
+
     const store = useStore()
     const { toggleUpdate } = store
     const { isUpdated } = store
-    function Toolbar(props) {
+    const navigate = useNavigate()
+
+    const Toolbar = (props) => {
         const handleClick = () => {
             Swal.fire({
                 title: 'Emin misin?',
@@ -58,13 +65,31 @@ const FormTable = () => {
 
         return (
             <GridToolbarContainer className="d-flex justify-content-end">
-                <Button disableElevation size="large" color="warning" onClick={handleClick}>
-                    <Delete />
-                </Button>
+                <Tooltip title="Bu ayarı açtığınızda istediğiniz alana çift tıklayarak güncelleyebilirsiniz.">
+                    <button
+                        className={`btn ${isEditEnabled ? 'btn-secondary' : 'btn-success'}`}
+                        onClick={() => setEditEnabled(!isEditEnabled)}
+                    >
+                        {isEditEnabled ? 'Düzenlemeyi Kapat' : 'Düzenlemeyi Aç'}
+                    </button>
+                </Tooltip>
+                <Tooltip title="Seçili satırları sil.">
+                    <Button disableElevation size="large" color="warning" onClick={handleClick}>
+                        <Delete />
+                    </Button>
+                </Tooltip>
             </GridToolbarContainer>
         )
     }
-
+    useEffect(() => {
+        isExpired()
+            .then((res) => {
+                if (res) {
+                    navigate('/dynamic')
+                }
+            })
+            .catch((error) => console.log(error))
+    }, [])
     useEffect(() => {
         GetFormDetails(id)
             .then((res) => {
@@ -105,11 +130,13 @@ const FormTable = () => {
                         checkboxSelection
                         aria-label="collapsible table"
                         hideFooterPagination
-                        pagination={false}
                         editMode="row"
+                        isCellEditable={(params) => isEditEnabled}
                         onRowEditStop={(params, event) => {
-                            console.log(params)
-                            UpdateSelectedDocument(params.row, id)
+                            UpdateSelectedDocument(params.row, id).then(() => {
+                                toggleUpdate()
+                                toast.success('Satır güncellendi.', { position: 'bottom-center' })
+                            })
                         }}
                         components={{
                             Toolbar: Toolbar,

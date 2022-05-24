@@ -77,7 +77,7 @@ router.get("/get-forms", auth, (req, res) => {
               res.json(response);
             })
             .catch((err) => {
-              console.log;
+              console.log(err);
               res.status(404).send();
             });
         }
@@ -92,7 +92,7 @@ router.get("/get-forms", auth, (req, res) => {
           res.json(response);
         })
         .catch((err) => {
-          console.log;
+          console.log(err);
           res.status(404).send();
         });
     }
@@ -138,14 +138,13 @@ router.put("/update-form", auth, upload.single("file"), async (req, res) => {
 });
 
 const checkDeletionPermission = async (account, form_ids) => {
-  let isAllowed = true;
+  let isAllowed = false;
   return new Promise((resolve, reject) => {
     AccountModel.findById(account.account_id, { allowedForms: 1, _id: 0 })
       .then((formResponse) => {
         for (item of formResponse.allowedForms) {
-          //console.log(!form_ids.includes(item.formId) && item.permissionType !== "write");
-          if (!form_ids.includes(item.formId) || item.permissionType !== "write") {
-            isAllowed = false;
+          if (form_ids.includes(item.formId) || item.permissionType !== "write") {
+            isAllowed = true;
             break;
           }
         }
@@ -161,6 +160,7 @@ router.delete("/delete-forms", auth, async (req, res) => {
   try {
     const form_ids = req.body["form_ids"];
     let isAllowed = await checkDeletionPermission(req.account, form_ids);
+    console.log(isAllowed);
     if (!mongoose.models.formSchemas) {
       createSchemasModel();
     }
@@ -170,7 +170,10 @@ router.delete("/delete-forms", auth, async (req, res) => {
         .then((response) => {
           if (response) {
             response.forEach((item) => {
-              mongoose.connection.dropCollection(item.formName, (err, result) => {});
+              mongoose.connection.dropCollection(item.formName, (err, result) => {
+                if (err) console.log(err);
+                if (result) console.log(result);
+              });
             });
           }
         })
@@ -190,7 +193,9 @@ router.delete("/delete-forms", auth, async (req, res) => {
           console.log(err);
         });
     }
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 // Posts a document to form collection
@@ -282,7 +287,6 @@ router.post("/get-form-details", auth, async (req, res) => {
         .findById(req.body.formId)
         .then((response) => {
           res.json(response);
-          console.log(response);
         })
         .catch((error) => console.log(error));
     }

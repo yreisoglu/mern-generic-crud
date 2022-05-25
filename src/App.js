@@ -14,6 +14,8 @@ import FormList from './Pages/FormList'
 import DynamicLoginPage from './Pages/DynamicLoginPage'
 import CreateAdmin from './Pages/CreateAdmin'
 import FormCreate from './Pages/FormCreate'
+import CreateForms from './Pages/CreateForms'
+import FormTable from './Pages/FormTable'
 
 const App = () => {
     return (

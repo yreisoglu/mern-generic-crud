@@ -15,7 +15,7 @@ import DynamicLoginPage from './Pages/DynamicLoginPage'
 import RootPanel from './Pages/RootPanel'
 import AdminPanel from './Pages/AdminPanel'
 import CreateAdmin from './Pages/CreateAdmin'
-import CreateForms from './Pages/CreateForms'
+import FormCreate from './Pages/FormCreate'
 
 const App = () => {
     return (
@@ -42,7 +42,7 @@ const App = () => {
                     <Route path="root-panel" element={<RootPanel />} />
                     <Route path="admin-panel" element={<AdminPanel />} />
                     <Route path="create-admin" element={<CreateAdmin />} />
-                    <Route path="form-create" element={<CreateForms />} />
+                    <Route path="form-create" element={<FormCreate />} />
                     <Route path="form-list" element={<FormList />} />
                 </Route>
             </Routes>

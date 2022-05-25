@@ -107,7 +107,6 @@ html, body {
     cursor: pointer
 }
 a {
-    color: transparent !important;
     text-decoration: none !important;
 }
 .currentPhotoImg{

@@ -1,19 +1,91 @@
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { getRole, isExpired, RegisterAsAdmin } from '../methods/Account'
-import { GetAvailableForms } from '../methods/DynamicForms'
+import Swal from 'sweetalert2'
+import AddCircleSharpIcon from '@material-ui/icons/AddCircleSharp'
+import { getRole, isExpired } from '../methods/Account'
+import { CreateAdminAccount, GetAvailableForms } from '../methods/DynamicForms'
+import 'react-confirm-alert/src/react-confirm-alert.css'
+import AdminPanelDetail from './AdminPanelDetail'
+import useStore from '../store'
 
 const CreateAdmin = () => {
     const navigate = useNavigate()
     const [forms, setForms] = useState([])
-    const [selectedForm, setSelectedForm] = useState()
     const [isLoading, toggleLoading] = useState(true)
-
+    const [formPermission, setFormPermission] = useState([])
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const [permissionType, setPermissionType] = useState('')
-    const [allowedField, setAllowedField] = useState('')
-    const [allowedValue, setAllowedValue] = useState('')
+    const store = useStore()
+    const { toggleUpdate } = store
+
+    const handleAddFields = () => {
+        setFormPermission([...formPermission, {}])
+    }
+
+    const handleRemoveFieldsParent = (index) => {
+        formPermission.splice(index, 1)
+        setFormPermission([...formPermission])
+    }
+    const valueArray = []
+
+    const handlePermissionValueParent = (index) => {
+        let isExist = false
+        valueArray.forEach((item) => {
+            if (item.formId === index.formId) {
+                isExist = true
+            }
+        })
+        if (!isExist) {
+            valueArray.push(index)
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Bu izini daha önce gerçekleştirdiniz.',
+            })
+        }
+    }
+
+    const handleSubmit = (e) => {
+        const body = {}
+        body.username = username
+        body.password = password
+        body.allowedForms = valueArray
+
+        if (body.username !== '' && body.password !== '') {
+            if (body.allowedForms.length > 0) {
+                CreateAdminAccount(body)
+                    .then((res) => {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Başarılı!',
+                            text: 'Hesap başarıyla oluşturuldu.',
+                        })
+                        toggleUpdate()
+                        console.log(res)
+                    })
+                    .catch((error) => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Hesap oluşturma işlemi gerçekleştirilemedi.',
+                        })
+                        console.log(error)
+                    })
+                e.preventDefault()
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oluşturulan hesaba, en az 1 form yetkisi verilmesi gerektir.',
+                })
+                e.preventDefault()
+            }
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Kullanıcı adı ve şifre olmadan hesap oluşturulamaz.',
+            })
+            e.preventDefault()
+        }
+    }
 
     useEffect(() => {
         isExpired()
@@ -31,132 +103,122 @@ const CreateAdmin = () => {
 
         GetAvailableForms()
             .then((res) => {
-                console.log(res)
                 setForms(res)
                 toggleLoading(false)
-                setSelectedForm(forms[0])
             })
             .catch((err) => {
                 console.log(err)
             })
     }, [])
 
-    const submitAdminUser = (event) => {
-        event.preventDefault()
-        const allowedForms = {
-            // eslint-disable-next-line no-underscore-dangle
-            formId: forms[selectedForm]._id,
-            allowedField,
-            allowedValue,
-        }
-        const data = {
-            username,
-            password,
-            permissionType,
-            allowedForms,
-        }
-        console.log(data)
-        RegisterAsAdmin(data)
-            .then((res) => {
-                console.log(res)
-            })
-            .catch((err) => {
-                console.log(err)
-            })
-    }
-
     if (!isLoading) {
         return (
-            <div className="container d-flex justify-content-center bg-white">
-                <form className="" onSubmit={submitAdminUser}>
-                    <div className="col">
-                        <h2 className="row">Create an Admin Account</h2>
-                        <div className="row">
-                            <label htmlFor="">
-                                Username
-                                <input type="text" onChange={(e) => setUsername(e.target.value)} />
-                            </label>
-                        </div>
-                        <div className="row">
-                            <label htmlFor="">
-                                Password
-                                <input
-                                    type="password"
-                                    onChange={(e) => setPassword(e.target.value)}
-                                />
-                            </label>
-                        </div>
-                        <div className="row">
-                            <label htmlFor="">
-                                permission
-                                <select
-                                    name="permission"
-                                    id="permission"
-                                    onChange={(e) => setPermissionType(e.target.value)}
-                                >
-                                    <option value="read">read</option>
-                                    <option value="write">write</option>
-                                </select>
-                            </label>
-                        </div>
-                        <div className="row">
-                            <label htmlFor="">
-                                Allowed Forms
-                                <select
-                                    name="allowedForms"
-                                    id="allowedForms"
-                                    onChange={(e) => {
-                                        setSelectedForm(e.target.value)
-                                    }}
-                                >
-                                    {forms.map((form, index) => {
-                                        return (
-                                            <option key={form.formName} value={index}>
-                                                {form.formName}
-                                            </option>
-                                        )
-                                    })}
-                                </select>
-                            </label>
-                        </div>
-                        {selectedForm && (
-                            <div className="row">
-                                <label htmlFor="allowField">
-                                    Allowed Fields
-                                    <select
-                                        name="allowedField"
-                                        id="allowedField"
-                                        onChange={(e) => setAllowedField(e.target.value)}
-                                    >
-                                        {Object.keys(forms[selectedForm].formDetails).map(
-                                            (detail) => {
-                                                return (
-                                                    <option value={detail} key={detail}>
-                                                        {detail}
-                                                    </option>
-                                                )
-                                            }
-                                        )}
-                                    </select>
-                                </label>
+            <div className="container">
+                <div className="form-body">
+                    <div className="row">
+                        <div className="form-holder">
+                            <div className="form-content">
+                                <div className="form-items">
+                                    <div className="row">
+                                        <div className="form-group col-md-6">
+                                            <h3>Hesap Oluşturma ve Yetkilendirme</h3>
+                                            <p>ADMİN HESABI VE İZİNLERİ</p>
+                                        </div>
+                                    </div>
+                                    <form onSubmit={handleSubmit} encType="multipart/form-data">
+                                        <div className="row mt-2">
+                                            <div className="form-group col-md-6 col-sm-12">
+                                                <label htmlFor="fullname">
+                                                    Kullanıcı Adı Atama
+                                                </label>
+                                                <input
+                                                    type="text"
+                                                    className="form-control"
+                                                    id="username"
+                                                    name="username"
+                                                    placeholder="Kullanıcı Adı"
+                                                    onChange={(e) => {
+                                                        setUsername(e.target.value)
+                                                    }}
+                                                />
+                                            </div>
+                                            <div className="form-group col-md-6 col-sm-12">
+                                                <label htmlFor="fullname">Şifre Atama</label>
+                                                <input
+                                                    type="password"
+                                                    id="password"
+                                                    name="password"
+                                                    className="form-control"
+                                                    onChange={(e) => {
+                                                        setPassword(e.target.value)
+                                                    }}
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="row mt-4 justify-content-center">
+                                            <div className="form-group col-auto">
+                                                <button
+                                                    id="addForm"
+                                                    type="button"
+                                                    style={{ background: '#495056' }}
+                                                    onClick={() => handleAddFields()}
+                                                    className="btn btn-sm text-white"
+                                                >
+                                                    <small>Form ve Yetkilerini Belirle</small>
+                                                    <AddCircleSharpIcon
+                                                        htmlColor="white"
+                                                        fontSize="small"
+                                                        style={{ marginLeft: '5px' }}
+                                                    />
+                                                </button>
+                                            </div>
+                                            <div className="col-auto">
+                                                <p className="mt-2" style={{ fontSize: '12px' }}>
+                                                    (Oluşturuduğunuz hesabı; birden çok form ile
+                                                    ilişkilendirebilir, aynı zamanda form içinde
+                                                    yetkilendirme işlemi gerçekleştirebilirsiniz.
+                                                    Seçim yapmadığınız takdirde tüm formlara erişimi
+                                                    olan bir hesap oluşturursunuz. Aynı zamanda
+                                                    seçilen bir form içinde de yetkilendirme işlemi
+                                                    gerçekleştirebilirsiniz.)
+                                                </p>
+                                            </div>
+                                        </div>
+                                        {formPermission.map((item, index) => {
+                                            return (
+                                                <AdminPanelDetail
+                                                    key={index}
+                                                    data={forms}
+                                                    index={index}
+                                                    handleRemoveFieldsParent={
+                                                        handleRemoveFieldsParent
+                                                    }
+                                                    handlePermissionValueParent={
+                                                        handlePermissionValueParent
+                                                    }
+                                                />
+                                            )
+                                        })}
+                                        <div
+                                            style={{ textAlign: 'center' }}
+                                            className="form-button mt-4"
+                                        >
+                                            <button
+                                                style={{ background: 'coral ' }}
+                                                id="submit"
+                                                type="submit"
+                                                className="btn btn-primary mt-4"
+                                                onClick={handleSubmit}
+                                            >
+                                                Kaydet
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
                             </div>
-                        )}
-                        {selectedForm && (
-                            <div className="row">
-                                <label htmlFor="">
-                                    Allowed Value
-                                    <input
-                                        type="text"
-                                        onChange={(e) => setAllowedValue(e.target.value)}
-                                    />
-                                </label>
-                            </div>
-                        )}
+                        </div>
                     </div>
-                    <button className="btn btn-secondary" type="submit">
-                        Save
-                    </button>
-                </form>
+                </div>
             </div>
         )
     }

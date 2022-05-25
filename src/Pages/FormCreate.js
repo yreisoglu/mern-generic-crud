@@ -3,109 +3,117 @@
 import React, { useState } from 'react'
 import '../UserCreate.css'
 import camelcase from 'camelcase'
+import useStore from '../store'
+import {
+    Button,
+    Checkbox,
+    FormControl,
+    FormControlLabel,
+    FormGroup,
+    IconButton,
+    InputLabel,
+    MenuItem,
+    OutlinedInput,
+    Select,
+    TextField,
+} from '@mui/material'
+import { DeleteOutlined, Add } from '@material-ui/icons'
 
 const FormCreate = () => {
-    const [infoForname, setInfoForname] = useState('')
-    const [coloroption, setcoloroption] = useState('#FFFFFF')
-    const [infoTextarea, setInfoTextarea] = useState('')
-    const [formFields, setFormFields] = useState([
-        {
-            // BODY dinamik yapının
-            type: 'String',
-            htmlLabel: '',
-            htmlType: '',
-            selectOptional: '',
-            min: '',
-            max: '',
-        },
-    ])
+    const [formFields, setFormFields] = useState([])
+    const [formName, setFormName] = useState('')
+    const [selectedColor, setSelectedColor] = useState('')
+    const [file, setFile] = useState()
+    const [formDescription, setFormDescription] = useState()
+    const store = useStore()
+    const { colors, fieldTypes } = store
 
-    const PageArr = []
-    const PageObj = {}
-
-    const PageInfo = () => {
-        PageObj.pageName = infoForname
-        PageObj.pagecolor = coloroption
-        PageObj.pageTextarea = infoTextarea
-        PageArr.push(PageObj)
+    const deleteFormField = (index) => {
+        setFormFields(formFields.filter((item) => item.index !== index))
     }
-
-    const componentDynaminc = {
-        body: [...formFields],
+    const handleInputChange = (index, event) => {
+        const updatedFormFields = [...formFields]
+        updatedFormFields[index][event.target.name] = event.target.value
+        console.log(updatedFormFields)
+        setFormFields(updatedFormFields)
     }
-    const componentPage = {
-        body: PageArr,
-    }
-
-    const submit = (e) => {
-        e.preventDefault()
-        PageInfo()
-        console.log(componentDynaminc)
-        console.log(componentPage)
-        // post
-
-        // const formData = new FormData()
-        // formData.append(camelcase(infoForname), componentDynaminc)
-        // formData.append(componentPage)
-        // console.log(formData)
-        // PostCreateForms(formData)
-    }
-    const handleFormChange = (event, index) => {
-        const data = [...formFields]
-        data[index][event.target.name] = event.target.value
-        setFormFields(data)
-    }
-
-    const addFields = (index) => {
-        const fieldKontrol = document.getElementById(`fieldInput${index}`).value
-        const SelectOptionalKontrol = document.getElementById(`selectOptional${index}`).value
-
-        if (fieldKontrol !== '' && SelectOptionalKontrol !== '') {
-            const object = {}
-            setFormFields([...formFields, object])
-        }
-    }
-
-    const removeFields = (index) => {
-        const data = [...formFields]
-        data.splice(index, 1)
-        setFormFields(data)
-    }
-
-    const changeTypeInput = (index, e) => {
-        const element = e.target.value
-        // console.log(index, e)
-
-        if (element === 'Number' || element === 'text') {
-            document.getElementById(`MaxLength${index}`).style.visibility = ''
-            document.getElementById(`MinLength${index}`).style.visibility = ''
-        }
-    }
-    const ChangeColor = (e) => {
-        const colors = e.target.value
-
-        if (colors === 'Red') {
-            setcoloroption('#FC3D39')
-        } else if (colors === 'Orange') {
-            setcoloroption('#FC3158')
-        } else if (colors === 'Yellow') {
-            setcoloroption('#FECB2E')
-        } else if (colors === 'Green') {
-            setcoloroption('#53D769')
-        } else if (colors === 'Teal Blue') {
-            setcoloroption('#5FC9F8')
-        } else if (colors === 'Blue') {
-            setcoloroption('#147EFB')
-        } else if (colors === 'Purple') {
-            setcoloroption('#6a0dad')
-        } else if (colors === 'Pink') {
-            setcoloroption('#FFC0CB')
-        } else if (colors === 'selected') {
-            setcoloroption('#FFFFFF')
-
-            // eslint-disable-next-line no-empty
-        } else {
-        }
+    const NewInput = (props) => {
+        const field = props.field
+        return (
+            <form
+                onChange={(e) => {
+                    handleInputChange(field.index, e)
+                }}
+            >
+                <div className="col mt-2 align-items-center">
+                    <div className="row">
+                        <div className="col-md-3">
+                            <TextField
+                                id="outlined-basic"
+                                sx={{ width: '100%' }}
+                                label="Alan Adı"
+                                variant="outlined"
+                                name="formFields"
+                            />
+                        </div>
+                        <div className="col-md-2">
+                            <FormControl sx={{ width: 'auto', display: 'flex' }}>
+                                <InputLabel id="demo-multiple-checkbox-label">Alan Tipi</InputLabel>
+                                <Select
+                                    labelId="demo-multiple-checkbox-label"
+                                    id="demo-multiple-checkbox"
+                                    input={<OutlinedInput label="Alan Tipi" />}
+                                    onChange={(event) => console.log(event.target.value)}
+                                    name="type"
+                                >
+                                    {fieldTypes.map((item) => {
+                                        return (
+                                            <MenuItem value={item.field} className="">
+                                                {item.fieldName}
+                                            </MenuItem>
+                                        )
+                                    })}
+                                </Select>
+                            </FormControl>
+                        </div>
+                        <div className="col-md-4 d-flex justify-content-between">
+                            <TextField
+                                name="min"
+                                className="mx-1"
+                                label="Minimum değer"
+                                type="number"
+                                InputProps={{ inputProps: { min: 0 } }}
+                            />
+                            <TextField
+                                name="max"
+                                className="mx-1"
+                                label="Maksimum değer"
+                                type="number"
+                                InputProps={{ inputProps: { min: 0 } }}
+                            />
+                        </div>
+                        <div className="col-md-2">
+                            <FormGroup>
+                                <FormControlLabel
+                                    control={<Checkbox name="required" />}
+                                    label="Zorunlu alan"
+                                />
+                            </FormGroup>
+                        </div>
+                        <div className="col-md-1">
+                            <IconButton
+                                color="error"
+                                onClick={() => {
+                                    deleteFormField(field.index)
+                                }}
+                            >
+                                <DeleteOutlined />
+                            </IconButton>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        )
     }
 
     return (
@@ -120,19 +128,8 @@ const FormCreate = () => {
                     <div className="form-group col-md-3">
                         <div className="row">
                             <h3 id="formTitle" className="mb-3 col-sm-6">
-                                Welcom
+                                Welcome
                             </h3>
-                            <button
-                                id="primaryColor"
-                                name="primaryColor"
-                                className="form-control col-sm-1"
-                                style={{
-                                    backgroundColor: coloroption,
-                                    width: '25px',
-                                    height: '25px',
-                                    margin: '3px',
-                                }}
-                            />
                         </div>
                         <p id="subTitle">CREATE YOUR FORM</p>
                     </div>
@@ -150,207 +147,96 @@ const FormCreate = () => {
                 </div>
                 <hr className="my-4" />
 
-                <form
-                    className="needs-validation"
-                    noValidate
-                    onSubmit={submit}
-                    encType="multipart/formData"
-                >
-                    <div className="row">
-                        <div className="form-group col-md-4 col-sm-4">
-                            <div className="form-group">
-                                <label style={{ fontWeight: 'bold' }} htmlFor="nameForm">
-                                    Name Of The Form
-                                </label>
-                                <input
-                                    onChange={(evt) => setInfoForname(evt.target.value)}
-                                    type="text"
-                                    className="form-control themed-grid-col"
-                                    id="formName"
-                                    name="formName"
-                                    placeholder="e.g: Welcom page"
-                                    style={{ backgroundColor: '#f2f8fc' }}
-                                />
-                            </div>
-                        </div>
-
-                        <div className="col-sm-4">
-                            <br />
-                            <div>
-                                <select
-                                    onChange={ChangeColor}
-                                    className="form-select"
-                                    aria-label="Selected Color"
-                                >
-                                    <option value="selected" selected>
-                                        Selected Color
-                                    </option>
-                                    <option value="Red">Red</option>
-                                    <option value="Orange">Orange</option>
-                                    <option value="Yellow">Yellow</option>
-                                    <option value="Green">Green</option>
-                                    <option value="Teal Blue">Teal Blue</option>
-                                    <option value="Blue">Blue</option>
-                                    <option value="Purple">Purple</option>
-                                    <option value="Pink">Pink</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div className="col-sm-4">
-                            <div className="form-group">
-                                <label>Favicon</label>
-                                <input type="file" className="form-control" id="file" name="file" />
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="row mt-4">
-                        <div className="form-group">
-                            <label style={{ fontWeight: 'bold' }} htmlFor="aboutForm">
-                                Description The Form
-                            </label>
-                            <textarea
-                                onChange={(evt) => setInfoTextarea(evt.target.value)}
-                                className="form-control mt-2"
-                                name="description"
-                                id="description"
-                                rows="2"
-                                style={{ backgroundColor: '#f2f8fc' }}
+                <form className="needs-validation" noValidate encType="multipart/formData">
+                    <div className="row align-items-center">
+                        <div className="col-md-4">
+                            <TextField
+                                name="formName"
+                                id="outlined-basic"
+                                sx={{ width: '100%' }}
+                                label="Formun Adı"
+                                variant="outlined"
+                                onChange={(e) => {
+                                    setFormName(e.target.value)
+                                }}
                             />
                         </div>
-                        <hr className="my-4" />
+                        <div className="col-md-4">
+                            <FormControl sx={{ width: 'auto', display: 'flex' }}>
+                                <InputLabel id="demo-multiple-checkbox-label">
+                                    Bir Renk Seçiniz
+                                </InputLabel>
+                                <Select
+                                    labelId="demo-multiple-checkbox-label"
+                                    id="demo-multiple-checkbox"
+                                    input={<OutlinedInput label="Bir Renk Seçiniz" />}
+                                    defaultValue={''}
+                                    onChange={(e) => {
+                                        setSelectedColor(e.target.value)
+                                    }}
+                                >
+                                    {colors.map((item) => {
+                                        return (
+                                            <MenuItem
+                                                value={item.HEX}
+                                                className="d-flex justify-content-between"
+                                            >
+                                                <div
+                                                    style={{
+                                                        height: '15px',
+                                                        width: '15px',
+                                                        backgroundColor: item.HEX,
+                                                        borderRadius: '50%',
+                                                    }}
+                                                ></div>
+                                                <div>{item.color}</div>
+                                            </MenuItem>
+                                        )
+                                    })}
+                                </Select>
+                            </FormControl>
+                        </div>
+                        <div className="col-md-4">
+                            <input
+                                type="file"
+                                className="form-control"
+                                id="file"
+                                name="file"
+                                onChange={(e) => setFile(e.target.files[0])}
+                            />
+                        </div>
                     </div>
 
-                    <div className="container-fluid" style={{ visibility: '' }} id="firstDiv">
-                        {formFields.map((form, index) => {
-                            return (
-                                // eslint-disable-next-line react/no-array-index-key
-                                <div key={index} className="row" id={`main${index}`}>
-                                    <div className="col-sm-3">
-                                        <input
-                                            name="textForm"
-                                            id={`fieldInput${index}`}
-                                            name="htmlLabel"
-                                            onChange={(evt) => handleFormChange(evt, index)}
-                                            placeholder="Please Select a field"
-                                            className="form-control themed-grid-col"
-                                            style={{
-                                                backgroundColor: '#f2f8fc',
-                                                visibility: '',
-                                            }}
-                                        />
-                                    </div>
-                                    <div className="col-sm-3">
-                                        <select
-                                            id={`select${index}`}
-                                            onClick={(evt) => changeTypeInput(index, evt)}
-                                            onChange={(evt) => handleFormChange(evt, index)}
-                                            className="form-select"
-                                            aria-label="Selected Field type"
-                                            name="htmlType"
-                                        >
-                                            <option value="Select Type" selected>
-                                                Select Type
-                                            </option>
-                                            <option value="text">Text</option>
-                                            <option value="E-mail">E-mail</option>
-                                            <option value="Text Area">Text Area</option>
-                                            <option value="Date">Date</option>
-                                            <option value="Number">Number</option>
-                                            <option value="File">Add File</option>
-                                        </select>
-                                    </div>
-
-                                    <div className="col-sm-2">
-                                        <select
-                                            id={`selectOptional${index}`}
-                                            onChange={(evt) => handleFormChange(evt, index)}
-                                            className="form-select"
-                                            name="selectOptional"
-                                            aria-label="Selected Field type"
-                                        >
-                                            <option value="Optional" selected>
-                                                Optional
-                                            </option>
-                                            <option value="Yes">Yes</option>
-                                            <option value="No">No</option>
-                                        </select>
-                                    </div>
-
-                                    <div className="col-sm-1">
-                                        <input
-                                            placeholder="Min"
-                                            className="form-control"
-                                            id={`MinLength${index}`}
-                                            name="min"
-                                            onChange={(evt) => handleFormChange(evt, index)}
-                                            type="Number"
-                                            style={{ visibility: 'hidden' }}
-                                        />
-                                    </div>
-                                    <div className="col-sm-1">
-                                        <input
-                                            placeholder="Max"
-                                            onChange={(evt) => handleFormChange(evt, index)}
-                                            className="form-control"
-                                            name="max"
-                                            id={`MaxLength${index}`}
-                                            type="Number"
-                                            style={{ visibility: 'hidden' }}
-                                        />
-                                    </div>
-
-                                    <div className="col-sm-1">
-                                        <a
-                                            id="addFieldsButton"
-                                            className="btn me-2 col-sm-1 form-control"
-                                            aria-pressed="true"
-                                            role="button"
-                                            onClick={() => addFields(index)}
-                                            style={{
-                                                backgroundColor: 'coral',
-                                                color: 'white',
-                                            }}
-                                        >
-                                            +
-                                        </a>
-                                    </div>
-                                    <div className="col-sm-1">
-                                        <button
-                                            id={`removeFieldsButton${index}`}
-                                            className="btn me-2 col-sm-1 form-control"
-                                            onClick={(evt) => removeFields(index, evt)}
-                                            aria-pressed="true"
-                                            style={{ backgroundColor: 'coral', color: 'white' }}
-                                        >
-                                            -
-                                        </button>
-                                    </div>
-
-                                    <hr
-                                        style={{
-                                            height: '1px',
-                                            borderWidth: '0',
-                                            color: 'whitesmoke',
-                                            backgroundColor: 'gray',
-                                        }}
-                                    />
-                                </div>
-                            )
-                        })}
+                    <div className="row align-items-center mx-1 mt-3">
+                        <TextField
+                            label="Form Açıklaması"
+                            multiline
+                            rows={2}
+                            maxRows={4}
+                            onChange={(e) => {
+                                setFormDescription(e.target.value)
+                            }}
+                        />
                     </div>
-
-                    <div className="row">
-                        <div className="col-sm-12" />
+                    <div className="d-flex justify-content-center align-items-center mt-2">
+                        <IconButton
+                            onClick={() =>
+                                setFormFields((formFields) => [
+                                    ...formFields,
+                                    { index: formFields.length },
+                                ])
+                            }
+                        >
+                            <Add />
+                        </IconButton>
                     </div>
-
-                    <br />
-
-                    <div style={{ textAlign: 'center' }}>
-                        <button id="submit" type="submit" className="btn btn-primary">
-                            Submit
-                        </button>
+                    {formFields.map((field) => {
+                        return <NewInput field={field}></NewInput>
+                    })}
+                    <div className="d-flex justify-content-center align-items-center mt-2">
+                        <Button variant="contained" onClick={() => {}}>
+                            Kaydet
+                        </Button>
                     </div>
                 </form>
             </div>

@@ -3,7 +3,6 @@
 import React, { useState } from 'react'
 import '../UserCreate.css'
 import camelcase from 'camelcase'
-import { PostCreateForms } from '../methods/DynamicForms'
 
 const CreateForms = () => {
     // const [title, setTitle] = useState('Welcome')

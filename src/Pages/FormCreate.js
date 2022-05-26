@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import '../UserCreate.css'
 import camelcase from 'camelcase'
 import useStore from '../store'
@@ -19,7 +19,8 @@ import {
 import { DeleteOutlined, Add } from '@material-ui/icons'
 import Tooltip from '@mui/material/Tooltip'
 import { CreateForm } from '../methods/DynamicForms'
-
+import { getRole, isExpired } from '../methods/Account'
+import { useNavigate } from 'react-router-dom'
 const FormCreate = () => {
     const [formFields, setFormFields] = useState([{}])
     const [formName, setFormName] = useState()
@@ -34,6 +35,22 @@ const FormCreate = () => {
         file: { status: false, message: null },
         formDescription: { status: false, message: null },
     })
+    const navigate = useNavigate();
+    useEffect(() => {
+        isExpired()
+            .then((res) => {
+                if (res) {
+                    navigate('/dynamic')
+                }
+                getRole().then((roleResponse) => {
+                    if (roleResponse.role !== 'root') navigate('/dynamic/form-list')
+                })
+            })
+            .catch((error) => {
+                console.error(error)
+            })
+    }, [])
+
     const deleteFormField = (index) => {
         setFormFields(formFields.filter((item) => formFields.indexOf(item) !== index))
     }
@@ -45,7 +62,6 @@ const FormCreate = () => {
             event.target.type === 'checkbox' ? event.target.checked : event.target.value
         setFormFields(updatedFormFields)
         clearDynamicErrors(index, event)
-        console.log(formFields)
     }
 
     const clearDynamicErrors = (index, event) => {
@@ -135,6 +151,7 @@ const FormCreate = () => {
             formData.append('formStructure', formStructure)
             console.log(formStructure)
             CreateForm(formData)
+                // TODO: implement toast notification here accordin to the result of api request
                 .then((res) => console.log(res))
                 .catch((err) => console.log(err))
         }
@@ -395,7 +412,8 @@ const FormCreate = () => {
                     <div className="d-flex justify-content-center align-items-center mt-2">
                         <Button
                             variant="contained"
-                            onClick={() => {
+                            onClick={(e) => {
+                                e.preventDefault()
                                 submitForm()
                             }}
                         >

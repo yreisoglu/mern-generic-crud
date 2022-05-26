@@ -20,7 +20,8 @@ import { DeleteOutlined, Add } from '@material-ui/icons'
 import Tooltip from '@mui/material/Tooltip'
 import { CreateForm } from '../methods/DynamicForms'
 import { getRole, isExpired } from '../methods/Account'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 const FormCreate = () => {
     const [formFields, setFormFields] = useState([{}])
     const [formName, setFormName] = useState()
@@ -35,7 +36,7 @@ const FormCreate = () => {
         file: { status: false, message: null },
         formDescription: { status: false, message: null },
     })
-    const navigate = useNavigate();
+    const navigate = useNavigate()
     useEffect(() => {
         isExpired()
             .then((res) => {
@@ -114,6 +115,10 @@ const FormCreate = () => {
         })
         setErrors(updatedErrors)
         setFormFields(updatedFormFields)
+        if (formFields.length < 2) {
+            isValid = false
+            toast.error('En az 2 Alan ekleyiniz')
+        }
         return isValid
     }
     const submitForm = () => {
@@ -176,14 +181,15 @@ const FormCreate = () => {
                     </div>
 
                     <div style={{ textAlign: 'right' }} className="form-group col-md-9">
-                        <button
+                        <Link
+                            to={'/dynamic/form-list'}
                             id="backButton"
                             className="btn me-2"
                             style={{ backgroundColor: 'coral', color: 'white' }}
                             aria-pressed="true"
                         >
                             Back
-                        </button>
+                        </Link>
                     </div>
                 </div>
                 <hr className="my-4" />
@@ -291,7 +297,9 @@ const FormCreate = () => {
                         <IconButton
                             onClick={() => setFormFields((formFields) => [...formFields, {}])}
                         >
-                            <Add />
+                            <Tooltip title="Alan Ekle">
+                                <Add />
+                            </Tooltip>
                         </IconButton>
                     </div>
                     {formFields.map((field, index) => {

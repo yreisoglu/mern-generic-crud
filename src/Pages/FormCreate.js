@@ -156,8 +156,9 @@ const FormCreate = () => {
             formData.append('formStructure', formStructure)
             console.log(formStructure)
             CreateForm(formData)
-                // TODO: implement toast notification here accordin to the result of api request
-                .then((res) => console.log(res))
+                .then((res) => {
+                    if (res) toast.success('Form Oluşturuldu', { position: 'top-center' })
+                })
                 .catch((err) => console.log(err))
         }
     }

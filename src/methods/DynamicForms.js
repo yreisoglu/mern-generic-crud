@@ -3,6 +3,23 @@ import axios from 'axios'
 const HTTP = axios.create({
     baseURL: process.env.REACT_APP_API_URL,
 })
+
+/**
+ * Method to create new Form
+ *
+ * @param {FormData} formData
+ * @returns Promise
+ */
+export const CreateForm = (formData) => {
+    return new Promise((resolve, reject) => {
+        HTTP.post('/api/dynamic/create-form', formData, {
+            headers: { 'x-access-token': localStorage.getItem('jwt') },
+        })
+            .then((res) => resolve(res.data))
+            .catch((error) => reject(error))
+    })
+}
+
 export const GetAvailableForms = () => {
     return new Promise((resolve, reject) => {
         HTTP.get('api/dynamic/get-forms', {
@@ -111,8 +128,7 @@ export const DeleteFormDocuments = (documentIds, formId) => {
 }
 
 export const UpdateSelectedDocument = (document, formId) => {
-
-     return new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         HTTP.put(
             '/api/dynamic/',
             {

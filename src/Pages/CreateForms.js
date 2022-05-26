@@ -1,62 +1,106 @@
 /* eslint-disable react/button-has-type */
 /* eslint-disable jsx-a11y/anchor-is-valid */
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import '../UserCreate.css'
+import camelcase from 'camelcase'
 
 const CreateForms = () => {
-    const [title, setTitle] = useState('Welcome')
+    // const [title, setTitle] = useState('Welcome')
     const [subtitle] = useState('CREATE YOUR FORM')
-    useEffect(() => {
+
+    /*  useEffect(() => {
         document.title = title
     }, [title])
-
     const changeTitle = (event) => {
         setTitle(event.target.value)
     }
-
-    /* const SubchangeTitle = (event) => {
+    const SubchangeTitle = (event) => {
         setSubTitle(event.target.value)
     } */
 
+    // { nameForm: '', colorButton: '', file: '', descriptionForm: '' },
+
     const [formFields, setFormFields] = useState([
         {
-            textForm: '',
+            // BODY dinamik yapının
+            type: 'String',
+            htmlLabel: '',
+            textAreaDynamic: '',
+            htmlType: '',
+            selectOptional: '',
+            min: '',
+            max: '',
         },
     ])
 
+    const arr = []
+    const obj = {}
+
+    const PageInfo = () => {
+        // sayfa hakkında bilgiler için
+        const formName = document.getElementById('formName').value
+        const description = document.getElementById('description').value
+        const primaryColor = document.getElementById('primaryColor').value
+
+        obj.formName = formName
+        obj.description = description
+        obj.primaryColor = primaryColor
+        arr.push(obj)
+    }
+
+    const componentDynamin = {
+        body: [...formFields],
+    }
+    const componentPage = {
+        body: arr,
+    }
+
+    const submit = (e) => {
+        PageInfo()
+        if (obj.formName !== '' && obj.description !== '' && obj.primaryColor) {
+            e.preventDefault()
+
+            console.log(componentDynamin)
+            console.log(componentPage)
+
+            // post
+            const formData = new FormData()
+            formData.append(camelcase(obj.formName), componentDynamin)
+            formData.append(componentPage)
+            // console.log(formData)
+            PostCreateForms(formData)
+        }
+    }
     const handleFormChange = (event, index) => {
         const data = [...formFields]
         data[index][event.target.name] = event.target.value
         setFormFields(data)
     }
 
-    const submit = (e) => {
-        e.preventDefault()
-        console.log(formFields)
-    }
-
-    const addFields = () => {
-        const object = {
-            textForm: '',
+    const addFields = (index) => {
+        const fieldKontrol = document.getElementById(`fieldInput${index}`).value
+        const SelectOptionalKontrol = document.getElementById(`selectOptional${index}`).value
+        if (fieldKontrol !== '' && SelectOptionalKontrol !== '') {
+            const object = {}
+            setFormFields([...formFields, object])
         }
-        setFormFields([...formFields, object])
     }
 
-    /* const removeFields = (index) => {
-    let data = [...formFields];
-    data.splice(index, 1);
-    setFormFields(data);
-  }; */
+    const removeFields = (index) => {
+        const data = [...formFields]
+        data.splice(index, 1)
+        setFormFields(data)
+    }
 
     const changeTypeInput = (index, e) => {
         const element = e.target.value
-        console.log(index, e)
+        // console.log(index, e)
 
         document.getElementById(`MaxLength${index}`).style.visibility = 'hidden'
         document.getElementById(`MinLength${index}`).style.visibility = 'hidden'
         document.getElementById(`fieldInput${index}`).style.visibility = ''
         document.getElementById(`fieldInput${index}`).placeholder = ''
-
+        document.getElementById(`fieldInput${index}`).value = ''
         document.getElementById(`textArea${index}`).hidden = true
 
         if (element === 'text') {
@@ -80,53 +124,27 @@ const CreateForms = () => {
         } else {
         }
     }
-
-    const OptionalChoose = (index, e) => {
-        const element = e.target.value
-        if (element === 'Yes') {
-            console.log('Optional')
-        } else if (element === 'No') {
-            console.log('Not Optional')
-            // eslint-disable-next-line no-empty
-        } else {
-        }
-    }
-
-    /* const lengthFieldName = (index) => {
-        const lengthSizeMax = document.getElementById(`MaxLength${index}`).value
-        const lengthSizeMin = document.getElementById(`MinLength${index}`).value
-        document.getElementById(`fieldInput${index}`).maxLength = lengthSizeMax
-        document.getElementById(`fieldInput${index}`).minLength = lengthSizeMin
-    } */
-
-    /* const icon = () => {
-        const Favicon = document.getElementById('file').value
-        const favicon = document.getElementById('favicon')
-        console.log(Favicon.slice(12))
-        favicon.href = Favicon.slice(12)
-    } */
-
     const ChangeColor = (e) => {
         const colors = e.target.value
 
         if (colors === 'Red') {
-            document.getElementById('colorButton').style.backgroundColor = 'red'
+            document.getElementById('primaryColor').style.backgroundColor = '#FC3D39'
         } else if (colors === 'Orange') {
-            document.getElementById('colorButton').style.backgroundColor = 'Orange'
+            document.getElementById('primaryColor').style.backgroundColor = '#FC3158'
         } else if (colors === 'Yellow') {
-            document.getElementById('colorButton').style.backgroundColor = 'Yellow'
+            document.getElementById('primaryColor').style.backgroundColor = '#FECB2E'
         } else if (colors === 'Green') {
-            document.getElementById('colorButton').style.backgroundColor = 'Green'
+            document.getElementById('primaryColor').style.backgroundColor = '#53D769'
         } else if (colors === 'Teal Blue') {
-            document.getElementById('colorButton').style.backgroundColor = 'Teal Blue'
+            document.getElementById('primaryColor').style.backgroundColor = '#5FC9F8'
         } else if (colors === 'Blue') {
-            document.getElementById('colorButton').style.backgroundColor = 'Blue'
+            document.getElementById('primaryColor').style.backgroundColor = '#147EFB'
         } else if (colors === 'Purple') {
-            document.getElementById('colorButton').style.backgroundColor = 'Purple'
+            document.getElementById('primaryColor').style.backgroundColor = '#6a0dad'
         } else if (colors === 'Pink') {
-            document.getElementById('colorButton').style.backgroundColor = 'Pink'
+            document.getElementById('primaryColor').style.backgroundColor = '#FFC0CB'
         } else if (colors === 'selected') {
-            document.getElementById('colorButton').style.backgroundColor = '#FFFFFF'
+            document.getElementById('primaryColor').style.backgroundColor = '#FFFFFF'
             // eslint-disable-next-line no-empty
         } else {
         }
@@ -144,10 +162,11 @@ const CreateForms = () => {
                     <div className="form-group col-md-3">
                         <div className="row">
                             <h3 id="formTitle" className="mb-3 col-sm-6">
-                                {title}
+                                Welcom
                             </h3>
                             <button
-                                id="colorButton"
+                                id="primaryColor"
+                                name="primaryColor"
                                 className="form-control col-sm-1"
                                 style={{
                                     backgroundColor: 'white',
@@ -161,25 +180,14 @@ const CreateForms = () => {
                     </div>
 
                     <div style={{ textAlign: 'right' }} className="form-group col-md-9">
-                        <a
-                            id="StartButton"
-                            className="btn me-2"
-                            style={{ backgroundColor: 'coral', color: 'white' }}
-                            role="button"
-                            aria-pressed="true"
-                        >
-                            Start Adding
-                        </a>
-                        <a
+                        <button
                             id="backButton"
-                            href="#"
                             className="btn me-2"
                             style={{ backgroundColor: 'coral', color: 'white' }}
-                            role="button"
                             aria-pressed="true"
                         >
                             Back
-                        </a>
+                        </button>
                     </div>
                 </div>
                 <hr className="my-4" />
@@ -194,10 +202,9 @@ const CreateForms = () => {
                                 <input
                                     type="text"
                                     className="form-control themed-grid-col"
-                                    id="nameForm"
-                                    name="nameForm"
-                                    onChange={changeTitle}
-                                    placeholder={`e.g: ${title} page`}
+                                    id="formName"
+                                    name="formName"
+                                    placeholder="e.g: Welcom page"
                                     style={{ backgroundColor: '#f2f8fc' }}
                                 />
                             </div>
@@ -228,7 +235,7 @@ const CreateForms = () => {
 
                         <div className="col-sm-4">
                             <div className="form-group">
-                                <label htmlFor="file">Favicon</label>
+                                <label>Favicon</label>
                                 <input type="file" className="form-control" id="file" name="file" />
                             </div>
                         </div>
@@ -241,7 +248,7 @@ const CreateForms = () => {
                             </label>
                             <textarea
                                 className="form-control mt-2"
-                                name="descriptionForm"
+                                name="description"
                                 id="description"
                                 rows="2"
                                 style={{ backgroundColor: '#f2f8fc' }}
@@ -259,7 +266,8 @@ const CreateForms = () => {
                                         <input
                                             name="textForm"
                                             id={`fieldInput${index}`}
-                                            onChange={(event) => handleFormChange(event, index)}
+                                            name="htmlLabel"
+                                            onChange={(evt) => handleFormChange(evt, index)}
                                             placeholder="Please Select a field"
                                             type="text"
                                             className="form-control themed-grid-col"
@@ -272,18 +280,24 @@ const CreateForms = () => {
                                         <textarea
                                             id={`textArea${index}`}
                                             className="form-control"
+                                            name="textAreaDynamic"
                                             style={{}}
+                                            onChange={(evt) => handleFormChange(evt, index)}
                                             hidden
                                         />
                                     </div>
                                     <div className="col-sm-3">
                                         <select
                                             id={`select${index}`}
-                                            onChange={(evt) => changeTypeInput(index, evt)}
+                                            onClick={(evt) => changeTypeInput(index, evt)}
+                                            onChange={(evt) => handleFormChange(evt, index)}
                                             className="form-select"
                                             aria-label="Selected Field type"
+                                            name="htmlType"
                                         >
-                                            <option selected />
+                                            <option value="Select Type" selected>
+                                                Select Type
+                                            </option>
                                             <option value="text">Text</option>
                                             <option value="E-mail">E-mail</option>
                                             <option value="Text Area">Text Area</option>
@@ -296,11 +310,14 @@ const CreateForms = () => {
                                     <div className="col-sm-2">
                                         <select
                                             id={`selectOptional${index}`}
-                                            onChange={(evt) => OptionalChoose(index, evt)}
+                                            onChange={(evt) => handleFormChange(evt, index)}
                                             className="form-select"
+                                            name="selectOptional"
                                             aria-label="Selected Field type"
                                         >
-                                            <option selected>Optional</option>
+                                            <option value="Optional" selected>
+                                                Optional
+                                            </option>
                                             <option value="Yes">Yes</option>
                                             <option value="No">No</option>
                                         </select>
@@ -311,6 +328,8 @@ const CreateForms = () => {
                                             placeholder="Min"
                                             className="form-control"
                                             id={`MinLength${index}`}
+                                            name="min"
+                                            onChange={(evt) => handleFormChange(evt, index)}
                                             type="Number"
                                             style={{ visibility: 'hidden' }}
                                         />
@@ -318,20 +337,22 @@ const CreateForms = () => {
                                     <div className="col-sm-1">
                                         <input
                                             placeholder="Max"
+                                            onChange={(evt) => handleFormChange(evt, index)}
                                             className="form-control"
+                                            name="max"
                                             id={`MaxLength${index}`}
                                             type="Number"
                                             style={{ visibility: 'hidden' }}
                                         />
                                     </div>
 
-                                    <div className="col-sm-2">
+                                    <div className="col-sm-1">
                                         <a
                                             id="addFieldsButton"
                                             className="btn me-2 col-sm-1 form-control"
-                                            role="button"
                                             aria-pressed="true"
-                                            onClick={addFields}
+                                            role="button"
+                                            onClick={() => addFields(index)}
                                             style={{
                                                 backgroundColor: 'coral',
                                                 color: 'white',
@@ -339,6 +360,17 @@ const CreateForms = () => {
                                         >
                                             +
                                         </a>
+                                    </div>
+                                    <div className="col-sm-1">
+                                        <button
+                                            id={`removeFieldsButton${index}`}
+                                            className="btn me-2 col-sm-1 form-control"
+                                            onClick={(evt) => removeFields(index, evt)}
+                                            aria-pressed="true"
+                                            style={{ backgroundColor: 'coral', color: 'white' }}
+                                        >
+                                            -
+                                        </button>
                                     </div>
 
                                     <hr
@@ -361,15 +393,14 @@ const CreateForms = () => {
                     <br />
 
                     <div style={{ textAlign: 'center' }}>
-                        <a
-                            href="#"
-                            className="btn btn-outline-primary me-2"
-                            role="button"
-                            aria-pressed="true"
+                        <button
+                            id="submit"
+                            type="submit"
+                            className="btn btn-primary"
                             onClick={submit}
                         >
-                            Save
-                        </a>
+                            Submit
+                        </button>
                     </div>
                 </form>
             </div>

@@ -32,7 +32,7 @@ const FormEdit = () => {
     const [isLoading, setLoading] = useState(true)
     const [iconURL, setIconURL] = useState()
     const store = useStore()
-    const { colors, fieldTypes } = store
+    const { colors, fieldTypes, isUpdated, toggleUpdate } = store
     const [errors, setErrors] = useState({
         formName: { status: false, message: null },
         selectedColor: { status: false, message: null },
@@ -61,13 +61,14 @@ const FormEdit = () => {
     }
 
     useEffect(() => {
+        setFormFields([])
         GetFormDetails(id)
             .then((res) => {
                 setFormName(res.formName)
                 setFormDescription(res.description)
                 setSelectedColor(res.primaryColor)
                 setIconURL(res.icon)
-
+                document.title = res.formName
                 document.getElementById(
                     'favicon'
                 ).href = `${process.env.REACT_APP_API_URL}${res.icon}`
@@ -84,7 +85,7 @@ const FormEdit = () => {
                 setFile()
             })
             .catch((error) => console.log(error))
-    }, [])
+    }, [isUpdated])
 
     const deleteFormField = (index) => {
         setFormFields(formFields.filter((item) => formFields.indexOf(item) !== index))
@@ -192,7 +193,10 @@ const FormEdit = () => {
             console.log(formStructure)
             UpdateForm(formData)
                 .then((res) => {
-                    if (res) toast.success('Form Güncellendi', { position: 'top-center' })
+                    if (res) {
+                        toast.success('Form Güncellendi', { position: 'top-center' })
+                        toggleUpdate()
+                    }
                 })
                 .catch((err) => console.log(err))
         }

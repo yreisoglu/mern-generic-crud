@@ -15,6 +15,7 @@ import DynamicLoginPage from './Pages/DynamicLoginPage'
 import CreateAdmin from './Pages/CreateAdmin'
 import FormCreate from './Pages/FormCreate'
 import FormTable from './Pages/FormTable'
+import FormEdit from './Pages/FormEdit'
 
 const App = () => {
     return (
@@ -42,6 +43,7 @@ const App = () => {
                     <Route path="form-create" element={<FormCreate />} />
                     <Route path="form-list" element={<FormList />} />
                     <Route path="form-table/:id" element={<FormTable />} />
+                    <Route path="form-edit/:id" element={<FormEdit />} />
                 </Route>
             </Routes>
         </BrowserRouter>

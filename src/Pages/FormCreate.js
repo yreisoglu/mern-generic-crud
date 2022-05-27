@@ -59,7 +59,6 @@ const FormCreate = () => {
     }
 
     const handleInputChange = (index, event) => {
-        console.log(event)
         const updatedFormFields = [...formFields]
 
         updatedFormFields[index][event.target.name] =

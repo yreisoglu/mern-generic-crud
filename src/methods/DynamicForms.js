@@ -20,6 +20,16 @@ export const CreateForm = (formData) => {
     })
 }
 
+export const UpdateForm = (formData)=>{
+    return new Promise((resolve, reject) => {
+        HTTP.put('/api/dynamic/update-form', formData, {
+            headers: { 'x-access-token': localStorage.getItem('jwt') },
+        })
+            .then((res) => resolve(res.data))
+            .catch((error) => reject(error))
+    })
+}
+
 export const GetAvailableForms = () => {
     return new Promise((resolve, reject) => {
         HTTP.get('api/dynamic/get-forms', {

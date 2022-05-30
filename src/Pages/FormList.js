@@ -13,274 +13,331 @@ import useStore from '../store'
 import { isExpired } from '../methods/Account'
 import { GetUserDetails } from '../methods/GetUsers'
 import logout from '../methods/Logout'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 
 const AdminPanel = () => {
-  const [data, setData] = useState([])
-  const [userDetail, setUserDetail] = useState('')
-  const [search, setSearch] = useState('')
-  const store = useStore()
-  const { toggleUpdate } = store
-  const { isUpdated } = store
-  const navigate = useNavigate()
-  const [isLoading, setIsLoading] = useState(true)
+    const [data, setData] = useState([])
+    const [userDetail, setUserDetail] = useState('')
+    const [search, setSearch] = useState('')
+    const store = useStore()
+    const { toggleUpdate } = store
+    const { isUpdated } = store
+    const navigate = useNavigate()
+    const [isLoading, setIsLoading] = useState(true)
 
-  const CrudTools = (permission, id) => {
-    if (permission === 'write') {
-      return (
-        <div>
-          {' '}
-          <Tooltip title="Formu Gör">
-            <a
-              style={{
-                color: 'white',
-              }}
-              type="button"
-              id="update"
-              className="btn btn-info btn-sm"
-            >
-              <DynamicFeedRoundedIcon htmlColor="white" fontSize="small" marginRight={1} />
-            </a>
-          </Tooltip>
-          <Tooltip title="Formu Güncelle">
-            <a
-              style={{
-                marginLeft: '0.3rem',
-                color: 'white',
-              }}
-              type="button"
-              className="btn btn-warning btn-sm"
-            >
-              {' '}
-              <RateReviewRoundedIcon htmlColor="white" fontSize="small" marginRight={1} />
-            </a>
-          </Tooltip>
-          <Tooltip title="Formu Sil">
-            <button
-              style={{
-                marginLeft: '0.4rem',
-              }}
-              type="button"
-              onClick={() => {
-                DeleteForms([id])
-              }}
-              id="sil"
-              className="btn btn-danger btn-sm"
-            >
-              <DeleteForeverRoundedIcon htmlColor="white" fontSize="small" marginRight={1} />
-            </button>
-          </Tooltip>{' '}
-        </div>
-      )
-    } else if (permission === 'read') {
-      return (
-        <div>
-          {' '}
-          <Tooltip title="Formu Gör">
-            <a
-              style={{
-                color: 'white',
-              }}
-              type="button"
-              id="update"
-              className="btn btn-info btn-sm"
-            >
-              <DynamicFeedRoundedIcon htmlColor="white" fontSize="small" marginRight={1} />
-            </a>
-          </Tooltip>{' '}
-        </div>
-      )
-    }
-  }
-
-  useEffect(() => {
-    isExpired()
-      .then((res) => {
-        if (res) {
-          navigate('/dynamic')
-        }
-      })
-      .catch((error) => console.log(error))
-  }, [])
-
-  useEffect(() => {
-    GetAvailableForms().then((response) => {
-      setData(response)
-    })
-  }, [isUpdated])
-
-  useEffect(() => {
-    GetUserDetails().then((response) => {
-      setUserDetail(response)
-      setIsLoading(false)
-    })
-  }, [])
-
-  const DeleteForms = (id) => {
-    Swal.fire({
-      title: 'Emin misin?',
-      text: 'Seçilen form tüm içeriğiyle birlikte silinecektir!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Sil',
-      cancelButtonText: 'Vazgeç',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        DeleteFormsByIds(id)
-          .then((response) => {
-            if (response.deletedCount > 0) {
-              Swal.fire({
-                icon: 'success',
-                title: 'Başarılı!',
-                text: ' Form başarıyla silindi.',
-              })
-              toggleUpdate()
-            }
-          })
-          .catch((error) => {
-            Swal.fire({
-              icon: 'error',
-              title: 'Silme işlemi geçersiz.',
-            })
-          })
-      }
-    })
-  }
-  console.log(userDetail)
-  console.log(data)
-  return (
-    <div className="container">
-      {!isLoading ? (
-        <div className="form-body">
-          <div className="row">
-            <div className="form-holder">
-              <div className="form-content">
-                <div className="form-items">
-                  <div className="row">
-                    <div className="form-group col-md-4">
-                      <h3>Form Yönetimi</h3>
-                      <p style={{ textTransform: 'uppercase' }}>HOŞGELDİN {userDetail.username}</p>
-                    </div>
-                    <div style={{ textAlign: 'center' }} className="form-group col-md-4">
-                      <input
-                        className="form-control border-end-0 border rounded-pill"
-                        type="text"
-                        placeholder="Arama..."
-                        id="example-search-input"
-                        onChange={(e) => {
-                          setSearch(e.target.value)
-                        }}
-                      />
-                    </div>
-                    <div style={{ textAlign: 'right' }} className="form-group col-md-4 mt-2">
-                      {userDetail.role === 'root' ? (
-                        <Tooltip title="Yeni Form Oluştur">
-                          <button type="button" id="add" className="btn btn-success btn-sm">
-                            <AddCircleSharpIcon
-                              htmlColor="white"
-                              fontSize="small"
-                              marginRight={1}
-                            />
-                            <small> Yeni Form </small>
-                          </button>
-                        </Tooltip>
-                      ) : (
-                        ''
-                      )}
-                      {userDetail.role === 'root' ? (
-                        <Tooltip title="Admin Hesaplarına Erişim">
-                          <button
-                            type="button"
+    const CrudTools = (permission, id) => {
+        if (permission === 'write') {
+            return (
+                <div>
+                    {' '}
+                    <Tooltip title="Formu Gör">
+                        <Link
+                            to={`/dynamic/form-table/${id}`}
                             style={{
-                              background: 'coral',
-                              marginLeft: '0.4rem',
+                                color: 'white',
                             }}
-                            className="btn btn-sm text-white"
-                          >
-                            <small> Hesap Yönetimi </small>
-                          </button>
-                        </Tooltip>
-                      ) : (
-                        ''
-                      )}
-                      <Tooltip title="Çıkış Yap">
-                        <button
-                          style={{
-                            background: '#495056',
-                            marginLeft: '0.4rem',
-                          }}
-                          className="btn btn-sm text-white"
-                          onClick={() => logout(navigate)}
+                            type="button"
+                            id="update"
+                            className="btn btn-info btn-sm"
                         >
-                          <LogoutIcon htmlColor="white" fontSize="small" marginRight={1} />
+                            <DynamicFeedRoundedIcon
+                                htmlColor="white"
+                                fontSize="small"
+                                marginRight={1}
+                            />
+                        </Link>
+                    </Tooltip>
+                    <Tooltip title="Formu Güncelle">
+                        <Link
+                            to={`/dynamic/form-edit/${id}`}
+                            style={{
+                                marginLeft: '0.3rem',
+                                color: 'white',
+                            }}
+                            type="button"
+                            className="btn btn-warning btn-sm"
+                        >
+                            {' '}
+                            <RateReviewRoundedIcon
+                                htmlColor="white"
+                                fontSize="small"
+                                marginRight={1}
+                            />
+                        </Link>
+                    </Tooltip>
+                    <Tooltip title="Formu Sil">
+                        <button
+                            style={{
+                                marginLeft: '0.4rem',
+                            }}
+                            type="button"
+                            onClick={() => {
+                                DeleteForms([id])
+                            }}
+                            id="sil"
+                            className="btn btn-danger btn-sm"
+                        >
+                            <DeleteForeverRoundedIcon
+                                htmlColor="white"
+                                fontSize="small"
+                                marginRight={1}
+                            />
                         </button>
-                      </Tooltip>
-                    </div>
-                  </div>
-
-                  <div className="row">
-                    {data
-                      .filter((form) => {
-                        if (search === '') {
-                          return form
-                        } else if (form.formName.toLowerCase().includes(search.toLowerCase())) {
-                          return form
-                        }
-                      })
-                      .map((form) => (
-                        <div className="form-group col-xl-6 col-md-6 col-sm-12 mt-5">
-                          <div className="card">
-                            <div className="card-header">
-                              <div className="row">
-                                <div
-                                  className="col-xl-6 col-md-6 col-sm-12"
-                                  style={{ color: '#4d4c4c' }}
-                                >
-                                  {form.formName}
-                                </div>
-                                <div
-                                  className="col-xl-6 col-md-6 col-sm-12"
-                                  style={{ textAlign: 'right' }}
-                                >
-                                  {userDetail.role !== 'root'
-                                    ? userDetail.allowedForms.map((item) => {
-                                        if (
-                                          item.formId === form._id &&
-                                          item.permissionType === 'write'
-                                        ) {
-                                          return CrudTools('write', form._id)
-                                        } else if (
-                                          item.formId === form._id &&
-                                          item.permissionType === 'read'
-                                        ) {
-                                          return CrudTools('read', form._id)
-                                        }
-                                      })
-                                    : CrudTools('write', form._id)}
-                                </div>
-                              </div>
-                            </div>
-                            <div className="card-body">
-                              <div className="form-group col-md-12 col-sm-12">
-                                <p className="card-text">{form.description}</p>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                  </div>
+                    </Tooltip>{' '}
                 </div>
-              </div>
-            </div>
-          </div>
+            )
+        } else if (permission === 'read') {
+            return (
+                <div>
+                    {' '}
+                    <Tooltip title="Formu Gör">
+                        <Link
+                            to={`/dynamic/form-table/${id}`}
+                            style={{
+                                color: 'white',
+                            }}
+                            type="button"
+                            id="update"
+                            className="btn btn-info btn-sm"
+                        >
+                            <DynamicFeedRoundedIcon
+                                htmlColor="white"
+                                fontSize="small"
+                                marginRight={1}
+                            />
+                        </Link>
+                    </Tooltip>{' '}
+                </div>
+            )
+        }
+    }
+
+    useEffect(() => {
+        isExpired()
+            .then((res) => {
+                if (res) {
+                    navigate('/dynamic')
+                }
+            })
+            .catch((error) => console.log(error))
+    }, [])
+
+    useEffect(() => {
+        GetAvailableForms().then((response) => {
+            setData(response)
+        })
+    }, [isUpdated])
+
+    useEffect(() => {
+        GetUserDetails().then((response) => {
+            setUserDetail(response)
+            setIsLoading(false)
+        })
+    }, [])
+
+    const DeleteForms = (id) => {
+        Swal.fire({
+            title: 'Emin misin?',
+            text: 'Seçilen form tüm içeriğiyle birlikte silinecektir!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sil',
+            cancelButtonText: 'Vazgeç',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                DeleteFormsByIds(id)
+                    .then((response) => {
+                        if (response.deletedCount > 0) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Başarılı!',
+                                text: ' Form başarıyla silindi.',
+                            })
+                            toggleUpdate()
+                        }
+                    })
+                    .catch((error) => {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Silme işlemi geçersiz.',
+                        })
+                    })
+            }
+        })
+    }
+    console.log(userDetail)
+    console.log(data)
+    return (
+        <div className="container">
+            {!isLoading ? (
+                <div className="form-body">
+                    <div className="row">
+                        <div className="form-holder">
+                            <div className="form-content">
+                                <div className="form-items">
+                                    <div className="row">
+                                        <div className="form-group col-md-4">
+                                            <h3>Form Yönetimi</h3>
+                                            <p style={{ textTransform: 'uppercase' }}>
+                                                HOŞGELDİN {userDetail.username}
+                                            </p>
+                                        </div>
+                                        <div
+                                            style={{ textAlign: 'center' }}
+                                            className="form-group col-md-4"
+                                        >
+                                            <input
+                                                className="form-control border-end-0 border rounded-pill"
+                                                type="text"
+                                                placeholder="Arama..."
+                                                id="example-search-input"
+                                                onChange={(e) => {
+                                                    setSearch(e.target.value)
+                                                }}
+                                            />
+                                        </div>
+                                        <div
+                                            style={{ textAlign: 'right' }}
+                                            className="form-group col-md-4 mt-2"
+                                        >
+                                            {userDetail.role === 'root' ? (
+                                                <Tooltip title="Yeni Form Oluştur">
+                                                    <Link
+                                                    to={`/dynamic/form-create`}
+                                                        type="button"
+                                                        id="add"
+                                                        className="btn btn-success btn-sm"
+                                                    >
+                                                        <AddCircleSharpIcon
+                                                            htmlColor="white"
+                                                            fontSize="small"
+                                                            marginRight={1}
+                                                        />
+                                                        <small> Yeni Form </small>
+                                                    </Link>
+                                                </Tooltip>
+                                            ) : (
+                                                ''
+                                            )}
+                                            {userDetail.role === 'root' ? (
+                                                <Tooltip title="Admin Hesaplarına Erişim">
+                                                    <button
+                                                        type="button"
+                                                        style={{
+                                                            background: 'coral',
+                                                            marginLeft: '0.4rem',
+                                                        }}
+                                                        className="btn btn-sm text-white"
+                                                    >
+                                                        <small> Hesap Yönetimi </small>
+                                                    </button>
+                                                </Tooltip>
+                                            ) : (
+                                                ''
+                                            )}
+                                            <Tooltip title="Çıkış Yap">
+                                                <button
+                                                    style={{
+                                                        background: '#495056',
+                                                        marginLeft: '0.4rem',
+                                                    }}
+                                                    className="btn btn-sm text-white"
+                                                    onClick={() => logout(navigate)}
+                                                >
+                                                    <LogoutIcon
+                                                        htmlColor="white"
+                                                        fontSize="small"
+                                                        marginRight={1}
+                                                    />
+                                                </button>
+                                            </Tooltip>
+                                        </div>
+                                    </div>
+
+                                    <div className="row">
+                                        {data
+                                            .filter((form) => {
+                                                if (search === '') {
+                                                    return form
+                                                } else if (
+                                                    form.formName
+                                                        .toLowerCase()
+                                                        .includes(search.toLowerCase())
+                                                ) {
+                                                    return form
+                                                }
+                                            })
+                                            .map((form) => (
+                                                <div className="form-group col-xl-6 col-md-6 col-sm-12 mt-5">
+                                                    <div className="card">
+                                                        <div className="card-header">
+                                                            <div className="row">
+                                                                <div
+                                                                    className="col-xl-6 col-md-6 col-sm-12"
+                                                                    style={{ color: '#4d4c4c' }}
+                                                                >
+                                                                    {form.formName}
+                                                                </div>
+                                                                <div
+                                                                    className="col-xl-6 col-md-6 col-sm-12"
+                                                                    style={{ textAlign: 'right' }}
+                                                                >
+                                                                    {userDetail.role !== 'root'
+                                                                        ? userDetail.allowedForms.map(
+                                                                              (item) => {
+                                                                                  if (
+                                                                                      item.formId ===
+                                                                                          form._id &&
+                                                                                      item.permissionType ===
+                                                                                          'write'
+                                                                                  ) {
+                                                                                      return CrudTools(
+                                                                                          'write',
+                                                                                          form._id
+                                                                                      )
+                                                                                  } else if (
+                                                                                      item.formId ===
+                                                                                          form._id &&
+                                                                                      item.permissionType ===
+                                                                                          'read'
+                                                                                  ) {
+                                                                                      return CrudTools(
+                                                                                          'read',
+                                                                                          form._id
+                                                                                      )
+                                                                                  }
+                                                                              }
+                                                                          )
+                                                                        : CrudTools(
+                                                                              'write',
+                                                                              form._id
+                                                                          )}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div className="card-body">
+                                                            <div className="form-group col-md-12 col-sm-12">
+                                                                <p className="card-text">
+                                                                    {form.description}
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ) : (
+                <div> Yükleniyor... </div>
+            )}
         </div>
-      ) : (
-        <div> Yükleniyor... </div>
-      )}
-    </div>
-  )
+    )
 }
 
 export default AdminPanel

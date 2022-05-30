@@ -194,18 +194,15 @@ const FormCreate = () => {
                     id="bodyColor"
                     style={{ backgroundColor: '#FFFFFF' }}
                 >
-                    <br />
                     <div className="row">
-                        <div className="form-group col-md-3">
-                            <div className="row">
-                                <h3 id="formTitle" className="mb-3 col-sm-6">
-                                    Welcome
-                                </h3>
-                            </div>
-                            <p id="subTitle">CREATE YOUR FORM</p>
+                        <div className="form-group col-md-4">
+                            <h3>Form Oluştur</h3>
+                            <p style={{ textTransform: 'uppercase' }}>
+                                DİNAMİK YAPIDA FORM TASARIMI
+                            </p>
                         </div>
 
-                        <div style={{ textAlign: 'right' }} className="form-group col-md-9">
+                        <div style={{ textAlign: 'right' }} className="form-group col-md-8">
                             <Link
                                 to={'/dynamic/form-list'}
                                 id="backButton"

@@ -38,11 +38,11 @@ const AdminPanel = () => {
                             }}
                             type="button"
                             id="update"
-                            className="btn btn-info btn-sm"
+                            className="btn btn-sm bg-white"
                         >
                             <DynamicFeedRoundedIcon
-                                htmlColor="white"
-                                fontSize="small"
+                                htmlColor="#007AFF"
+                                fontSize="medium"
                                 marginRight={1}
                             />
                         </Link>
@@ -55,12 +55,12 @@ const AdminPanel = () => {
                                 color: 'white',
                             }}
                             type="button"
-                            className="btn btn-warning btn-sm"
+                            className="btn bg-white btn-sm"
                         >
                             {' '}
                             <RateReviewRoundedIcon
-                                htmlColor="white"
-                                fontSize="small"
+                                htmlColor="orange"
+                                fontSize="medium"
                                 marginRight={1}
                             />
                         </Link>
@@ -75,11 +75,11 @@ const AdminPanel = () => {
                                 DeleteForms([id])
                             }}
                             id="sil"
-                            className="btn btn-danger btn-sm"
+                            className="btn bg-white btn-sm"
                         >
                             <DeleteForeverRoundedIcon
-                                htmlColor="white"
-                                fontSize="small"
+                                htmlColor="red"
+                                fontSize="medium"
                                 marginRight={1}
                             />
                         </button>
@@ -205,7 +205,7 @@ const AdminPanel = () => {
                                             {userDetail.role === 'root' ? (
                                                 <Tooltip title="Yeni Form Oluştur">
                                                     <Link
-                                                    to={`/dynamic/form-create`}
+                                                        to={`/dynamic/form-create`}
                                                         type="button"
                                                         id="add"
                                                         className="btn btn-success btn-sm"
@@ -223,7 +223,8 @@ const AdminPanel = () => {
                                             )}
                                             {userDetail.role === 'root' ? (
                                                 <Tooltip title="Admin Hesaplarına Erişim">
-                                                    <button
+                                                    <Link
+                                                        to={`/dynamic/create-admin`}
                                                         type="button"
                                                         style={{
                                                             background: 'coral',
@@ -232,7 +233,7 @@ const AdminPanel = () => {
                                                         className="btn btn-sm text-white"
                                                     >
                                                         <small> Hesap Yönetimi </small>
-                                                    </button>
+                                                    </Link>
                                                 </Tooltip>
                                             ) : (
                                                 ''
@@ -272,11 +273,16 @@ const AdminPanel = () => {
                                             .map((form) => (
                                                 <div className="form-group col-xl-6 col-md-6 col-sm-12 mt-5">
                                                     <div className="card">
-                                                        <div className="card-header">
-                                                            <div className="row">
+                                                        <div
+                                                            className="card-header"
+                                                            style={{
+                                                                backgroundColor: form.primaryColor,
+                                                            }}
+                                                        >
+                                                            <div className="row align-items-center">
                                                                 <div
                                                                     className="col-xl-6 col-md-6 col-sm-12"
-                                                                    style={{ color: '#4d4c4c' }}
+                                                                    style={{ color: '#fff' }}
                                                                 >
                                                                     {form.formName}
                                                                 </div>

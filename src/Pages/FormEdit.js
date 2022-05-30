@@ -18,19 +18,21 @@ import {
 } from '@mui/material'
 import { DeleteOutlined, Add } from '@material-ui/icons'
 import Tooltip from '@mui/material/Tooltip'
-import { CreateForm } from '../methods/DynamicForms'
+import { CreateForm, GetFormDetails, UpdateForm } from '../methods/DynamicForms'
 import { getRole, isExpired } from '../methods/Account'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
-const FormCreate = () => {
-    const [formFields, setFormFields] = useState([{}])
+const FormEdit = () => {
+    const { id } = useParams()
+    const [formFields, setFormFields] = useState([])
     const [formName, setFormName] = useState()
     const [selectedColor, setSelectedColor] = useState()
     const [file, setFile] = useState()
     const [formDescription, setFormDescription] = useState()
     const [isLoading, setLoading] = useState(true)
+    const [iconURL, setIconURL] = useState()
     const store = useStore()
-    const { colors, fieldTypes } = store
+    const { colors, fieldTypes, isUpdated, toggleUpdate } = store
     const [errors, setErrors] = useState({
         formName: { status: false, message: null },
         selectedColor: { status: false, message: null },
@@ -38,21 +40,52 @@ const FormCreate = () => {
         formDescription: { status: false, message: null },
     })
     const navigate = useNavigate()
+
     useEffect(() => {
         isExpired()
             .then((res) => {
                 if (res) {
                     navigate('/dynamic')
                 }
-                getRole().then((roleResponse) => {
-                    if (roleResponse.role !== 'root') navigate('/dynamic/form-list')
-                })
-                setLoading(false)
             })
             .catch((error) => {
                 console.error(error)
             })
     }, [])
+    const urlToObject = async (image) => {
+        const response = await fetch(process.env.REACT_APP_API_URL + image)
+        const blob = await response.blob()
+        const file = new File([blob], 'image.jpg', { type: blob.type })
+        setFile(file)
+        return file
+    }
+
+    useEffect(() => {
+        setFormFields([])
+        GetFormDetails(id)
+            .then((res) => {
+                setFormName(res.formName)
+                setFormDescription(res.description)
+                setSelectedColor(res.primaryColor)
+                setIconURL(res.icon)
+                document.title = res.formName
+                document.getElementById(
+                    'favicon'
+                ).href = `${process.env.REACT_APP_API_URL}${res.icon}`
+
+                Object.keys(res.formDetails).map((item, index) => {
+                    const formDetail = res.formDetails[item]
+                    formDetail.fieldName = item
+                    formDetail.type = fieldTypes.findIndex((item) => item.type === formDetail.type)
+                    setFormFields((formFields) => [...formFields, formDetail])
+                })
+            })
+            .then(() => {
+                setLoading(false)
+                setFile()
+            })
+            .catch((error) => console.log(error))
+    }, [isUpdated])
 
     const deleteFormField = (index) => {
         setFormFields(formFields.filter((item) => formFields.indexOf(item) !== index))
@@ -64,6 +97,7 @@ const FormCreate = () => {
         updatedFormFields[index][event.target.name] =
             event.target.type === 'checkbox' ? event.target.checked : event.target.value
         setFormFields(updatedFormFields)
+        console.log(formFields)
         clearDynamicErrors(index, event)
     }
 
@@ -76,6 +110,7 @@ const FormCreate = () => {
             updatedFormFields[index][event.target.name + 'Error'] = null
         }
     }
+
     const clearNormalErrors = (errorField) => {
         const updatedErrors = errors
         updatedErrors[errorField] = { status: false, message: null }
@@ -93,10 +128,7 @@ const FormCreate = () => {
             updatedErrors.selectedColor.status = true
             updatedErrors.selectedColor.message = 'Bir Renk seçmelisiniz'
         }
-        if (!file) {
-            updatedErrors.file.status = true
-            updatedErrors.file.message = 'Form için bir ikon eklemelisiniz'
-        }
+
         if (!formDescription) {
             updatedErrors.formDescription.status = true
             updatedErrors.formDescription.message = 'Form açıklaması boş bırakılamaz'
@@ -125,11 +157,14 @@ const FormCreate = () => {
         }
         return isValid
     }
-    const submitForm = () => {
+    console.log(iconURL)
+    const updateForm = async () => {
         const isValid = checkValidation()
         if (isValid) {
             const formData = new FormData()
-            formData.append('file', file)
+            if (!file) setFile()
+            formData.append('file', file ? file : await urlToObject(iconURL))
+            console.log(file)
             const formFieldDetails = {}
             formFields.map((item) => {
                 const fieldNameCamelCased = camelcase(item.fieldName)
@@ -153,12 +188,15 @@ const FormCreate = () => {
                 description: formDescription,
                 primaryColor: selectedColor,
             }
-            const formStructure = JSON.stringify([formFieldDetails, formDetails])
+            const formStructure = JSON.stringify([formFieldDetails, formDetails, { form_id: id }])
             formData.append('formStructure', formStructure)
             console.log(formStructure)
-            CreateForm(formData)
+            UpdateForm(formData)
                 .then((res) => {
-                    if (res) toast.success('Form Oluşturuldu', { position: 'top-center' })
+                    if (res) {
+                        toast.success('Form Güncellendi', { position: 'top-center' })
+                        toggleUpdate()
+                    }
                 })
                 .catch((err) => console.log(err))
         }
@@ -195,6 +233,12 @@ const FormCreate = () => {
                     style={{ backgroundColor: '#FFFFFF' }}
                 >
                     <br />
+                    {/* <div className="currentPhoto">
+                        <img
+                            className="currentPhotoImg"
+                            src={`${process.env.REACT_APP_API_URL}${iconURL}`}
+                        />
+                    </div> */}
                     <div className="row">
                         <div className="form-group col-md-3">
                             <div className="row">
@@ -224,6 +268,7 @@ const FormCreate = () => {
                             <div className="col-md-4">
                                 <TextField
                                     name="formName"
+                                    value={formName}
                                     id="outlined-basic"
                                     sx={{ width: '100%' }}
                                     label="Formun Adı"
@@ -251,6 +296,7 @@ const FormCreate = () => {
                                         defaultValue={''}
                                         sx={{ width: '100%' }}
                                         name="selectedColor"
+                                        value={selectedColor}
                                         onChange={(e) => {
                                             setSelectedColor(e.target.value)
                                             clearNormalErrors(e.target.name)
@@ -310,6 +356,7 @@ const FormCreate = () => {
                                 rows={2}
                                 maxRows={4}
                                 name="formDescription"
+                                value={formDescription}
                                 onChange={(e) => {
                                     setFormDescription(e.target.value)
                                     clearNormalErrors(e.target.name)
@@ -387,6 +434,7 @@ const FormCreate = () => {
                                                         label="İpucu"
                                                         variant="outlined"
                                                         name="placeholder"
+                                                        value={field.placeholder || ''}
                                                         type={placeholderType(field.type)}
                                                     />
                                                 </Tooltip>
@@ -445,7 +493,7 @@ const FormCreate = () => {
                                 variant="contained"
                                 onClick={(e) => {
                                     e.preventDefault()
-                                    submitForm()
+                                    updateForm()
                                 }}
                             >
                                 Kaydet
@@ -460,4 +508,4 @@ const FormCreate = () => {
     )
 }
 
-export default FormCreate
+export default FormEdit

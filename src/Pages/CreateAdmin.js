@@ -5,7 +5,6 @@ import AddCircleSharpIcon from '@material-ui/icons/AddCircleSharp'
 import { getRole, isExpired } from '../methods/Account'
 import { CreateAdminAccount, GetAvailableForms } from '../methods/DynamicForms'
 import 'react-confirm-alert/src/react-confirm-alert.css'
-import AdminPanelDetail from './AdminPanelDetail'
 import useStore from '../store'
 
 const CreateAdmin = () => {
@@ -17,31 +16,30 @@ const CreateAdmin = () => {
     const [password, setPassword] = useState('')
     const store = useStore()
     const { toggleUpdate } = store
+    const [show, setShow] = useState(false)
+    const [inputType, setInputType] = useState()
+    const [selectedForm, setSelectedForm] = useState()
 
     const handleAddFields = () => {
         setFormPermission([...formPermission, {}])
     }
 
-    const handleRemoveFieldsParent = (index) => {
-        formPermission.splice(index, 1)
-        setFormPermission([...formPermission])
-    }
-    const valueArray = []
-
-    const handlePermissionValueParent = (index) => {
-        let isExist = false
-        valueArray.forEach((item) => {
-            if (item.formId === index.formId) {
-                isExist = true
-            }
-        })
-        if (!isExist) {
-            valueArray.push(index)
-        } else {
+    const handlePermissionValueParent = (index, event) => {
+        if (
+            event.target.name === 'formId' &&
+            formPermission.find((e) => e.formId === event.target.value)
+        ) {
             Swal.fire({
                 icon: 'error',
                 title: 'Bu izini daha önce gerçekleştirdiniz.',
             })
+        } else {
+            if (event.target.name !== 'show') {
+                const updatedPermissions = [...formPermission]
+                updatedPermissions[index][event.target.name] = event.target.value
+                setFormPermission(updatedPermissions)
+                console.log(formPermission)
+            }
         }
     }
 
@@ -49,7 +47,7 @@ const CreateAdmin = () => {
         const body = {}
         body.username = username
         body.password = password
-        body.allowedForms = valueArray
+        body.allowedForms = formPermission
 
         if (body.username !== '' && body.password !== '') {
             if (body.allowedForms.length > 0) {
@@ -186,17 +184,185 @@ const CreateAdmin = () => {
                                         </div>
                                         {formPermission.map((item, index) => {
                                             return (
-                                                <AdminPanelDetail
-                                                    key={index}
-                                                    data={forms}
-                                                    index={index}
-                                                    handleRemoveFieldsParent={
-                                                        handleRemoveFieldsParent
+                                                <form
+                                                    className="row mt-4 p-5"
+                                                    style={{ border: 'solid 1px coral' }}
+                                                    onChange={(e) =>
+                                                        handlePermissionValueParent(index, e)
                                                     }
-                                                    handlePermissionValueParent={
-                                                        handlePermissionValueParent
-                                                    }
-                                                />
+                                                >
+                                                    <div className="form-group col-12 col-md-4 col-sm-4">
+                                                        <label htmlFor="fullname">Form Atama</label>
+                                                        <select
+                                                            name="formId"
+                                                            id="allowedForms"
+                                                            className="form-select"
+                                                            onChange={(e) => {
+                                                                setSelectedForm(e.target.value)
+                                                            }}
+                                                        >
+                                                            <option selected disabled>
+                                                                Form Seç
+                                                            </option>
+                                                            {forms.map((form, index) => {
+                                                                return (
+                                                                    <option
+                                                                        key={form.formName}
+                                                                        value={form._id}
+                                                                    >
+                                                                        {form.formName}
+                                                                    </option>
+                                                                )
+                                                            })}
+                                                        </select>
+                                                    </div>
+                                                    <div className="form-group col-12 col-md-5 col-sm-5">
+                                                        <label htmlFor="fullname">
+                                                            Yetkilendirme
+                                                        </label>
+                                                        <select
+                                                            id="permission"
+                                                            className="form-select"
+                                                            name="permissionType"
+                                                        >
+                                                            <option value="read">
+                                                                Görebilir. (Listeleme)
+                                                            </option>
+                                                            <option value="write">
+                                                                İşlem yapabilir.
+                                                                (Listeleme/Güncelleme/Silme)
+                                                            </option>
+                                                        </select>
+                                                    </div>
+                                                    <div className="form-check col-12 col-md-2 col-sm-2">
+                                                        <div
+                                                            style={{ float: 'right' }}
+                                                            className="form-group mt-4"
+                                                        >
+                                                            <input
+                                                                onClick={() => setShow(!show)}
+                                                                className="form-check-input"
+                                                                type="checkbox"
+                                                                name="show"
+                                                                id="flexCheckDefault"
+                                                            />
+                                                            <label>Yetkiyi Özelleştir</label>
+                                                        </div>
+                                                    </div>
+                                                    {show ? (
+                                                        <div className="row">
+                                                            {forms.find(
+                                                                (e) => e._id === selectedForm
+                                                            ) ? (
+                                                                <div className="row">
+                                                                    <div className="form-group col-12 col-md-6 col-sm-6 mt-4">
+                                                                        <label htmlFor="fullname">
+                                                                            Form İçinde Yetkilendir
+                                                                        </label>
+                                                                        <select
+                                                                            name="allowedField"
+                                                                            id="allowedField"
+                                                                            className="form-select"
+                                                                            onChange={(e) => {
+                                                                                setInputType(
+                                                                                    forms.find(
+                                                                                        (e) =>
+                                                                                            e._id ===
+                                                                                            selectedForm
+                                                                                    ).formDetails[
+                                                                                        e.target
+                                                                                            .value
+                                                                                    ].type
+                                                                                )
+                                                                            }}
+                                                                        >
+                                                                            <option
+                                                                                selected
+                                                                                disabled
+                                                                            >
+                                                                                Forma ait bir alan
+                                                                                seçiniz.
+                                                                            </option>
+                                                                            {Object.entries(
+                                                                                forms.find(
+                                                                                    (e) =>
+                                                                                        e._id ===
+                                                                                        selectedForm
+                                                                                ).formDetails
+                                                                            ).map(
+                                                                                ([
+                                                                                    detail,
+                                                                                    value,
+                                                                                ]) => {
+                                                                                    return (
+                                                                                        <option
+                                                                                            key={
+                                                                                                value.type
+                                                                                            }
+                                                                                            value={
+                                                                                                detail
+                                                                                            }
+                                                                                        >
+                                                                                            {detail}{' '}
+                                                                                            /{' '}
+                                                                                            {
+                                                                                                value.type
+                                                                                            }
+                                                                                        </option>
+                                                                                    )
+                                                                                }
+                                                                            )}
+                                                                        </select>
+                                                                    </div>
+                                                                    <div className="form-group col-12 col-md-6 col-sm-6 mt-4">
+                                                                        <label htmlFor="fullname">
+                                                                            Yetkili Alana Değer
+                                                                            Atama
+                                                                        </label>
+                                                                        <input
+                                                                            name="allowedValue"
+                                                                            id="allowedValue"
+                                                                            type={inputType}
+                                                                            className="form-control mt-1"
+                                                                        />
+                                                                    </div>{' '}
+                                                                </div>
+                                                            ) : (
+                                                                <div className="row">
+                                                                    {' '}
+                                                                    <p className="formikValidate">
+                                                                        Form seçimi yapmadan yetki
+                                                                        özelleştirilemez.
+                                                                    </p>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    ) : (
+                                                        ''
+                                                    )}
+                                                    <div className="row">
+                                                        <div className="form-group col-12 col-md-12 col-sm-12">
+                                                            <div
+                                                                style={{ textAlign: 'right' }}
+                                                                className="form-group mt-4"
+                                                            >
+                                                                <button
+                                                                    type="button"
+                                                                    id="removeForm"
+                                                                    className="btn btn-danger btn-sm"
+                                                                    style={{ marginLeft: '5px' }}
+                                                                    onClick={(e) =>
+                                                                        handleRemoveFieldsChild(
+                                                                            e.target
+                                                                        )
+                                                                    }
+                                                                >
+                                                                    Sil
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </form>
                                             )
                                         })}
                                         <div

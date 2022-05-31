@@ -98,11 +98,11 @@ const AdminPanel = () => {
                             }}
                             type="button"
                             id="update"
-                            className="btn btn-info btn-sm"
+                            className="btn btn-sm bg-white"
                         >
                             <DynamicFeedRoundedIcon
-                                htmlColor="white"
-                                fontSize="small"
+                                htmlColor="#007AFF"
+                                fontSize="medium"
                                 marginRight={1}
                             />
                         </Link>
@@ -167,8 +167,6 @@ const AdminPanel = () => {
             }
         })
     }
-    console.log(userDetail)
-    console.log(data)
     return (
         <div className="container">
             {!isLoading ? (

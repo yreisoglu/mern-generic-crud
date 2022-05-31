@@ -6,6 +6,7 @@ import { getRole, isExpired } from '../methods/Account'
 import { CreateAdminAccount, GetAvailableForms } from '../methods/DynamicForms'
 import 'react-confirm-alert/src/react-confirm-alert.css'
 import useStore from '../store'
+import { v4 as uuid } from 'uuid'
 
 const CreateAdmin = () => {
     const navigate = useNavigate()
@@ -20,8 +21,12 @@ const CreateAdmin = () => {
     const [inputType, setInputType] = useState()
     const [selectedForm, setSelectedForm] = useState()
 
+    const removePermission = (index) => {
+        setFormPermission(formPermission.filter((item) => formPermission.indexOf(item) !== index))
+    }
+
     const handleAddFields = () => {
-        setFormPermission([...formPermission, {}])
+        setFormPermission([...formPermission, { id: uuid(), show: false }])
     }
 
     const handlePermissionValueParent = (index, event) => {
@@ -34,12 +39,10 @@ const CreateAdmin = () => {
                 title: 'Bu izini daha önce gerçekleştirdiniz.',
             })
         } else {
-            if (event.target.name !== 'show') {
-                const updatedPermissions = [...formPermission]
-                updatedPermissions[index][event.target.name] = event.target.value
-                setFormPermission(updatedPermissions)
-                console.log(formPermission)
-            }
+            const updatedPermissions = [...formPermission]
+            updatedPermissions[index][event.target.name] =
+                event.target.name === 'show' ? event.target.checked : event.target.value
+            setFormPermission(updatedPermissions)
         }
     }
 
@@ -47,7 +50,17 @@ const CreateAdmin = () => {
         const body = {}
         body.username = username
         body.password = password
-        body.allowedForms = formPermission
+        const allowedForms = []
+        formPermission.map((item) => {
+            const form = {}
+            Object.keys(item).forEach((key) => {
+                if (key !== 'id' || key !== 'show') {
+                    form[key] = item[key]
+                }
+            })
+            allowedForms.push(form)
+        })
+        body.allowedForms = allowedForms
 
         if (body.username !== '' && body.password !== '') {
             if (body.allowedForms.length > 0) {
@@ -185,6 +198,7 @@ const CreateAdmin = () => {
                                         {formPermission.map((item, index) => {
                                             return (
                                                 <form
+                                                    key={item.id}
                                                     className="row mt-4 p-5"
                                                     style={{ border: 'solid 1px coral' }}
                                                     onChange={(e) =>
@@ -225,6 +239,9 @@ const CreateAdmin = () => {
                                                             className="form-select"
                                                             name="permissionType"
                                                         >
+                                                            <option selected disabled>
+                                                                Yetki seç
+                                                            </option>
                                                             <option value="read">
                                                                 Görebilir. (Listeleme)
                                                             </option>
@@ -240,7 +257,6 @@ const CreateAdmin = () => {
                                                             className="form-group mt-4"
                                                         >
                                                             <input
-                                                                onClick={() => setShow(!show)}
                                                                 className="form-check-input"
                                                                 type="checkbox"
                                                                 name="show"
@@ -249,7 +265,7 @@ const CreateAdmin = () => {
                                                             <label>Yetkiyi Özelleştir</label>
                                                         </div>
                                                     </div>
-                                                    {show ? (
+                                                    {item.show ? (
                                                         <div className="row">
                                                             {forms.find(
                                                                 (e) => e._id === selectedForm
@@ -351,10 +367,8 @@ const CreateAdmin = () => {
                                                                     id="removeForm"
                                                                     className="btn btn-danger btn-sm"
                                                                     style={{ marginLeft: '5px' }}
-                                                                    onClick={(e) =>
-                                                                        handleRemoveFieldsChild(
-                                                                            e.target
-                                                                        )
+                                                                    onClick={() =>
+                                                                        removePermission(index)
                                                                     }
                                                                 >
                                                                     Sil

@@ -22,8 +22,10 @@ import { CreateForm } from '../methods/DynamicForms'
 import { getRole, isExpired } from '../methods/Account'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { v4 as uuid } from 'uuid';
+
 const FormCreate = () => {
-    const [formFields, setFormFields] = useState([{}])
+    const [formFields, setFormFields] = useState([{ id: uuid() }])
     const [formName, setFormName] = useState()
     const [selectedColor, setSelectedColor] = useState()
     const [file, setFile] = useState()
@@ -155,7 +157,6 @@ const FormCreate = () => {
             }
             const formStructure = JSON.stringify([formFieldDetails, formDetails])
             formData.append('formStructure', formStructure)
-            console.log(formStructure)
             CreateForm(formData)
                 .then((res) => {
                     if (res) toast.success('Form Oluşturuldu', { position: 'top-center' })
@@ -317,7 +318,12 @@ const FormCreate = () => {
                         </div>
                         <div className="d-flex justify-content-center align-items-center mt-2">
                             <IconButton
-                                onClick={() => setFormFields((formFields) => [...formFields, {}])}
+                                onClick={() =>
+                                    setFormFields((formFields) => [
+                                        ...formFields,
+                                        { id: uuid() },
+                                    ])
+                                }
                             >
                                 <Tooltip title="Alan Ekle">
                                     <Add />
@@ -326,7 +332,7 @@ const FormCreate = () => {
                         </div>
                         {formFields.map((field, index) => {
                             return (
-                                <form onChange={(e) => handleInputChange(index, e)}>
+                                <form onChange={(e) => handleInputChange(index, e)} key={field.id}>
                                     <div className="col mt-2 align-items-center">
                                         <div className="row">
                                             <div className="col-md-3">

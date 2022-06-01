@@ -99,6 +99,7 @@ const CreateAdmin = () => {
     }
 
     useEffect(() => {
+        document.title = "Admin Create"
         isExpired()
             .then((res) => {
                 if (res) {

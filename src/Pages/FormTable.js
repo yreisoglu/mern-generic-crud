@@ -93,7 +93,11 @@ const FormTable = () => {
                             id="sil"
                             className="btn bg-white btn-sm"
                         >
-                            {isEditEnabled ? <EditOff htmlColor='orange' /> : <Edit htmlColor='orange' />}
+                            {isEditEnabled ? (
+                                <EditOff htmlColor="orange" />
+                            ) : (
+                                <Edit htmlColor="orange" />
+                            )}
                         </button>
                     </Tooltip>
                     <Tooltip title="Seçili satırları sil">
@@ -140,6 +144,10 @@ const FormTable = () => {
         GetFormDetails(id)
             .then((res) => {
                 setFormDetails(res)
+                document.title = res.formName + ' Table'
+                document.getElementById(
+                    'favicon'
+                ).href = `${process.env.REACT_APP_API_URL}${res.icon}`
                 return res.formDetails
             })
             .then((details) => {
@@ -188,7 +196,6 @@ const FormTable = () => {
                     }}
                 >
                     <DataGrid
-
                         className="bg-white"
                         getRowId={(row) => row._id}
                         rows={documents}

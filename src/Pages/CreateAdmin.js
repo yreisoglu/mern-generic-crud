@@ -7,6 +7,8 @@ import { CreateAdminAccount, GetAvailableForms } from '../methods/DynamicForms'
 import 'react-confirm-alert/src/react-confirm-alert.css'
 import useStore from '../store'
 import { v4 as uuid } from 'uuid'
+import { ArrowBack } from '@mui/icons-material'
+import { Tooltip } from '@material-ui/core'
 
 const CreateAdmin = () => {
     const navigate = useNavigate()
@@ -99,7 +101,7 @@ const CreateAdmin = () => {
     }
 
     useEffect(() => {
-        document.title = "Admin Create"
+        document.title = 'Admin Create'
         isExpired()
             .then((res) => {
                 if (res) {
@@ -140,15 +142,20 @@ const CreateAdmin = () => {
                                             style={{ textAlign: 'right' }}
                                             className="form-group col-md-6"
                                         >
-                                            <Link
-                                                to={'/dynamic/form-list'}
-                                                id="backButton"
-                                                className="btn me-2"
-                                                style={{ backgroundColor: 'coral', color: 'white' }}
-                                                aria-pressed="true"
-                                            >
-                                                Back
-                                            </Link>
+                                            <Tooltip title="Geri Dön">
+                                                <Link
+                                                    style={{
+                                                        marginLeft: '0.4rem',
+                                                        backgroundColor:"#4d4c4c"
+                                                    }}
+                                                    to={'/dynamic/form-list'}
+                                                    id="backButton"
+                                                    aria-pressed="true"
+                                                    className="btn btn-sm me-2"
+                                                >
+                                                    <ArrowBack htmlColor='white'/>
+                                                </Link>
+                                            </Tooltip>
                                         </div>
                                     </div>
                                     <form onSubmit={handleSubmit} encType="multipart/form-data">
@@ -374,7 +381,7 @@ const CreateAdmin = () => {
                                                     <div className="row">
                                                         <div className="form-group col-12 col-md-12 col-sm-12">
                                                             <div
-                                                                style={{ textAlign: 'right' }}
+                                                                style={{ textAlign: 'center' }}
                                                                 className="form-group mt-4"
                                                             >
                                                                 <button

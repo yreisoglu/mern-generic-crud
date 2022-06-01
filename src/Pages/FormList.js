@@ -107,6 +107,7 @@ const AdminPanel = () => {
     }
 
     useEffect(() => {
+        document.title = "Form List"
         isExpired()
             .then((res) => {
                 if (res) {

@@ -16,13 +16,13 @@ import {
     MenuItem,
     FormHelperText,
 } from '@mui/material'
-import { DeleteOutlined, Add } from '@material-ui/icons'
+import { DeleteOutlined, Add, ArrowBack } from '@material-ui/icons'
 import Tooltip from '@mui/material/Tooltip'
 import { CreateForm } from '../methods/DynamicForms'
 import { getRole, isExpired } from '../methods/Account'
 import { Link, useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
-import { v4 as uuid } from 'uuid';
+import { v4 as uuid } from 'uuid'
 
 const FormCreate = () => {
     const [formFields, setFormFields] = useState([{ id: uuid() }])
@@ -57,7 +57,9 @@ const FormCreate = () => {
     }, [])
 
     const deleteFormField = (index) => {
-        setFormFields(formFields.filter((item) => formFields.indexOf(item) !== index))
+        if (formFields.length > 1) {
+            setFormFields(formFields.filter((item) => formFields.indexOf(item) !== index))
+        }
     }
 
     const handleInputChange = (index, event) => {
@@ -188,36 +190,53 @@ const FormCreate = () => {
     }
 
     return (
-        <div className="container">
+        <div
+            className="container justify-content-center align-items-center d-flex"
+            style={{ height: '100vh' }}
+        >
             {!isLoading ? (
                 <div
-                    className="my-3 p-3 rounded shadow-sm"
+                    className=" rounded shadow-sm"
                     id="bodyColor"
                     style={{ backgroundColor: '#FFFFFF' }}
                 >
-                    <div className="row">
-                        <div className="form-group col-md-4">
-                            <h3>Form Oluştur</h3>
-                            <p style={{ textTransform: 'uppercase' }}>
-                                DİNAMİK YAPIDA FORM TASARIMI
-                            </p>
-                        </div>
+                    <div
+                        style={{
+                            backgroundColor: selectedColor || '#4d4c4c',
+                            transition: '1s all',
+                        }}
+                    >
+                        <div className="row py-4 px-3">
+                            <div className="form-group col-md-4">
+                                <h3 className="form-header text-white">Form Oluştur</h3>
+                                <p className="form-subtitle text-white">
+                                    DİNAMİK YAPIDA FORM TASARIMI
+                                </p>
+                            </div>
 
-                        <div style={{ textAlign: 'right' }} className="form-group col-md-8">
-                            <Link
-                                to={'/dynamic/form-list'}
-                                id="backButton"
-                                className="btn me-2"
-                                style={{ backgroundColor: 'coral', color: 'white' }}
-                                aria-pressed="true"
-                            >
-                                Back
-                            </Link>
+                            <div style={{ textAlign: 'right' }} className="form-group col-md-8">
+                                <Tooltip title="Geri dön">
+                                    <Link
+                                        style={{
+                                            marginLeft: '0.4rem',
+                                        }}
+                                        to={'/dynamic/form-list'}
+                                        id="backButton"
+                                        aria-pressed="true"
+                                        className="btn bg-white btn-sm me-2"
+                                    >
+                                        <ArrowBack />
+                                    </Link>
+                                </Tooltip>
+                            </div>
                         </div>
                     </div>
-                    <hr className="my-4" />
 
-                    <form className="needs-validation" noValidate encType="multipart/formData">
+                    <form
+                        className="needs-validation py-4  px-3"
+                        noValidate
+                        encType="multipart/formData"
+                    >
                         <div className="row align-items-center">
                             <div className="col-md-4">
                                 <TextField
@@ -319,10 +338,7 @@ const FormCreate = () => {
                         <div className="d-flex justify-content-center align-items-center mt-2">
                             <IconButton
                                 onClick={() =>
-                                    setFormFields((formFields) => [
-                                        ...formFields,
-                                        { id: uuid() },
-                                    ])
+                                    setFormFields((formFields) => [...formFields, { id: uuid() }])
                                 }
                             >
                                 <Tooltip title="Alan Ekle">

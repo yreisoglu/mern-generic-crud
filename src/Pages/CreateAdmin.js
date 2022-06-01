@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import AddCircleSharpIcon from '@material-ui/icons/AddCircleSharp'
 import { getRole, isExpired } from '../methods/Account'
@@ -135,6 +135,20 @@ const CreateAdmin = () => {
                                             <h3>Hesap Oluşturma ve Yetkilendirme</h3>
                                             <p>ADMİN HESABI VE İZİNLERİ</p>
                                         </div>
+                                        <div
+                                            style={{ textAlign: 'right' }}
+                                            className="form-group col-md-6"
+                                        >
+                                            <Link
+                                                to={'/dynamic/form-list'}
+                                                id="backButton"
+                                                className="btn me-2"
+                                                style={{ backgroundColor: 'coral', color: 'white' }}
+                                                aria-pressed="true"
+                                            >
+                                                Back
+                                            </Link>
+                                        </div>
                                     </div>
                                     <form onSubmit={handleSubmit} encType="multipart/form-data">
                                         <div className="row mt-2">
@@ -268,7 +282,7 @@ const CreateAdmin = () => {
                                                     {item.show ? (
                                                         <div className="row">
                                                             {forms.find(
-                                                                (e) => e._id === selectedForm
+                                                                (e) => e._id === item.formId
                                                             ) ? (
                                                                 <div className="row">
                                                                     <div className="form-group col-12 col-md-6 col-sm-6 mt-4">

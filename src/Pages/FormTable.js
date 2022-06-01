@@ -6,14 +6,16 @@ import {
     GetFormDetails,
     UpdateSelectedDocument,
 } from '../methods/DynamicForms'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Button } from '@mui/material'
-import { Delete, Edit } from '@material-ui/icons'
+import { Delete } from '@material-ui/icons'
+import { ArrowBack, EditOff, Edit } from '@mui/icons-material/'
 import Swal from 'sweetalert2'
 import useStore from '../store'
 import { isExpired } from '../methods/Account'
 import Tooltip from '@mui/material/Tooltip'
 import { toast } from 'react-toastify'
+import { GetUserDetails } from '../methods/GetUsers'
 
 const FormTable = () => {
     const { id } = useParams()
@@ -23,7 +25,7 @@ const FormTable = () => {
     const [isLoading, setLoading] = useState(true)
     const [selectionModel, setSelectionModel] = useState([])
     const [isEditEnabled, setEditEnabled] = useState(false)
-
+    const [userDetail, setUserDetail] = useState()
     const store = useStore()
     const { toggleUpdate } = store
     const { isUpdated } = store
@@ -62,22 +64,66 @@ const FormTable = () => {
                 }
             })
         }
-
+        const isAllowed = () => {
+            if (
+                userDetail.role === 'root' ||
+                userDetail.allowedForms.find((e) => e.formId === id).permissionType === 'write'
+            ) {
+                return true
+            }
+            return false
+        }
         return (
-            <GridToolbarContainer className="d-flex justify-content-end">
-                <Tooltip title="Bu ayarı açtığınızda istediğiniz alana çift tıklayarak güncelleyebilirsiniz.">
-                    <button
-                        className={`btn ${isEditEnabled ? 'btn-secondary' : 'btn-success'}`}
-                        onClick={() => setEditEnabled(!isEditEnabled)}
-                    >
-                        {isEditEnabled ? 'Düzenlemeyi Kapat' : 'Düzenlemeyi Aç'}
-                    </button>
-                </Tooltip>
-                <Tooltip title="Seçili satırları sil.">
-                    <Button disableElevation size="large" color="warning" onClick={handleClick}>
-                        <Delete />
-                    </Button>
-                </Tooltip>
+            <GridToolbarContainer
+                className="d-flex justify-content-between"
+                sx={{ backgroundColor: formDetails.primaryColor }}
+            >
+                <div className="row mt-3 mb-2 ms-1">
+                    <h3 className="form-header text-white">{formDetails.formName} Verileri</h3>
+                </div>
+                <div>
+                    <Tooltip title="Bu ayarı açtığınızda istediğiniz alana çift tıklayarak güncelleyebilirsiniz">
+                        <button
+                            disabled={!isAllowed()}
+                            style={{
+                                marginLeft: '0.4rem',
+                            }}
+                            type="button"
+                            onClick={() => setEditEnabled(!isEditEnabled)}
+                            id="sil"
+                            className="btn bg-white btn-sm"
+                        >
+                            {isEditEnabled ? <EditOff htmlColor='orange' /> : <Edit htmlColor='orange' />}
+                        </button>
+                    </Tooltip>
+                    <Tooltip title="Seçili satırları sil">
+                        <button
+                            disabled={!isAllowed()}
+                            style={{
+                                marginLeft: '0.4rem',
+                            }}
+                            type="button"
+                            onClick={handleClick}
+                            id="sil"
+                            className="btn bg-white btn-sm"
+                        >
+                            <Delete htmlColor="red" />
+                        </button>
+                    </Tooltip>
+                    <Tooltip title="Geri Dön">
+                        <Link
+                            style={{
+                                marginLeft: '0.4rem',
+                            }}
+                            to={'/dynamic/form-list'}
+                            id="backButton"
+                            aria-pressed="true"
+                            className="btn bg-white btn-sm me-2"
+                        >
+                            <ArrowBack />
+                        </Link>
+                    </Tooltip>
+                </div>
             </GridToolbarContainer>
         )
     }
@@ -93,7 +139,7 @@ const FormTable = () => {
     useEffect(() => {
         GetFormDetails(id)
             .then((res) => {
-                setFormDetails(res.formDetails)
+                setFormDetails(res)
                 return res.formDetails
             })
             .then((details) => {
@@ -108,7 +154,14 @@ const FormTable = () => {
                         })
                     }
                 })
-                setLoading(false)
+                GetUserDetails()
+                    .then((response) => {
+                        setUserDetail(response)
+                        console.log(response)
+                    })
+                    .then(() => {
+                        setLoading(false)
+                    })
             })
             .catch((err) => console.log(err))
     }, [])
@@ -119,24 +172,47 @@ const FormTable = () => {
             })
             .catch((err) => console.log(err))
     }, [isUpdated])
+
+    useEffect(() => {}, [])
+
     return (
         <div>
             {!isLoading ? (
-                <div className="container bg-white" style={{ height: 1000 }}>
+                <div
+                    className="container"
+                    style={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        display: 'flex',
+                        height: '100vh',
+                    }}
+                >
                     <DataGrid
+
+                        className="bg-white"
                         getRowId={(row) => row._id}
                         rows={documents}
+                        autoHeight
                         columns={columns}
                         checkboxSelection
                         aria-label="collapsible table"
                         hideFooterPagination
                         editMode="row"
-                        isCellEditable={(params) => isEditEnabled}
-                        onRowEditStop={(params, event) => {
-                            UpdateSelectedDocument(params.row, id).then(() => {
-                                toggleUpdate()
-                                toast.success('Satır güncellendi.', { position: 'bottom-center' })
-                            })
+                        isCellEditable={() => isEditEnabled}
+                        onRowEditStop={(params) => {
+                            UpdateSelectedDocument(params.row, id)
+                                .then(() => {
+                                    toggleUpdate()
+                                    toast.success('Satır güncellendi.', {
+                                        position: 'bottom-center',
+                                    })
+                                })
+                                .catch(() => {
+                                    toggleUpdate()
+                                    toast.error('Güncellenemedi.', {
+                                        position: 'bottom-center',
+                                    })
+                                })
                         }}
                         components={{
                             Toolbar: Toolbar,

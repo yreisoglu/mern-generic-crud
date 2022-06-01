@@ -196,3 +196,16 @@ input#GraduationTime {
 .valid-feedback{
    color: #2acc80;
 }
+
+
+.form-header{
+    color: #4d4c4c;
+    font-size: 28px;
+    font-weight: 600;
+}
+
+.form-subtitle{
+    color: #4d4c4c;
+    font-size: 17px;
+    font-weight: 300;
+}

@@ -16,12 +16,14 @@ import {
     MenuItem,
     FormHelperText,
 } from '@mui/material'
-import { DeleteOutlined, Add } from '@material-ui/icons'
+import { DeleteOutlined, Add, ArrowBack } from '@material-ui/icons'
 import Tooltip from '@mui/material/Tooltip'
 import { CreateForm, GetFormDetails, UpdateForm } from '../methods/DynamicForms'
 import { getRole, isExpired } from '../methods/Account'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { toast } from 'react-toastify'
+import { v4 as uuid } from 'uuid'
+
 const FormEdit = () => {
     const { id } = useParams()
     const [formFields, setFormFields] = useState([])
@@ -88,7 +90,9 @@ const FormEdit = () => {
     }, [isUpdated])
 
     const deleteFormField = (index) => {
-        setFormFields(formFields.filter((item) => formFields.indexOf(item) !== index))
+        if (formFields.length > 1) {
+            setFormFields(formFields.filter((item) => formFields.indexOf(item) !== index))
+        }
     }
 
     const handleInputChange = (index, event) => {
@@ -225,45 +229,56 @@ const FormEdit = () => {
     }
 
     return (
-        <div className="container">
+        <div
+            className="container justify-content-center align-items-center d-flex"
+            style={{ height: '100vh' }}
+        >
             {!isLoading ? (
                 <div
-                    className="my-3 p-3 rounded shadow-sm"
+                    className=" rounded shadow-sm"
                     id="bodyColor"
                     style={{ backgroundColor: '#FFFFFF' }}
                 >
-                    <br />
-                    {/* <div className="currentPhoto">
-                        <img
-                            className="currentPhotoImg"
-                            src={`${process.env.REACT_APP_API_URL}${iconURL}`}
-                        />
-                    </div> */}
-                    <div className="row">
-                        <div className="form-group col-md-3">
-                            <div className="row">
-                                <h3 id="formTitle" className="mb-3 col-sm-6">
-                                    Welcome
-                                </h3>
+                    <div
+                        style={{
+                            backgroundColor: selectedColor || '#4d4c4c',
+                            transition: '1s all',
+                        }}
+                    >
+                        <div className="row py-4 px-3">
+                            <div className="form-group col-md-4">
+                                <h3 className="form-header text-white">Form Güncelle</h3>
+                                <p
+                                    className="form-subtitle text-white"
+                                    style={{ textTransform: 'uppercase' }}
+                                >
+                                    {formName} TASARIMINI DÜZENLE
+                                </p>
                             </div>
-                            <p id="subTitle">CREATE YOUR FORM</p>
-                        </div>
 
-                        <div style={{ textAlign: 'right' }} className="form-group col-md-9">
-                            <Link
-                                to={'/dynamic/form-list'}
-                                id="backButton"
-                                className="btn me-2"
-                                style={{ backgroundColor: 'coral', color: 'white' }}
-                                aria-pressed="true"
-                            >
-                                Back
-                            </Link>
+                            <div style={{ textAlign: 'right' }} className="form-group col-md-8">
+                                <Tooltip title="Geri dön">
+                                    <Link
+                                        style={{
+                                            marginLeft: '0.4rem',
+                                        }}
+                                        to={'/dynamic/form-list'}
+                                        id="backButton"
+                                        aria-pressed="true"
+                                        className="btn bg-white btn-sm me-2"
+                                    >
+                                        <ArrowBack />
+                                    </Link>
+                                </Tooltip>
+                            </div>
                         </div>
                     </div>
-                    <hr className="my-4" />
 
-                    <form className="needs-validation" noValidate encType="multipart/formData">
+                    <form
+                        className="needs-validation py-4  px-3"
+                        noValidate
+                        encType="multipart/formData"
+                    >
                         <div className="row align-items-center">
                             <div className="col-md-4">
                                 <TextField
@@ -367,7 +382,9 @@ const FormEdit = () => {
                         </div>
                         <div className="d-flex justify-content-center align-items-center mt-2">
                             <IconButton
-                                onClick={() => setFormFields((formFields) => [...formFields, {}])}
+                                onClick={() =>
+                                    setFormFields((formFields) => [...formFields, { id: uuid() }])
+                                }
                             >
                                 <Tooltip title="Alan Ekle">
                                     <Add />
@@ -376,7 +393,7 @@ const FormEdit = () => {
                         </div>
                         {formFields.map((field, index) => {
                             return (
-                                <form onChange={(e) => handleInputChange(index, e)}>
+                                <form onChange={(e) => handleInputChange(index, e)} key={field.id}>
                                     <div className="col mt-2 align-items-center">
                                         <div className="row">
                                             <div className="col-md-3">

@@ -3,9 +3,11 @@ import '../UserCreate.css'
 import DeleteForeverRoundedIcon from '@material-ui/icons/DeleteForeverRounded'
 import DynamicFeedRoundedIcon from '@material-ui/icons/DynamicFeedRounded'
 import AddCircleSharpIcon from '@material-ui/icons/AddCircleSharp'
-import RateReviewRoundedIcon from '@material-ui/icons/RateReviewRounded'
 import LogoutIcon from '@material-ui/icons/ExitToApp'
 import Tooltip from '@material-ui/core/Tooltip'
+import { Edit } from '@mui/icons-material/'
+import { Delete } from '@material-ui/icons'
+
 import Swal from 'sweetalert2'
 import { GetAvailableForms, DeleteFormsByIds } from '../methods/DynamicForms'
 import 'react-confirm-alert/src/react-confirm-alert.css'
@@ -58,11 +60,7 @@ const AdminPanel = () => {
                             className="btn bg-white btn-sm"
                         >
                             {' '}
-                            <RateReviewRoundedIcon
-                                htmlColor="orange"
-                                fontSize="medium"
-                                marginRight={1}
-                            />
+                            <Edit htmlColor="orange" fontSize="medium" marginRight={1} />
                         </Link>
                     </Tooltip>
                     <Tooltip title="Formu Sil">
@@ -77,11 +75,7 @@ const AdminPanel = () => {
                             id="sil"
                             className="btn bg-white btn-sm"
                         >
-                            <DeleteForeverRoundedIcon
-                                htmlColor="red"
-                                fontSize="medium"
-                                marginRight={1}
-                            />
+                            <Delete htmlColor="red" fontSize="medium" marginRight={1} />
                         </button>
                     </Tooltip>{' '}
                 </div>

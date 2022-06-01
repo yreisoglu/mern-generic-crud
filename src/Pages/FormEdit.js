@@ -305,13 +305,19 @@ const FormEdit = () => {
                                         Bir Renk Seçiniz
                                     </InputLabel>
                                     <Select
+                                        SelectDisplayProps={{
+                                            style: {
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'space-between',
+                                            },
+                                        }}
                                         labelId="demo-multiple-checkbox-label"
                                         id="demo-multiple-checkbox"
                                         input={<OutlinedInput label="Bir Renk Seçiniz" />}
                                         value={selectedColor || null}
                                         sx={{ width: '100%' }}
                                         name="selectedColor"
-                                        value={selectedColor}
                                         onChange={(e) => {
                                             setSelectedColor(e.target.value)
                                             clearNormalErrors(e.target.name)
@@ -319,25 +325,20 @@ const FormEdit = () => {
                                     >
                                         {colors.map((item) => {
                                             return (
-                                                <MenuItem value={item.HEX}>
+                                                <MenuItem
+                                                    value={item.HEX}
+                                                    className="d-flex justify-content-between align-items-center"
+                                                >
+                                                    <div>{item.color} </div>
                                                     <div
                                                         style={{
-                                                            display: 'flex',
-                                                            alignItems: 'center',
-                                                            justifyContent: 'space-between',
+                                                            height: '15px',
+                                                            width: '15px',
+                                                            backgroundColor: item.HEX,
+                                                            borderRadius: '50%',
+                                                            justifySelf: 'flex-end',
                                                         }}
-                                                    >
-                                                        <div>{item.color} </div>
-                                                        <div
-                                                            style={{
-                                                                height: '15px',
-                                                                width: '15px',
-                                                                backgroundColor: item.HEX,
-                                                                borderRadius: '50%',
-                                                                justifySelf: 'flex-end',
-                                                            }}
-                                                        ></div>
-                                                    </div>
+                                                    ></div>
                                                 </MenuItem>
                                             )
                                         })}
@@ -347,20 +348,24 @@ const FormEdit = () => {
                                     </FormHelperText>
                                 </FormControl>
                             </div>
-                            <div className="col-md-4">
+                            <div className="col-md-4 align-items-center d-flex justify-content-evenly">
                                 <FormControl error={errors.file.status}>
-                                    <input
-                                        type="file"
-                                        className="form-control"
-                                        id="file"
-                                        name="file"
-                                        onChange={(e) => {
-                                            setFile(e.target.files[0])
-                                            clearNormalErrors(e.target.name)
-                                        }}
-                                    />
+                                    <Button variant="contained" component="label">
+                                        Form İkonu Yükle
+                                        <input
+                                            type="file"
+                                            hidden
+                                            name="file"
+                                            onChange={(e) => {
+                                                setFile(e.target.files[0])
+                                                clearNormalErrors(e.target.name)
+                                            }}
+                                        />
+                                    </Button>
+
                                     <FormHelperText>{errors.file.message || null}</FormHelperText>
                                 </FormControl>
+                                {file && <label>{file.name}</label>}
                             </div>
                         </div>
 

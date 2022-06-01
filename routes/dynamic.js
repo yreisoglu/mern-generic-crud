@@ -278,18 +278,15 @@ router.post("/get-form", auth, (req, res) => {
 
 router.post("/get-form-details", auth, async (req, res) => {
   try {
-    const isAllowed = await checkPermission(req.account, req.body.formId);
-    if (req.account.role === "root" || (req.account.role === "admin" && isAllowed)) {
-      if (!mongoose.models.formSchemas) {
-        createSchemasModel();
-      }
-      mongoose.models.formSchemas
-        .findById(req.body.formId)
-        .then((response) => {
-          res.json(response);
-        })
-        .catch((error) => console.log(error));
+    if (!mongoose.models.formSchemas) {
+      createSchemasModel();
     }
+    mongoose.models.formSchemas
+      .findById(req.body.formId)
+      .then((response) => {
+        res.json(response);
+      })
+      .catch((error) => console.log(error));
   } catch (error) {
     console.log(error);
     res.status(404).send(error);

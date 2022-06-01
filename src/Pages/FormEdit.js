@@ -308,7 +308,7 @@ const FormEdit = () => {
                                         labelId="demo-multiple-checkbox-label"
                                         id="demo-multiple-checkbox"
                                         input={<OutlinedInput label="Bir Renk Seçiniz" />}
-                                        defaultValue={''}
+                                        value={selectedColor || null}
                                         sx={{ width: '100%' }}
                                         name="selectedColor"
                                         value={selectedColor}

@@ -1,5 +1,5 @@
 <div align="center">
-    <img src="ReadmeAssets/logo.png" alt="Logo" width="200" height="200">
+    <img src="readme/logo.png" alt="Logo" width="200" height="200">
   </a>
 
   <h3 align="center">MERN GENERIC CRUD</h3>
@@ -82,13 +82,13 @@ In server we have an endpoint for root level user creation. That endpoint is cov
 
 <br/>
 <div align="center">
-<img src="ReadmeAssets/register-gif.gif" alt="Logo" >
+<img src="readme/register-gif.gif" alt="Logo" >
 </div>
 After that you can make a request to the api with username and password. Once root level user has been created, you should cover with comment the register code block.
 
 <br/>
 <div align="center">
-<img src="ReadmeAssets/postman-register.png" alt="Logo" >
+<img src="readme/postman-register.png" alt="Logo" >
 </div>
 
  <br>
@@ -96,3 +96,13 @@ After that you can make a request to the api with username and password. Once ro
 ### Starting the project
 
 After all operations your project is ready for start on your local. 
+
+```js
+// client start
+cd client && npm start
+```
+
+```js
+// server start
+cd server && npm start
+```

@@ -7,7 +7,6 @@
   <p align="center">
     An awesome tool for create your own forms!
     <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
 </div>
 
 <!-- ABOUT THE PROJECT -->
@@ -36,11 +35,11 @@ If you want to setup the project on your local network you can follow the instru
 
 ### Prerequisites
 
-First requirement is Node package manager. Npm allows to install and manage the packages on your project. So you can download the npm from link below.
+First requirement is Node package manager. Npm allows to install and manage the packages on your project. So you can download the node from link below.
 
 -   [Node.js](https://nodejs.org/en/)
 
-The other requirement is mongodb community server. You should download and install it. After installation don't forget to add mongo.exe's path to your computer's environment variables.
+The other requirement is MongoDB community server. You should download and install it. After installation don't forget to add mongo.exe's path to your computer's environment variables.
 
 -   [MongoDB](https://www.mongodb.com/try/download/community)
 
@@ -50,7 +49,7 @@ The other requirement is mongodb community server. You should download and insta
     ```sh
     git clone https://github.com/yreisoglu/mern-generic-crud
     ```
-2. Go to project path and run that command below that is going to install both packages for client and server.
+2. Go to project path and run this command below this is going to install both packages for client and server.
     ```sh
     cd server && npm install && cd .. && cd client && npm install
     ```
@@ -91,3 +90,9 @@ After that you can make a request to the api with username and password. Once ro
 <div align="center">
 <img src="ReadmeAssets/postman-register.png" alt="Logo" >
 </div>
+
+ <br>
+
+### Starting the project
+
+After all operations your project is ready for start on your local. 

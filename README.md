@@ -106,3 +106,7 @@ cd client && npm start
 // server start
 cd server && npm start
 ```
+
+### API Documentation
+
+[You can find the Postman api collection here](/readme/CRUD.postman_collection.json)

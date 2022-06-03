@@ -20,7 +20,7 @@ export const CreateForm = (formData) => {
     })
 }
 
-export const UpdateForm = (formData)=>{
+export const UpdateForm = (formData) => {
     return new Promise((resolve, reject) => {
         HTTP.put('/api/dynamic/update-form', formData, {
             headers: { 'x-access-token': localStorage.getItem('jwt') },
@@ -63,6 +63,17 @@ export const CreateAdminAccount = (body) => {
         HTTP.post('/api/account/register-as-admin', body, {
             headers: { 'x-access-token': localStorage.getItem('jwt') },
         })
+            .then((response) => {
+                resolve(response.data)
+            })
+            .catch((error) => {
+                reject(error)
+            })
+    })
+}
+export const submitFormDocument = (body) => {
+    return new Promise((resolve, reject) => {
+        HTTP.post('/api/dynamic', body)
             .then((response) => {
                 resolve(response.data)
             })

@@ -197,6 +197,13 @@ input#GraduationTime {
    color: #2acc80;
 }
 
+.dynamic-form-body{
+    padding: 30px;
+}
+
+.dynamic-form-title{
+    padding: 30px;
+}
 
 .form-header{
     color: #4d4c4c;

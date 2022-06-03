@@ -16,6 +16,7 @@ import CreateAdmin from './Pages/CreateAdmin'
 import FormCreate from './Pages/FormCreate'
 import FormTable from './Pages/FormTable'
 import FormEdit from './Pages/FormEdit'
+import FormView from './Pages/FormView'
 
 const App = () => {
     return (
@@ -44,6 +45,7 @@ const App = () => {
                     <Route path="form-list" element={<FormList />} />
                     <Route path="form-table/:id" element={<FormTable />} />
                     <Route path="form-edit/:id" element={<FormEdit />} />
+                    <Route path="form/:id" element={<FormView />} />
                 </Route>
             </Routes>
         </BrowserRouter>

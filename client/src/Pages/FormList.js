@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import '../UserCreate.css'
 import DeleteForeverRoundedIcon from '@material-ui/icons/DeleteForeverRounded'
+import PreviewIcon from '@material-ui/icons/RemoveRedEyeSharp'
 import DynamicFeedRoundedIcon from '@material-ui/icons/DynamicFeedRounded'
 import AddCircleSharpIcon from '@material-ui/icons/AddCircleSharp'
 import LogoutIcon from '@material-ui/icons/ExitToApp'
@@ -31,12 +32,25 @@ const AdminPanel = () => {
         if (permission === 'write') {
             return (
                 <div>
-                    {' '}
                     <Tooltip title="Formu Gör">
+                        <Link
+                            to={`/dynamic/form/${id}`}
+                            style={{
+                                color: 'white',
+                            }}
+                            type="button"
+                            id="update"
+                            className="btn btn-sm bg-white"
+                        >
+                            <PreviewIcon htmlColor="green" fontSize="medium" marginRight={1} />
+                        </Link>
+                    </Tooltip>
+                    <Tooltip title="Forma Kayıtlı Verileri Gör">
                         <Link
                             to={`/dynamic/form-table/${id}`}
                             style={{
                                 color: 'white',
+                                marginLeft: '0.3rem',
                             }}
                             type="button"
                             id="update"
@@ -83,8 +97,20 @@ const AdminPanel = () => {
         } else if (permission === 'read') {
             return (
                 <div>
-                    {' '}
                     <Tooltip title="Formu Gör">
+                        <Link
+                            to={`/dynamic/form/${id}`}
+                            style={{
+                                color: 'green',
+                            }}
+                            type="button"
+                            id="update"
+                            className="btn btn-sm bg-white"
+                        >
+                            <PreviewIcon htmlColor="#007AFF" fontSize="medium" marginRight={1} />
+                        </Link>
+                    </Tooltip>{' '}
+                    <Tooltip title="Forma Kayıtlı Verileri Gör">
                         <Link
                             to={`/dynamic/form-table/${id}`}
                             style={{
@@ -107,7 +133,7 @@ const AdminPanel = () => {
     }
 
     useEffect(() => {
-        document.title = "Form List"
+        document.title = 'Form List'
         isExpired()
             .then((res) => {
                 if (res) {

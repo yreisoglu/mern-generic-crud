@@ -276,7 +276,7 @@ router.post("/get-form", auth, (req, res) => {
   }
 });
 
-router.post("/get-form-details", auth, async (req, res) => {
+router.post("/get-form-details", async (req, res) => {
   try {
     if (!mongoose.models.formSchemas) {
       createSchemasModel();
